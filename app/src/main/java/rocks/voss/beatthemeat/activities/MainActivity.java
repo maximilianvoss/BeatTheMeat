@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.widgets;
+package rocks.voss.beatthemeat.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,6 +18,7 @@ import java.util.List;
 import lombok.Getter;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.DataCollectionService;
+import rocks.voss.beatthemeat.ui.ThermometerCanvas;
 
 public class MainActivity extends AppCompatActivity {
 

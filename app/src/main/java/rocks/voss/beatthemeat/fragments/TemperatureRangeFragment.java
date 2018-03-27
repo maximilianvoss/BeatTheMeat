@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.widgets;
+package rocks.voss.beatthemeat.fragments;
 
 import android.os.Bundle;
 import android.preference.Preference;
@@ -7,6 +7,7 @@ import android.preference.SwitchPreference;
 
 import lombok.Setter;
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 
 /**

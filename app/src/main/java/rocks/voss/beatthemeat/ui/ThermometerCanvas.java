@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.widgets;
+package rocks.voss.beatthemeat.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import lombok.Setter;
+import rocks.voss.beatthemeat.activities.MainActivity;
+import rocks.voss.beatthemeat.activities.ThermometerSettingActivity;
 import rocks.voss.beatthemeat.utils.ColorUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 

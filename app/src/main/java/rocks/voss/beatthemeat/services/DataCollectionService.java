@@ -37,7 +37,7 @@ public class DataCollectionService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        doMyWork(params);
+        execute(params);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             schedule(this);
         }
@@ -49,8 +49,8 @@ public class DataCollectionService extends JobService {
         return false;
     }
 
-    private void doMyWork(JobParameters params) {
-        DataRetrievalService service = new DataRetrievalService(getBaseContext());
+    private void execute(JobParameters params) {
+        DataCollectionServiceThread service = new DataCollectionServiceThread(getBaseContext());
         service.start();
         try {
             service.join();

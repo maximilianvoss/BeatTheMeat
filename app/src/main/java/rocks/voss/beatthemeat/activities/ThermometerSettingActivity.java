@@ -1,7 +1,9 @@
-package rocks.voss.beatthemeat.widgets;
+package rocks.voss.beatthemeat.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import rocks.voss.beatthemeat.fragments.TemperatureRangeFragment;
 
 public class ThermometerSettingActivity extends Activity {
 

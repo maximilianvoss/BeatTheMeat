@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.widgets;
+package rocks.voss.beatthemeat.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;

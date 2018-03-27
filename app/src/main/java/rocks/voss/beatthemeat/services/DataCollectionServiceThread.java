@@ -16,16 +16,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import rocks.voss.beatthemeat.utils.KeyUtil;
-import rocks.voss.beatthemeat.widgets.MainActivity;
+import rocks.voss.beatthemeat.activities.MainActivity;
 
 /**
  * Created by voss on 24.03.18.
  */
-public class DataRetrievalService extends Thread {
+public class DataCollectionServiceThread extends Thread {
 
     private Context context;
 
-    public DataRetrievalService(Context context) {
+    public DataCollectionServiceThread(Context context) {
         this.context = context;
     }
 
