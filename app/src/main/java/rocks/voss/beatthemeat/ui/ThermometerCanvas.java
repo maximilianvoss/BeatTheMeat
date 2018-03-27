@@ -21,21 +21,13 @@ import rocks.voss.beatthemeat.utils.KeyUtil;
 /**
  * Created by voss on 11.03.18.
  */
+@Setter
 public class ThermometerCanvas extends SurfaceView {
-    @Setter
+    private int id;
     private Paint colorBackground;
-
-    @Setter
     private Paint colorRed;
-
-    @Setter
     private Paint colorYellow;
-
-    @Setter
     private Paint colorGreen;
-
-    @Setter
-    private int id = 0;
 
     public ThermometerCanvas(Context context) {
         this(context, null);
@@ -69,7 +61,7 @@ public class ThermometerCanvas extends SurfaceView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        this.id = MainActivity.getThermometers().indexOf(this);
+        id = MainActivity.getThermometers().indexOf(this);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         boolean isRange = sharedPref.getBoolean(KeyUtil.createKey("isRange", id), true);
@@ -150,7 +142,8 @@ public class ThermometerCanvas extends SurfaceView {
         Paint colorBlack = new Paint();
         colorBlack.setColor(Color.BLACK);
         colorBlack.setTextSize(200);
-        canvas.drawText(temperature, 530, 250, colorBlack);
+        colorBlack.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText(temperature, canvas.getWidth() - 50, 250, colorBlack);
     }
 
 }

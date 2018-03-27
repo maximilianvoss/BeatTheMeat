@@ -14,6 +14,5 @@ public class ThermometerSettingActivity extends Activity {
         TemperatureRangeFragment temperatureRangeFragment = new TemperatureRangeFragment();
         temperatureRangeFragment.setId(id);
         getFragmentManager().beginTransaction().replace(android.R.id.content, temperatureRangeFragment).commit();
-
     }
 }
