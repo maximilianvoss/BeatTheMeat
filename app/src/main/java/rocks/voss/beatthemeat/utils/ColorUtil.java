@@ -24,7 +24,7 @@ public class ColorUtil {
         return value;
     }
 
-    public static int getCloserColor(int colorDest, int colorStart, int steps, int step) {
+    public static int getCloserColor(int colorStart, int colorDest, int steps, int step) {
         int redStart = getRed(colorStart);
         int redDest = getRed(colorDest);
         int greenStart = getGreen(colorStart);

@@ -8,13 +8,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/thermometers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/scrollview"
+        >
     </ScrollView>
 
     <android.support.design.widget.FloatingActionButton

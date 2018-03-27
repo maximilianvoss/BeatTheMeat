@@ -7,11 +7,4 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
-    <declare-styleable name="ThermometerCanvas">
-        <attr name="colorBackground" format="color" />
-        <attr name="colorThermometerRed" format="color" />
-        <attr name="colorThermometerYellow" format="color" />
-        <attr name="colorThermometerGreen" format="color" />
-    </declare-styleable>
 </resources>
