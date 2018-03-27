@@ -1,5 +1,6 @@
 package rocks.voss.beatthemeat.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -7,6 +8,7 @@ import android.preference.SwitchPreference;
 
 import lombok.Setter;
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 
@@ -48,9 +50,23 @@ public class TemperatureRangeFragment extends PreferenceFragment {
         temperatureMax.setTitle("Temperature Max");
         temperatureMax.setDefaultValue(100);
 
+
+        Preference removeButton = new Preference(this.getContext());
+        removeButton.setTitle("Remove Thermometer");
+        removeButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                MainActivity.removeThermometer(id);
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                getContext().startActivity(intent);
+                return true;
+            }
+        });
+
         addPreferencesFromResource(R.xml.pref_thermometersetting);
         getPreferenceScreen().addPreference(isRange);
         getPreferenceScreen().addPreference(temperatureMin);
         getPreferenceScreen().addPreference(temperatureMax);
+        getPreferenceScreen().addPreference(removeButton);
     }
 }

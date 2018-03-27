@@ -12,7 +12,6 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import lombok.Setter;
-import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.activities.ThermometerSettingActivity;
 import rocks.voss.beatthemeat.utils.ColorUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
@@ -28,6 +27,11 @@ public class ThermometerCanvas extends SurfaceView {
     private Paint colorRed;
     private Paint colorYellow;
     private Paint colorGreen;
+
+    public ThermometerCanvas(Context context, int id) {
+        this(context);
+        this.id = id;
+    }
 
     public ThermometerCanvas(Context context) {
         this(context, null);
@@ -60,8 +64,6 @@ public class ThermometerCanvas extends SurfaceView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        id = MainActivity.getThermometers().indexOf(this);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         boolean isRange = sharedPref.getBoolean(KeyUtil.createKey("isRange", id), true);

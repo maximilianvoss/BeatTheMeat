@@ -23,12 +23,13 @@ import rocks.voss.beatthemeat.ui.ThermometerCanvas;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
     @Getter
     private static List<ThermometerCanvas> thermometers = new ArrayList<>();
 
     private Context context;
     private LinearLayout linearLayout;
-    private SharedPreferences sharedPref;
+    private static SharedPreferences sharedPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,10 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         scrollView.addView(linearLayout);
 
-        int numberOfThermometers = sharedPref.getInt("numberOfThermometers", 0);
+        int numberOfThermometers = sharedPref.getInt(NUMBER_OF_THERMOMETERS, 0);
+        thermometers.clear();
         for (int i = 0; i < numberOfThermometers; i++) {
-            ThermometerCanvas thermometerCanvas = new ThermometerCanvas(context);
+            ThermometerCanvas thermometerCanvas = new ThermometerCanvas(context, i);
             thermometerCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
             setupThermometerCanvas(thermometerCanvas);
             linearLayout.addView(thermometerCanvas);
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ThermometerCanvas thermometerCanvas = new ThermometerCanvas(context);
+                ThermometerCanvas thermometerCanvas = new ThermometerCanvas(context, thermometers.size());
                 thermometerCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
                 setupThermometerCanvas(thermometerCanvas);
                 linearLayout.addView(thermometerCanvas);
@@ -69,10 +71,33 @@ public class MainActivity extends AppCompatActivity {
                 linearLayout.postInvalidate();
 
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt("numberOfThermometers", thermometers.size());
+                editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
                 editor.commit();
             }
         });
+    }
+
+    public void onResume() {
+        super.onResume();
+        linearLayout.removeAllViews();
+
+        int numberOfThermometers = sharedPref.getInt(NUMBER_OF_THERMOMETERS, 0);
+
+        for (int i = 0; i < numberOfThermometers; i++) {
+            ThermometerCanvas thermometerCanvas = new ThermometerCanvas(context, i);
+            thermometerCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
+            setupThermometerCanvas(thermometerCanvas);
+            linearLayout.addView(thermometerCanvas);
+            linearLayout.postInvalidate();
+        }
+        linearLayout.postInvalidate();
+    }
+
+    public static void removeThermometer(int id) {
+        thermometers.remove(id);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
+        editor.commit();
     }
 
     @Override
