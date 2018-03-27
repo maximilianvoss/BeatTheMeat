@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public static void refreshThermometers() {
+        for ( ThermometerCanvas thermometerCanvas : thermometers ) {
+            thermometerCanvas.postInvalidate();
+        }
+    }
+
     @SuppressLint("ResourceAsColor")
     private void setupThermometerCanvas(ThermometerCanvas thermometerCanvas) {
         Paint paintBackground = new Paint();

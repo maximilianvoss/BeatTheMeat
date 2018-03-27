@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import rocks.voss.beatthemeat.utils.KeyUtil;
+import rocks.voss.beatthemeat.widgets.MainActivity;
 
 /**
  * Created by voss on 24.03.18.
@@ -55,6 +56,7 @@ public class DataRetrievalService extends Thread {
                 editor.putInt(KeyUtil.createKey("temperatureCurrent", i), temperatures.getInt(i));
             }
             editor.commit();
+            MainActivity.refreshThermometers();
         } catch (IOException e) {
             Log.e(this.getClass().toString() ,"IOException", e);
         } catch (JSONException e) {
