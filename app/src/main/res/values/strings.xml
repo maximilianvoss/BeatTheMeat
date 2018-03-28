@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Beat The Meat</string>
+    <string name="channel_name">Meat Notification</string>
+    <string name="channel_description">Notification when your meat is done</string>
 </resources>

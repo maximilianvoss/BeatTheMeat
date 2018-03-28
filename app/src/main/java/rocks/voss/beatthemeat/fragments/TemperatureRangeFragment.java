@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class TemperatureRangeFragment extends PreferenceFragment {
     private SwitchPreference isRange;
     private NumberPickerPreference temperatureMin;
     private NumberPickerPreference temperatureMax;
+    private RingtonePreference alarm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +52,12 @@ public class TemperatureRangeFragment extends PreferenceFragment {
         temperatureMax.setTitle("Temperature Max");
         temperatureMax.setDefaultValue(100);
 
+        alarm = new RingtonePreference(this.getContext());
+        alarm.setKey(KeyUtil.createKey("alarm", id));
+        alarm.setTitle("Alarm");
 
         Preference removeButton = new Preference(this.getContext());
-        removeButton.setTitle("Remove Thermometer");
+        removeButton.setTitle("Remove last Thermometer");
         removeButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -67,6 +72,7 @@ public class TemperatureRangeFragment extends PreferenceFragment {
         getPreferenceScreen().addPreference(isRange);
         getPreferenceScreen().addPreference(temperatureMin);
         getPreferenceScreen().addPreference(temperatureMax);
+        getPreferenceScreen().addPreference(alarm);
         getPreferenceScreen().addPreference(removeButton);
     }
 }

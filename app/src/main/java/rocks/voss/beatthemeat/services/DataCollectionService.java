@@ -15,15 +15,16 @@ import android.util.Log;
 public class DataCollectionService extends JobService {
 
     private static final int SEC = 1000;
+    private static final int COUNT = 5;
 
     public static void schedule(Context context) {
         ComponentName component = new ComponentName(context, DataCollectionService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(JobIds.DATA_COLLECTION_SERVICE_ID, component);
+        JobInfo.Builder builder = new JobInfo.Builder(Constants.DATA_COLLECTION_SERVICE_ID, component);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            builder.setMinimumLatency(3 * SEC);
+            builder.setMinimumLatency(COUNT * SEC);
         } else {
-            builder.setPeriodic(3 * SEC);
+            builder.setPeriodic(COUNT * SEC);
         }
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -32,7 +33,7 @@ public class DataCollectionService extends JobService {
 
     public static void cancelJob(Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        jobScheduler.cancel(JobIds.DATA_COLLECTION_SERVICE_ID);
+        jobScheduler.cancel(Constants.DATA_COLLECTION_SERVICE_ID);
     }
 
     @Override
