@@ -1,8 +1,10 @@
 package rocks.voss.beatthemeat.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -107,22 +109,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ResourceType")
     private void setupThermometerCanvas(ThermometerCanvas thermometerCanvas) {
+        int[] attrs = {android.R.attr.colorBackground, R.attr.colorThermometerRed, R.attr.colorThermometerYellow, R.attr.colorThermometerGreen, R.attr.colorThermometerText, R.attr.colorThermometerTextAlarm};
+        TypedArray ta = obtainStyledAttributes(R.style.AppTheme, attrs);
+
         Paint paintBackground = new Paint();
-        paintBackground.setColor(Color.parseColor("#ffffff"));
+        paintBackground.setColor(ta.getColor(0, Color.BLACK));
         thermometerCanvas.setColorBackground(paintBackground);
 
         Paint paintRed = new Paint();
-        paintRed.setColor(Color.parseColor("#ef0000"));
+        paintRed.setColor(ta.getColor(1, Color.RED));
         thermometerCanvas.setColorRed(paintRed);
 
         Paint paintYellow = new Paint();
-        paintYellow.setColor(Color.parseColor("#e8a812"));
+        paintYellow.setColor(ta.getColor(2, Color.YELLOW));
         thermometerCanvas.setColorYellow(paintYellow);
 
         Paint paintGreen = new Paint();
-        paintGreen.setColor(Color.parseColor("#0cce23"));
+        paintGreen.setColor(ta.getColor(3, Color.GREEN));
         thermometerCanvas.setColorGreen(paintGreen);
+
+        Paint paintText = new Paint();
+        paintText.setColor(ta.getColor(4, Color.WHITE));
+        thermometerCanvas.setColorText(paintText);
+
+        Paint paintTextAlarm = new Paint();
+        paintTextAlarm.setColor(ta.getColor(5, Color.RED));
+        thermometerCanvas.setColorTextAlarm(paintTextAlarm);
+
+        ta.recycle();
     }
 
 
@@ -131,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         switchAlarm.setText("Enable Alarm");
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
         switchAlarm.setChecked(TemperatureUtil.isEnabled());
+        switchAlarm.setPadding(25, 0, 25, 0);
         switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

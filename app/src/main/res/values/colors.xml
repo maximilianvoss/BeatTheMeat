@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorThermometerRed">#ef0000</color>
+    <color name="colorThermometerYellow">#e8a812</color>
+    <color name="colorThermometerGreen">#0cce23</color>
+    <color name="colorThermometerText">#ffffff</color>
+    <color name="colorThermometerTextAlarm">#ff0000</color>
 </resources>

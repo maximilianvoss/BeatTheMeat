@@ -15,6 +15,7 @@ import lombok.Setter;
 import rocks.voss.beatthemeat.activities.ThermometerSettingActivity;
 import rocks.voss.beatthemeat.utils.ColorUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
+import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 
 /**
@@ -24,9 +25,12 @@ import rocks.voss.beatthemeat.utils.KeyUtil;
 public class ThermometerCanvas extends SurfaceView {
     private int id;
     private Paint colorBackground;
+    private Paint colorText;
+    private Paint colorTextAlarm;
     private Paint colorRed;
     private Paint colorYellow;
     private Paint colorGreen;
+
 
     public ThermometerCanvas(Context context, int id) {
         this(context);
@@ -141,11 +145,16 @@ public class ThermometerCanvas extends SurfaceView {
         while (temperature.length() < 3) {
             temperature = " " + temperature;
         }
-        Paint colorBlack = new Paint();
-        colorBlack.setColor(Color.BLACK);
-        colorBlack.setTextSize(200);
-        colorBlack.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(temperature, canvas.getWidth() - 50, 250, colorBlack);
+        Paint color;
+        if (TemperatureUtil.isAlarm(getContext(), id)) {
+            color = colorTextAlarm;
+        } else {
+            color = colorText;
+        }
+
+        color.setTextSize(200);
+        color.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText(temperature, canvas.getWidth() - 25, 225, color);
     }
 
 }
