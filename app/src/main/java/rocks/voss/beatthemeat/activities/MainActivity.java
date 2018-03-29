@@ -29,6 +29,7 @@ import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.DataCollectionService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.ui.ThermometerCanvas;
+import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -127,9 +128,13 @@ public class MainActivity extends AppCompatActivity {
 
     public static void removeThermometer() {
         if (thermometers.size() > 0) {
-            thermometers.remove(thermometers.size() - 1);
+            int id = thermometers.size() - 1;
             SharedPreferences.Editor editor = sharedPref.edit();
+            thermometers.remove(id);
             editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
+            editor.remove(KeyUtil.createKey("isRange", id));
+            editor.remove(KeyUtil.createKey("temperatureMin", id));
+            editor.remove(KeyUtil.createKey("temperatureMax", id));
             editor.commit();
 
         }
