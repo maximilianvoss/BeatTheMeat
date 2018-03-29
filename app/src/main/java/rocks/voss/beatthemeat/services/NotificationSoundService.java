@@ -37,7 +37,7 @@ public class NotificationSoundService extends Service {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String alarm = sharedPref.getString("alarm", "");
         Uri notificationUri;
-        if (alarm == null || alarm.equals("")) {
+        if (alarm.equals("")) {
             notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         } else {
             notificationUri = Uri.parse(alarm);

@@ -18,16 +18,14 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     @Setter
     private int id;
 
-    private SwitchPreference isRange;
-    private NumberPickerPreference temperatureMin;
     private NumberPickerPreference temperatureMax;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         addPreferencesFromResource(R.xml.pref_thermometersettings);
-        isRange = new SwitchPreference(this.getContext());
+
+        SwitchPreference isRange = new SwitchPreference(this.getContext());
         isRange.setKey(KeyUtil.createKey("isRange", id));
         isRange.setTitle("Temperature is Range");
         isRange.setDefaultValue(true);
@@ -40,7 +38,11 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         });
         getPreferenceScreen().addPreference(isRange);
 
-        temperatureMin = new NumberPickerPreference(this.getContext());
+        // TODO: to be continued
+//        ListPreference typePreference = new ListPreference(this.getContext());
+//        typePreference.setTitle("Name");
+
+        NumberPickerPreference temperatureMin = new NumberPickerPreference(this.getContext());
         temperatureMin.setKey(KeyUtil.createKey("temperatureMin", id));
         temperatureMin.setTitle("Temperature Min");
         temperatureMin.setDefaultValue(50);

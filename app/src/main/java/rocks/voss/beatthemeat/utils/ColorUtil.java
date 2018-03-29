@@ -20,8 +20,7 @@ public class ColorUtil {
     }
 
     public static int getBlue(int color) {
-        int value = color & 0xFF;
-        return value;
+        return color & 0xFF;
     }
 
     public static int getCloserColor(int colorStart, int colorDest, int steps, int step) {

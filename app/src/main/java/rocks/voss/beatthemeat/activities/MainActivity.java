@@ -34,9 +34,9 @@ import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
+    private static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
     @Getter
-    private static List<ThermometerCanvas> thermometers = new ArrayList<>();
+    private static final List<ThermometerCanvas> thermometers = new ArrayList<>();
 
     @Getter
     private static Switch switchAlarm;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
+        ScrollView scrollView = findViewById(R.id.scrollview);
         linearLayout = new LinearLayout(this);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         thermometers.clear();
         fillLinearLayout();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
-                editor.commit();
+                editor.apply();
             }
         });
     }
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             editor.remove(KeyUtil.createKey("isRange", id));
             editor.remove(KeyUtil.createKey("temperatureMin", id));
             editor.remove(KeyUtil.createKey("temperatureMax", id));
-            editor.commit();
+            editor.apply();
 
         }
     }

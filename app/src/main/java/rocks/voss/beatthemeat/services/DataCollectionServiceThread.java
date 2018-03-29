@@ -22,7 +22,7 @@ import rocks.voss.beatthemeat.utils.KeyUtil;
  */
 public class DataCollectionServiceThread extends Thread {
 
-    private Context context;
+    private final Context context;
 
     public DataCollectionServiceThread(Context context) {
         this.context = context;
@@ -33,16 +33,16 @@ public class DataCollectionServiceThread extends Thread {
         try {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
             String webserviceUrl = sharedPref.getString("webserviceURL", "");
-            if (webserviceUrl != null && !webserviceUrl.equals("")) {
+            if (!webserviceUrl.equals("")) {
                 URL url = new URL(webserviceUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"), 8);
                 StringBuilder sb = new StringBuilder();
 
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
+                    sb.append(line).append("\n");
                 }
                 JSONObject jObject = new JSONObject(sb.toString());
 
@@ -54,7 +54,7 @@ public class DataCollectionServiceThread extends Thread {
                 for (int i = 0; i < temperatures.length(); i++) {
                     editor.putInt(KeyUtil.createKey("temperatureCurrent", i), temperatures.getInt(i));
                 }
-                editor.commit();
+                editor.apply();
             }
         } catch (IOException e) {
             Log.e(this.getClass().toString(), "IOException", e);

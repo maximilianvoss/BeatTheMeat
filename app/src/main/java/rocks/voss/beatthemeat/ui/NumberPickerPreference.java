@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by voss on 23.03.18.
@@ -21,7 +22,10 @@ public class NumberPickerPreference extends DialogPreference {
     private static final int DEFAUT_MIN_VALUE = 0;
     private static final boolean WRAP_SELECTOR_WHEEL = true;
 
+    @Setter
     private int minValue = DEFAUT_MIN_VALUE;
+
+    @Setter
     private int maxValue = DEFAULT_MAX_VALUE;
 
     private NumberPicker picker;
@@ -89,13 +93,5 @@ public class NumberPickerPreference extends DialogPreference {
     public void setValue(int value) {
         this.value = value;
         persistInt(this.value);
-    }
-
-    public void setMinValue(int value) {
-        this.minValue = value;
-    }
-
-    public void setMaxValue(int value) {
-        this.maxValue = value;
     }
 }
