@@ -45,7 +45,6 @@ public class NotficationSoundService extends Service {
         mp = MediaPlayer.create(this, notificationUri);
         mp.setLooping(true);
 
-
         createNotificationChannel();
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
@@ -74,7 +73,7 @@ public class NotficationSoundService extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Constants.NOTIFICIATION_TEMPERATURE_ID);
         mp.stop();
-        DataCollectionServiceThread.setNotificationActive(false);
+        DataCollectionService.setNotificationActive(false);
     }
 
     @Override

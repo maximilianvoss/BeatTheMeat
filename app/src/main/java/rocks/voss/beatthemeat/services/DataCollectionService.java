@@ -6,8 +6,13 @@ import android.app.job.JobScheduler;
 import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+
+import lombok.Setter;
+import rocks.voss.beatthemeat.activities.MainActivity;
+import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 /**
  * Created by voss on 24.03.18.
@@ -16,6 +21,9 @@ public class DataCollectionService extends JobService {
 
     private static final int SEC = 1000;
     private static final int COUNT = 5;
+
+    @Setter
+    private static boolean notificationActive = false;
 
     public static void schedule(Context context) {
         ComponentName component = new ComponentName(context, DataCollectionService.class);
@@ -55,9 +63,32 @@ public class DataCollectionService extends JobService {
         service.start();
         try {
             service.join();
+            MainActivity.refreshThermometers();
+            boolean isAlarm = TemperatureUtil.isAlarm(this);
+            if ( isAlarm ) {
+                activateNotification();
+            } else {
+                deactivateNotification();
+            }
         } catch (InterruptedException e) {
             Log.e(this.getClass().toString() ,"InterruptedException", e);
         }
         jobFinished(params, false);
+    }
+
+    private void activateNotification() {
+        if ( TemperatureUtil.isEnabled() && !notificationActive) {
+            notificationActive = true;
+            Intent intent = new Intent(this, NotficationSoundService.class);
+            startService(intent);
+        }
+    }
+
+    private void deactivateNotification() {
+        if ( TemperatureUtil.isEnabled() && notificationActive) {
+            notificationActive = false;
+            Intent intent = new Intent(this, NotficationSoundService.class);
+            stopService(intent);
+        }
     }
 }

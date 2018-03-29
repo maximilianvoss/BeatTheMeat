@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         scrollView.addView(linearLayout);
 
         thermometers.clear();
-        fillLinearLayout(true);
+        fillLinearLayout();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         Intent notificationSoundServiceIntent = new Intent(context, NotficationSoundService.class);
         context.stopService(notificationSoundServiceIntent);
 
-        fillLinearLayout(false);
+        thermometers.clear();
+        fillLinearLayout();
     }
 
     public static void removeThermometer(int id) {
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void fillLinearLayout(boolean addThermometerCanvas) {
+    private void fillLinearLayout() {
         switchAlarm = new Switch(context);
         switchAlarm.setText("Enable Alarm");
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 TemperatureUtil.setEnabled(b);
-                if ( !b ) {
+                if (!b) {
                     Intent notificationSoundServiceIntent = new Intent(context, NotficationSoundService.class);
                     context.stopService(notificationSoundServiceIntent);
                 }
@@ -166,9 +167,7 @@ public class MainActivity extends AppCompatActivity {
             thermometerCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
             setupThermometerCanvas(thermometerCanvas);
             linearLayout.addView(thermometerCanvas);
-            if ( addThermometerCanvas) {
-                thermometers.add(thermometerCanvas);
-            }
+            thermometers.add(thermometerCanvas);
             linearLayout.postInvalidate();
         }
     }

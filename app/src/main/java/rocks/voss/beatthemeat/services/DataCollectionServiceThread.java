@@ -1,7 +1,6 @@
 package rocks.voss.beatthemeat.services;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -16,10 +15,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import lombok.Setter;
-import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.utils.KeyUtil;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 /**
  * Created by voss on 24.03.18.
@@ -27,9 +23,6 @@ import rocks.voss.beatthemeat.utils.TemperatureUtil;
 public class DataCollectionServiceThread extends Thread {
 
     private Context context;
-
-    @Setter
-    private static boolean notificationActive = false;
 
     public DataCollectionServiceThread(Context context) {
         this.context = context;
@@ -61,10 +54,6 @@ public class DataCollectionServiceThread extends Thread {
                 editor.putInt(KeyUtil.createKey("temperatureCurrent", i), temperatures.getInt(i));
             }
             editor.commit();
-            MainActivity.refreshThermometers();
-            if ( TemperatureUtil.isAlarm(context)) {
-                activateNotification();
-            }
         } catch (IOException e) {
             Log.e(this.getClass().toString(), "IOException", e);
         } catch (JSONException e) {
@@ -72,11 +61,5 @@ public class DataCollectionServiceThread extends Thread {
         }
     }
 
-    private void activateNotification() {
-        if ( TemperatureUtil.isEnabled() && !notificationActive) {
-            notificationActive = true;
-            Intent intent = new Intent(context, NotficationSoundService.class);
-            context.startService(intent);
-        }
-    }
+
 }
