@@ -10,16 +10,23 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
+import lombok.Getter;
+
 /**
  * Created by voss on 23.03.18.
  */
 
 public class NumberPickerPreference extends DialogPreference {
-    public static final int MAX_VALUE = 350;
-    public static final int MIN_VALUE = 0;
-    public static final boolean WRAP_SELECTOR_WHEEL = true;
+    private static final int DEFAULT_MAX_VALUE = 350;
+    private static final int DEFAUT_MIN_VALUE = 0;
+    private static final boolean WRAP_SELECTOR_WHEEL = true;
+
+    private int minValue = DEFAUT_MIN_VALUE;
+    private int maxValue = DEFAULT_MAX_VALUE;
 
     private NumberPicker picker;
+
+    @Getter
     private int value;
 
     public NumberPickerPreference(Context context) {
@@ -52,8 +59,8 @@ public class NumberPickerPreference extends DialogPreference {
     @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
-        picker.setMinValue(MIN_VALUE);
-        picker.setMaxValue(MAX_VALUE);
+        picker.setMinValue(minValue);
+        picker.setMaxValue(maxValue);
         picker.setWrapSelectorWheel(WRAP_SELECTOR_WHEEL);
         picker.setValue(getValue());
     }
@@ -71,12 +78,12 @@ public class NumberPickerPreference extends DialogPreference {
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInt(index, MIN_VALUE);
+        return a.getInt(index, minValue);
     }
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        setValue(restorePersistedValue ? getPersistedInt(MIN_VALUE) : (Integer) defaultValue);
+        setValue(restorePersistedValue ? getPersistedInt(minValue) : (Integer) defaultValue);
     }
 
     public void setValue(int value) {
@@ -84,7 +91,11 @@ public class NumberPickerPreference extends DialogPreference {
         persistInt(this.value);
     }
 
-    public int getValue() {
-        return this.value;
+    public void setMinValue(int value) {
+        this.minValue = value;
+    }
+
+    public void setMaxValue(int value) {
+        this.maxValue = value;
     }
 }

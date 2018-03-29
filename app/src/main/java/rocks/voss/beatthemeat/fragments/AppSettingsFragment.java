@@ -6,6 +6,7 @@ import android.preference.PreferenceFragment;
 import android.preference.RingtonePreference;
 
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 
 /**
  * Created by voss on 26.03.18.
@@ -16,16 +17,24 @@ public class AppSettingsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EditTextPreference editTextPreference = new EditTextPreference(this.getContext());
-        editTextPreference.setTitle("Webservice URL");
-        editTextPreference.setKey("webserviceURL");
+        EditTextPreference webseviceURL = new EditTextPreference(this.getContext());
+        webseviceURL.setTitle("Webservice URL");
+        webseviceURL.setKey("webserviceURL");
 
-        RingtonePreference ringtonePreference = new RingtonePreference(this.getContext());
-        ringtonePreference.setKey("alarm");
-        ringtonePreference.setTitle("Alarm");
+        NumberPickerPreference webserviceURLCalls = new NumberPickerPreference(this.getContext());
+        webserviceURLCalls.setKey("webserviceURLCalls");
+        webserviceURLCalls.setTitle("Interval for Webservice Calls (in seconds)");
+        webserviceURLCalls.setDefaultValue(5);
+        webserviceURLCalls.setMaxValue(20);
+        webserviceURLCalls.setMinValue(3);
+
+        RingtonePreference alarm = new RingtonePreference(this.getContext());
+        alarm.setKey("alarm");
+        alarm.setTitle("Alarm");
 
         addPreferencesFromResource(R.xml.pref_appsettings);
-        getPreferenceScreen().addPreference(editTextPreference);
-        getPreferenceScreen().addPreference(ringtonePreference);
+        getPreferenceScreen().addPreference(webseviceURL);
+        getPreferenceScreen().addPreference(webserviceURLCalls);
+        getPreferenceScreen().addPreference(alarm);
     }
 }

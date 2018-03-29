@@ -7,7 +7,9 @@ import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import lombok.Setter;
@@ -29,10 +31,13 @@ public class DataCollectionService extends JobService {
         ComponentName component = new ComponentName(context, DataCollectionService.class);
         JobInfo.Builder builder = new JobInfo.Builder(Constants.DATA_COLLECTION_SERVICE_ID, component);
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        int webserviceUrlCalls = sharedPref.getInt("webserviceURLCalls", COUNT);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            builder.setMinimumLatency(COUNT * SEC);
+            builder.setMinimumLatency(webserviceUrlCalls * SEC);
         } else {
-            builder.setPeriodic(COUNT * SEC);
+            builder.setPeriodic(webserviceUrlCalls * SEC);
         }
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
