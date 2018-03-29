@@ -79,7 +79,7 @@ public class DataCollectionService extends JobService {
     private void activateNotification() {
         if ( TemperatureUtil.isEnabled() && !notificationActive) {
             notificationActive = true;
-            Intent intent = new Intent(this, NotficationSoundService.class);
+            Intent intent = new Intent(this, NotificationSoundService.class);
             startService(intent);
         }
     }
@@ -87,7 +87,7 @@ public class DataCollectionService extends JobService {
     private void deactivateNotification() {
         if ( TemperatureUtil.isEnabled() && notificationActive) {
             notificationActive = false;
-            Intent intent = new Intent(this, NotficationSoundService.class);
+            Intent intent = new Intent(this, NotificationSoundService.class);
             stopService(intent);
         }
     }

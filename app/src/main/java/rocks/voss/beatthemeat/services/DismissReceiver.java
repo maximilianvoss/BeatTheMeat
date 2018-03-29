@@ -19,7 +19,7 @@ public class DismissReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         TemperatureUtil.setEnabled(false);
-        Intent notificationSoundServiceIntent = new Intent(context, NotficationSoundService.class);
+        Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
         context.stopService(notificationSoundServiceIntent);
         MainActivity.getSwitchAlarm().setChecked(false);
     }

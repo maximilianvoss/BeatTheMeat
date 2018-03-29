@@ -12,7 +12,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import lombok.Setter;
-import rocks.voss.beatthemeat.activities.ThermometerSettingActivity;
+import rocks.voss.beatthemeat.activities.ThermometerSettingsActivity;
 import rocks.voss.beatthemeat.utils.ColorUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
@@ -52,7 +52,7 @@ public class ThermometerCanvas extends SurfaceView {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ThermometerSettingActivity.class);
+                Intent intent = new Intent(v.getContext(), ThermometerSettingsActivity.class);
                 intent.putExtra("rocks.voss.beatthemeat.widgets.ThermometerCanvas.id", id);
                 v.getContext().startActivity(intent);
             }

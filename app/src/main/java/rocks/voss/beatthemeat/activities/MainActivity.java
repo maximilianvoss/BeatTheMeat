@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -24,7 +27,7 @@ import java.util.List;
 import lombok.Getter;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.DataCollectionService;
-import rocks.voss.beatthemeat.services.NotficationSoundService;
+import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.ui.ThermometerCanvas;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
@@ -52,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         DataCollectionService.schedule(this);
 
         setContentView(R.layout.activity_main);
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
 
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
         linearLayout = new LinearLayout(this);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -80,28 +83,56 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.settings:
+                intent = new Intent(this, AppSettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.remove:
+                MainActivity.removeThermometer();
+                onResume();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         linearLayout.removeAllViews();
 
-        Intent notificationSoundServiceIntent = new Intent(context, NotficationSoundService.class);
+        Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
         context.stopService(notificationSoundServiceIntent);
 
         thermometers.clear();
         fillLinearLayout();
     }
 
-    public static void removeThermometer(int id) {
-        thermometers.remove(id);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
-        editor.commit();
-    }
-
     @Override
     public void onDestroy() {
         DataCollectionService.schedule(this);
         super.onDestroy();
+    }
+
+    public static void removeThermometer() {
+        if (thermometers.size() > 0) {
+            thermometers.remove(thermometers.size() - 1);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
+            editor.commit();
+
+        }
     }
 
     public static void refreshThermometers() {
@@ -154,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 TemperatureUtil.setEnabled(b);
                 if (!b) {
-                    Intent notificationSoundServiceIntent = new Intent(context, NotficationSoundService.class);
+                    Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
                     context.stopService(notificationSoundServiceIntent);
                 }
             }
