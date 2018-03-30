@@ -27,5 +27,12 @@ public class Constants {
     public static final String SETTING_TEMPERATURE_MAX = "temperatureMax";
 
     public static final String THERMOMETER_CANVAS_ID = "rocks.voss.beatthemeat.widgets.ThermometerCanvas.id";
+
     public static final String JSON_TEMPERATURES_OBJECT = "temperatures";
+    public static final String JSON_THERMOMETER_SETTINGS_CATEGORIES = "categories";
+    public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_NAME = "name";
+    public static final String JSON_THERMOMETER_SETTINGS_STYLES = "styles";
+    public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_IS_RANGE = "temperatureIsRange";
+    public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MIN = "temperatureMin";
+    public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MAX = "temperatureMax";
 }
