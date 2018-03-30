@@ -12,6 +12,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import lombok.Setter;
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.ThermometerSettingsActivity;
 import rocks.voss.beatthemeat.utils.ColorUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
@@ -53,7 +54,7 @@ public class ThermometerCanvas extends SurfaceView {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), ThermometerSettingsActivity.class);
-                intent.putExtra("rocks.voss.beatthemeat.widgets.ThermometerCanvas.id", id);
+                intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
                 v.getContext().startActivity(intent);
             }
         });
@@ -70,10 +71,10 @@ public class ThermometerCanvas extends SurfaceView {
         super.onDraw(canvas);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        boolean isRange = sharedPref.getBoolean(KeyUtil.createKey("isRange", id), true);
-        int temperatureCurrent = sharedPref.getInt(KeyUtil.createKey("temperatureCurrent", id), -9999);
-        int temperatureMin = sharedPref.getInt(KeyUtil.createKey("temperatureMin", id), 50);
-        int temperatureMax = sharedPref.getInt(KeyUtil.createKey("temperatureMax", id), 100);
+        boolean isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id), true);
+        int temperatureCurrent = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, id), -9999);
+        int temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id), 50);
+        int temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id), 100);
 
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), colorBackground);
 

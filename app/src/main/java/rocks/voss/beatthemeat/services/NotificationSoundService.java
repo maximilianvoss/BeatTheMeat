@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.activities.MainActivity;
 
@@ -35,7 +36,7 @@ public class NotificationSoundService extends Service {
     @Override
     public void onCreate() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String alarm = sharedPref.getString("alarm", "");
+        String alarm = sharedPref.getString(Constants.SETTING_GENERAL_ALARM, "");
         Uri notificationUri;
         if (alarm.equals("")) {
             notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -55,13 +56,13 @@ public class NotificationSoundService extends Service {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, Constants.NOTIFICIATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.beatthemeat)
-                .setContentTitle("Beat The Meat Alarm")
-                .setContentText("Check the meat!")
+                .setContentTitle(Constants.NOTIFICATION_TITLE)
+                .setContentText(Constants.NOTIFICATION_TEXT)
                 .setContentIntent(mainActivityPendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
-                .addAction(R.mipmap.beatthemeat, "Dismiss", dismissReceiverPendingIntent)
+                .addAction(R.mipmap.beatthemeat, Constants.NOTIFICATION_DISMISS, dismissReceiverPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

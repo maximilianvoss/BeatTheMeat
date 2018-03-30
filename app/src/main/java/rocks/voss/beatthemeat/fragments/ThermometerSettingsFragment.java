@@ -6,6 +6,7 @@ import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 
 import lombok.Setter;
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 import rocks.voss.beatthemeat.utils.KeyUtil;
@@ -26,8 +27,8 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_thermometersettings);
 
         SwitchPreference isRange = new SwitchPreference(this.getContext());
-        isRange.setKey(KeyUtil.createKey("isRange", id));
-        isRange.setTitle("Temperature is Range");
+        isRange.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id));
+        isRange.setTitle(R.string.setting_temperature_isrange);
         isRange.setDefaultValue(true);
         isRange.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -43,14 +44,14 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
 //        typePreference.setTitle("Name");
 
         NumberPickerPreference temperatureMin = new NumberPickerPreference(this.getContext());
-        temperatureMin.setKey(KeyUtil.createKey("temperatureMin", id));
-        temperatureMin.setTitle("Temperature Min");
+        temperatureMin.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id));
+        temperatureMin.setTitle(R.string.setting_temperature_min);
         temperatureMin.setDefaultValue(50);
         getPreferenceScreen().addPreference(temperatureMin);
 
         temperatureMax = new NumberPickerPreference(this.getContext());
-        temperatureMax.setKey(KeyUtil.createKey("temperatureMax", id));
-        temperatureMax.setTitle("Temperature Max");
+        temperatureMax.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
+        temperatureMax.setTitle(R.string.setting_temperature_max);
         temperatureMax.setDefaultValue(100);
         temperatureMax.setEnabled(isRange.isChecked());
         getPreferenceScreen().addPreference(temperatureMax);

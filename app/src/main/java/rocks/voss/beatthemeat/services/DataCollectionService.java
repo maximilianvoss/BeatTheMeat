@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import lombok.Setter;
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
@@ -29,10 +30,10 @@ public class DataCollectionService extends JobService {
 
     public static void schedule(Context context) {
         ComponentName component = new ComponentName(context, DataCollectionService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(Constants.DATA_COLLECTION_SERVICE_ID, component);
+        JobInfo.Builder builder = new JobInfo.Builder(Constants.SERVICE_DATA_COLLECTION_SERVICE_ID, component);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        int webserviceUrlCalls = sharedPref.getInt("webserviceURLCalls", COUNT);
+        int webserviceUrlCalls = sharedPref.getInt(Constants.SETTING_GENERAL_WEBSERVICE_URL_CALLS, COUNT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             builder.setMinimumLatency(webserviceUrlCalls * SEC);
@@ -46,7 +47,7 @@ public class DataCollectionService extends JobService {
 
     public static void cancelJob(Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        jobScheduler.cancel(Constants.DATA_COLLECTION_SERVICE_ID);
+        jobScheduler.cancel(Constants.SERVICE_DATA_COLLECTION_SERVICE_ID);
     }
 
     @Override

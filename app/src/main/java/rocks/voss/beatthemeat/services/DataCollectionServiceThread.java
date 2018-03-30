@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 
 /**
@@ -32,7 +33,7 @@ public class DataCollectionServiceThread extends Thread {
     public void run() {
         try {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            String webserviceUrl = sharedPref.getString("webserviceURL", "");
+            String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_WEBSERVICE_URL, "");
             if (!webserviceUrl.equals("")) {
                 URL url = new URL(webserviceUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -50,9 +51,9 @@ public class DataCollectionServiceThread extends Thread {
                 urlConnection.disconnect();
 
                 SharedPreferences.Editor editor = sharedPref.edit();
-                JSONArray temperatures = jObject.getJSONArray("temperatures");
+                JSONArray temperatures = jObject.getJSONArray(Constants.JSON_TEMPERATURES_OBJECT);
                 for (int i = 0; i < temperatures.length(); i++) {
-                    editor.putInt(KeyUtil.createKey("temperatureCurrent", i), temperatures.getInt(i));
+                    editor.putInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, i), temperatures.getInt(i));
                 }
                 editor.apply();
             }

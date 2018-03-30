@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.DataCollectionService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
@@ -132,9 +133,9 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             thermometers.remove(id);
             editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
-            editor.remove(KeyUtil.createKey("isRange", id));
-            editor.remove(KeyUtil.createKey("temperatureMin", id));
-            editor.remove(KeyUtil.createKey("temperatureMax", id));
+            editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id));
+            editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id));
+            editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
             editor.apply();
 
         }
@@ -181,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fillLinearLayout() {
         switchAlarm = new Switch(context);
-        switchAlarm.setText("Enable Alarm");
+        switchAlarm.setText(R.string.setting_general_enable_alarm);
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
         switchAlarm.setChecked(TemperatureUtil.isEnabled());
         switchAlarm.setPadding(25, 0, 25, 0);

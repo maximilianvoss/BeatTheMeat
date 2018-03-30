@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.DataCollectionService;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
@@ -21,7 +22,7 @@ public class AppSettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         SwitchPreference runningService = new SwitchPreference(this.getContext());
-        runningService.setTitle("Enable Web Service Calls");
+        runningService.setTitle(R.string.setting_general_enable_webservice_calls);
         runningService.setDefaultValue(true);
         runningService.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -36,19 +37,19 @@ public class AppSettingsFragment extends PreferenceFragment {
         });
 
         EditTextPreference webseviceURL = new EditTextPreference(this.getContext());
-        webseviceURL.setTitle("Webservice URL");
-        webseviceURL.setKey("webserviceURL");
+        webseviceURL.setTitle(R.string.setting_general_webservice_url);
+        webseviceURL.setKey(Constants.SETTING_GENERAL_WEBSERVICE_URL);
 
         NumberPickerPreference webserviceURLCalls = new NumberPickerPreference(this.getContext());
-        webserviceURLCalls.setKey("webserviceURLCalls");
-        webserviceURLCalls.setTitle("Interval for Web Service Calls (in seconds)");
+        webserviceURLCalls.setKey(Constants.SETTING_GENERAL_WEBSERVICE_URL_CALLS);
+        webserviceURLCalls.setTitle(R.string.setting_general_webservice_call_interval);
         webserviceURLCalls.setDefaultValue(5);
         webserviceURLCalls.setMaxValue(20);
         webserviceURLCalls.setMinValue(3);
 
         RingtonePreference alarm = new RingtonePreference(this.getContext());
-        alarm.setKey("alarm");
-        alarm.setTitle("Alarm");
+        alarm.setKey(Constants.SETTING_GENERAL_ALARM);
+        alarm.setTitle(R.string.setting_general_alarm);
 
         addPreferencesFromResource(R.xml.pref_appsettings);
         getPreferenceScreen().addPreference(runningService);

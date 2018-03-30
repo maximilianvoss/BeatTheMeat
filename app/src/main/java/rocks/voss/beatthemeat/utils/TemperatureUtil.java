@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import lombok.Getter;
 import lombok.Setter;
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 
 /**
@@ -29,10 +30,10 @@ public class TemperatureUtil {
 
     public static boolean isAlarm(Context context, int id) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean isRange = sharedPref.getBoolean(KeyUtil.createKey("isRange", id), true);
-        int temperatureCurrent = sharedPref.getInt(KeyUtil.createKey("temperatureCurrent", id), 100);
-        int temperatureMin = sharedPref.getInt(KeyUtil.createKey("temperatureMin", id), 50);
-        int temperatureMax = sharedPref.getInt(KeyUtil.createKey("temperatureMax", id), 100);
+        boolean isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id), true);
+        int temperatureCurrent = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, id), 100);
+        int temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id), 50);
+        int temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id), 100);
 
         if (isRange) {
             if (temperatureCurrent < temperatureMin || temperatureCurrent > temperatureMax) {
