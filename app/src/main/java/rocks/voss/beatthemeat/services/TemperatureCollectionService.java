@@ -37,7 +37,7 @@ public class TemperatureCollectionService extends JobService {
 
     public static void schedule(Context context) {
         ComponentName component = new ComponentName(context, TemperatureCollectionService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(Constants.SERVICE_DATA_COLLECTION_SERVICE_ID, component);
+        JobInfo.Builder builder = new JobInfo.Builder(Constants.SERVICE_TEMPERATURE_COLLECTION_SERVICE_ID, component);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         int webserviceUrlCalls = sharedPref.getInt(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL, COUNT);
@@ -54,7 +54,7 @@ public class TemperatureCollectionService extends JobService {
 
     public static void cancelJob(Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        jobScheduler.cancel(Constants.SERVICE_DATA_COLLECTION_SERVICE_ID);
+        jobScheduler.cancel(Constants.SERVICE_TEMPERATURE_COLLECTION_SERVICE_ID);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class TemperatureCollectionService extends JobService {
                         MainActivity.refreshThermometers();
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(getClass().toString(), "JSONException", e);
                     }
                 }
             });

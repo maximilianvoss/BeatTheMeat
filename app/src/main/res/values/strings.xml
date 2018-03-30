@@ -3,14 +3,17 @@
     <string name="channel_name">Meat Notification</string>
     <string name="channel_description">Notification when your meat is done</string>
 
-    <string name="setting_general_enable_alarm">Enable Alarm</string>
-    <string name="setting_general_enable_webservice_calls">Enable Web Service Calls</string>
+    <string name="setting_general_alarm_enable">Enable Alarm</string>
+    <string name="setting_general_temperature_webservice_enable">Temperature Web Service Enabled</string>
     <string name="setting_general_temperature_webservice_url">Temperature Web Service URL</string>
-    <string name="setting_general_temperature_webservice_interval">Interval for Temperature Web Service Calls (in seconds)</string>
+    <string name="setting_general_temperature_webservice_interval">Temperature Web Service Call Interval (in seconds)</string>
+    <string name="setting_general_thermometer_settings_webservice_url">Thermometer Settings Web Service URL</string>
     <string name="setting_general_alarm">Alarm Sound</string>
 
     <string name="setting_temperature_isrange">Temperature is Range</string>
-    <string name="setting_temperature_min">Temperature Min: </string>
-    <string name="setting_temperature_max">Temperature Max: </string>
+    <string name="setting_temperature_min">Temperature Min:</string>
+    <string name="setting_temperature_max">Temperature Max:</string>
+    <string name="setting_temperature_category">Preparating Category:</string>
+    <string name="setting_temperature_style">Preparation Style:</string>
 
 </resources>

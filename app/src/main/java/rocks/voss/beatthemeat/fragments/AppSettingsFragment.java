@@ -10,6 +10,7 @@ import android.preference.SwitchPreference;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
+import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 
 /**
@@ -21,10 +22,10 @@ public class AppSettingsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SwitchPreference enableWebserviceCalls = new SwitchPreference(this.getContext());
-        enableWebserviceCalls.setTitle(R.string.setting_general_enable_webservice_calls);
-        enableWebserviceCalls.setDefaultValue(true);
-        enableWebserviceCalls.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        SwitchPreference temperatureWebserviceEnable = new SwitchPreference(this.getContext());
+        temperatureWebserviceEnable.setTitle(R.string.setting_general_temperature_webservice_enable);
+        temperatureWebserviceEnable.setDefaultValue(true);
+        temperatureWebserviceEnable.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if ( (boolean) newValue ) {
@@ -47,14 +48,26 @@ public class AppSettingsFragment extends PreferenceFragment {
         temperatureWebserviceInterval.setMaxValue(20);
         temperatureWebserviceInterval.setMinValue(3);
 
+        EditTextPreference thermometerSettingsWebserviceUrl = new EditTextPreference(this.getContext());
+        thermometerSettingsWebserviceUrl.setTitle(R.string.setting_general_thermometer_settings_webservice_url);
+        thermometerSettingsWebserviceUrl.setKey(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL);
+        thermometerSettingsWebserviceUrl.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                ThermometerSettingsCollectionService.schedule(getContext());
+                return true;
+            }
+        });
+
         RingtonePreference alarmSound = new RingtonePreference(this.getContext());
         alarmSound.setKey(Constants.SETTING_GENERAL_ALARM);
         alarmSound.setTitle(R.string.setting_general_alarm);
 
         addPreferencesFromResource(R.xml.pref_appsettings);
-        getPreferenceScreen().addPreference(enableWebserviceCalls);
+        getPreferenceScreen().addPreference(temperatureWebserviceEnable);
         getPreferenceScreen().addPreference(temperatureWebserviceUrl);
         getPreferenceScreen().addPreference(temperatureWebserviceInterval);
+        getPreferenceScreen().addPreference(thermometerSettingsWebserviceUrl);
         getPreferenceScreen().addPreference(alarmSound);
     }
 }

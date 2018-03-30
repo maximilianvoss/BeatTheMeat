@@ -29,6 +29,7 @@ import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
+import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.ThermometerCanvas;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         TemperatureCollectionService.schedule(this);
+        ThermometerSettingsCollectionService.schedule(this);
 
         setContentView(R.layout.activity_main);
 
@@ -182,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fillLinearLayout() {
         switchAlarm = new Switch(context);
-        switchAlarm.setText(R.string.setting_general_enable_alarm);
+        switchAlarm.setText(R.string.setting_general_alarm_enable);
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
         switchAlarm.setChecked(TemperatureUtil.isEnabled());
         switchAlarm.setPadding(25, 0, 25, 0);
