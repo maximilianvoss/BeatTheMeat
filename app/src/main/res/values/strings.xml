@@ -5,8 +5,8 @@
 
     <string name="setting_general_enable_alarm">Enable Alarm</string>
     <string name="setting_general_enable_webservice_calls">Enable Web Service Calls</string>
-    <string name="setting_general_webservice_url">Web Service URL</string>
-    <string name="setting_general_webservice_call_interval">Interval for Web Service Calls (in seconds)</string>
+    <string name="setting_general_temperature_webservice_url">Temperature Web Service URL</string>
+    <string name="setting_general_temperature_webservice_interval">Interval for Temperature Web Service Calls (in seconds)</string>
     <string name="setting_general_alarm">Alarm Sound</string>
 
     <string name="setting_temperature_isrange">Temperature is Range</string>

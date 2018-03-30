@@ -33,7 +33,7 @@ public class DataCollectionServiceThread extends Thread {
     public void run() {
         try {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_WEBSERVICE_URL, "");
+            String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL, "");
             if (!webserviceUrl.equals("")) {
                 URL url = new URL(webserviceUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

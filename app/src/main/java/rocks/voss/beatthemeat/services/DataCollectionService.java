@@ -33,7 +33,7 @@ public class DataCollectionService extends JobService {
         JobInfo.Builder builder = new JobInfo.Builder(Constants.SERVICE_DATA_COLLECTION_SERVICE_ID, component);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        int webserviceUrlCalls = sharedPref.getInt(Constants.SETTING_GENERAL_WEBSERVICE_URL_CALLS, COUNT);
+        int webserviceUrlCalls = sharedPref.getInt(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL, COUNT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             builder.setMinimumLatency(webserviceUrlCalls * SEC);

@@ -13,8 +13,8 @@ public class Constants {
     public static final String NOTIFICATION_DISMISS = "Dismiss";
     public final static int NOTIFICIATION_TEMPERATURE_ID = 1;
 
-    public static final String SETTING_GENERAL_WEBSERVICE_URL = "webserviceURL";
-    public static final String SETTING_GENERAL_WEBSERVICE_URL_CALLS = "webserviceURLCalls";
+    public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL = "temperatureWebserviceURL";
+    public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL = "temperatureWebserviceInterval";
     public static final String SETTING_GENERAL_ALARM = "alarm";
 
     public static final String SETTING_TEMPERATURE_CURRENT = "temperatureCurrent";
