@@ -27,7 +27,7 @@ import java.util.List;
 import lombok.Getter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
-import rocks.voss.beatthemeat.services.DataCollectionService;
+import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.ui.ThermometerCanvas;
 import rocks.voss.beatthemeat.utils.KeyUtil;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        DataCollectionService.schedule(this);
+        TemperatureCollectionService.schedule(this);
 
         setContentView(R.layout.activity_main);
 
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        DataCollectionService.schedule(this);
+        TemperatureCollectionService.schedule(this);
         super.onDestroy();
     }
 

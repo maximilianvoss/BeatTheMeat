@@ -9,7 +9,7 @@ import android.preference.SwitchPreference;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
-import rocks.voss.beatthemeat.services.DataCollectionService;
+import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 
 /**
@@ -28,9 +28,9 @@ public class AppSettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if ( (boolean) newValue ) {
-                    DataCollectionService.schedule(getContext());
+                    TemperatureCollectionService.schedule(getContext());
                 } else {
-                    DataCollectionService.cancelJob(getContext());
+                    TemperatureCollectionService.cancelJob(getContext());
                 }
                 return true;
             }

@@ -20,7 +20,7 @@
         <activity android:name=".activities.AppSettingsActivity" />
 
         <service
-            android:name=".services.DataCollectionService"
+            android:name=".services.TemperatureCollectionService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
