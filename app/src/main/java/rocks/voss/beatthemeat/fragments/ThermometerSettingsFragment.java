@@ -48,6 +48,7 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         temperatureMin.setTitle(R.string.setting_temperature_min);
         temperatureMin.setDefaultValue(50);
         getPreferenceScreen().addPreference(temperatureMin);
+        temperatureMin.setTitle(temperatureMin.getTitle() + " " + String.valueOf(temperatureMin.getValue()));
 
         temperatureMax = new NumberPickerPreference(this.getContext());
         temperatureMax.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
@@ -55,5 +56,6 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         temperatureMax.setDefaultValue(100);
         temperatureMax.setEnabled(isRange.isChecked());
         getPreferenceScreen().addPreference(temperatureMax);
+        temperatureMax.setTitle(temperatureMax.getTitle() + " " + String.valueOf(temperatureMax.getValue()));
     }
 }

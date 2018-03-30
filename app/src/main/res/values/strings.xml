@@ -10,7 +10,7 @@
     <string name="setting_general_alarm">Alarm Sound</string>
 
     <string name="setting_temperature_isrange">Temperature is Range</string>
-    <string name="setting_temperature_min">Temperature Min</string>
-    <string name="setting_temperature_max">Temperature Max</string>
+    <string name="setting_temperature_min">Temperature Min: </string>
+    <string name="setting_temperature_max">Temperature Max: </string>
 
 </resources>
