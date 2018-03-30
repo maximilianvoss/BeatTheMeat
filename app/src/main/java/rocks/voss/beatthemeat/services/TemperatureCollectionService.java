@@ -95,7 +95,6 @@ public class TemperatureCollectionService extends JobService {
             });
 
             service.start();
-
             service.join();
             boolean isAlarm = TemperatureUtil.isAlarm(this);
             if (isAlarm) {

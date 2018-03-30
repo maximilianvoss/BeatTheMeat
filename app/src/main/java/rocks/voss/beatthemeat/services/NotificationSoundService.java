@@ -74,7 +74,7 @@ public class NotificationSoundService extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Constants.NOTIFICIATION_TEMPERATURE_ID);
         mp.stop();
-        DataCollectionService.setNotificationActive(false);
+        TemperatureCollectionService.setNotificationActive(false);
     }
 
     @Override
