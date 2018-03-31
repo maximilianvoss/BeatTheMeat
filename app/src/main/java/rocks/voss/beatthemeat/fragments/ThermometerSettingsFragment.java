@@ -13,6 +13,7 @@ import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.data.ThermometerSettings;
+import rocks.voss.beatthemeat.data.ThermometerSettingsCatalog;
 import rocks.voss.beatthemeat.data.ThermometerSettingsCategory;
 import rocks.voss.beatthemeat.data.ThermometerSettingsStyle;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
@@ -26,16 +27,66 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     @Setter
     private int id;
 
+    private ListPreference temperatureCatalog;
+    private ListPreference temperatureCategory;
+    private ListPreference temperatureStyle;
     private SwitchPreference isRange;
     private NumberPickerPreference temperatureMin;
     private NumberPickerPreference temperatureMax;
-    private ListPreference temperatureStyle;
-    private ListPreference temperatureCategory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_thermometersettings);
+
+        temperatureCatalog = new ListPreference(this.getContext());
+        temperatureCatalog.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CATALOG, id));
+        temperatureCatalog.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                setPreferenceTitle(preference, R.string.setting_temperature_catalog, (String) o);
+                updateTemperatureCategoryLists(temperatureCategory, o.toString(), null);
+                invalidateCategory();
+                temperatureStyle.setEnabled(true);
+                return true;
+            }
+        });
+        updateTemperatureCategoryLists(temperatureCatalog, null, null);
+        getPreferenceScreen().addPreference(temperatureCatalog);
+        setPreferenceTitle(temperatureCatalog, R.string.setting_temperature_catalog, temperatureCatalog.getValue());
+
+        temperatureCategory = new ListPreference(this.getContext());
+        temperatureCategory.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CATEGORY, id));
+        temperatureCategory.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                setPreferenceTitle(preference, R.string.setting_temperature_category, (String) o);
+                updateTemperatureCategoryLists(temperatureStyle, temperatureCatalog.getValue(), o.toString());
+                invalidateStyle();
+                temperatureStyle.setEnabled(true);
+                return true;
+            }
+        });
+        updateTemperatureCategoryLists(temperatureCategory, temperatureCatalog.getValue(), null);
+        getPreferenceScreen().addPreference(temperatureCategory);
+        setPreferenceTitle(temperatureCategory, R.string.setting_temperature_category, temperatureCategory.getValue());
+
+
+        temperatureStyle = new ListPreference(this.getContext());
+        temperatureStyle.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_STYLE, id));
+        temperatureStyle.setEnabled(temperatureCategory.getValue() == null || temperatureCategory.getValue().equals("") ? false : true);
+        temperatureStyle.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                setPreferenceTitle(preference, R.string.setting_temperature_style, (String) o);
+                fillThermometerSettings(temperatureCatalog.getValue(), temperatureCategory.getValue(), (String) o);
+                return true;
+            }
+        });
+        updateTemperatureCategoryLists(temperatureStyle, temperatureCatalog.getValue(), temperatureCategory.getValue());
+        getPreferenceScreen().addPreference(temperatureStyle);
+        setPreferenceTitle(temperatureStyle, R.string.setting_temperature_style, temperatureStyle.getValue());
+
 
         isRange = new SwitchPreference(this.getContext());
         isRange.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id));
@@ -50,39 +101,6 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
             }
         });
         getPreferenceScreen().addPreference(isRange);
-
-
-        temperatureCategory = new ListPreference(this.getContext());
-        temperatureCategory.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CATEGORY, id));
-        temperatureCategory.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                setPreferenceTitle(preference, R.string.setting_temperature_category, (String) o);
-                updateTemperatureCategoryLists(temperatureStyle, o.toString());
-                invalidateStyle();
-                temperatureStyle.setEnabled(true);
-                return true;
-            }
-        });
-        updateTemperatureCategoryLists(temperatureCategory, null);
-        getPreferenceScreen().addPreference(temperatureCategory);
-        setPreferenceTitle(temperatureCategory, R.string.setting_temperature_category, temperatureCategory.getValue());
-
-
-        temperatureStyle = new ListPreference(this.getContext());
-        temperatureStyle.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_STYLE, id));
-        temperatureStyle.setEnabled(temperatureCategory.getValue() == null || temperatureCategory.getValue().equals("") ? false : true);
-        temperatureStyle.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                setPreferenceTitle(preference, R.string.setting_temperature_style, (String) o);
-                fillThermometerSettings(temperatureCategory.getValue(), (String) o);
-                return true;
-            }
-        });
-        updateTemperatureCategoryLists(temperatureStyle, temperatureCategory.getValue());
-        getPreferenceScreen().addPreference(temperatureStyle);
-        setPreferenceTitle(temperatureStyle, R.string.setting_temperature_style, temperatureStyle.getValue());
 
 
         temperatureMin = new NumberPickerPreference(this.getContext());
@@ -116,59 +134,84 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         setPreferenceTitle(temperatureMax, R.string.setting_temperature_max, String.valueOf(temperatureMax.getValue()));
     }
 
-    private void updateTemperatureCategoryLists(ListPreference listPreference, String category) {
+    private void updateTemperatureCategoryLists(ListPreference listPreference, String catalog, String category) {
         List<CharSequence> list;
-        if (category == null) {
-            list = fillThermometerCategories();
+        if (catalog == null) {
+            list = fillThermometerCatalog();
+        } else if (category == null) {
+            list = fillThermometerCategories(catalog);
         } else {
-            list = fillThermometerStyle(category);
+            list = fillThermometerStyle(catalog, category);
         }
         CharSequence[] array = list.toArray(new CharSequence[list.size()]);
         listPreference.setEntries(array);
         listPreference.setEntryValues(array);
     }
 
-    private List<CharSequence> fillThermometerCategories() {
+    private List<CharSequence> fillThermometerCatalog() {
         List<CharSequence> entries = new ArrayList<>();
 
         ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-        for (int i = 0; i < thermometerSettings.getCategories().size(); i++) {
-            entries.add(thermometerSettings.getCategories().get(i).getName());
+        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+            entries.add(catalog.getName());
         }
         return entries;
     }
 
-    private List<CharSequence> fillThermometerStyle(String category) {
+    private List<CharSequence> fillThermometerCategories(String catalogName) {
         List<CharSequence> entries = new ArrayList<>();
 
         ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-        for (ThermometerSettingsCategory thermometerSettingsCategory : thermometerSettings.getCategories()) {
-            if (thermometerSettingsCategory.getName().equals(category)) {
-                for (int i = 0; i < thermometerSettingsCategory.getStyles().size(); i++) {
-                    entries.add(thermometerSettingsCategory.getStyles().get(i).getName());
+        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+            if ( catalog.getName().equals(catalogName)) {
+                for ( ThermometerSettingsCategory category : catalog.getCategories() ) {
+                    entries.add(category.getName());
+                }
+                return entries;
+            }
+        }
+        return entries;
+    }
+
+    private List<CharSequence> fillThermometerStyle(String catalogName, String categoryName) {
+        List<CharSequence> entries = new ArrayList<>();
+
+        ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
+        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+            if ( catalog.getName().equals(catalogName)) {
+                for ( ThermometerSettingsCategory category : catalog.getCategories() ) {
+                    if ( category.getName().equals(categoryName) ) {
+                        for ( ThermometerSettingsStyle style : category.getStyles() ) {
+                            entries.add(style.getName());
+                        }
+                        return entries;
+                    }
                 }
             }
         }
         return entries;
     }
 
-    private void fillThermometerSettings(String category, String style) {
-        List<CharSequence> entries = new ArrayList<>();
+    private void fillThermometerSettings(String catalogName, String categoryName, String styleName) {
 
         ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-        for (ThermometerSettingsCategory thermometerSettingsCategory : thermometerSettings.getCategories()) {
-            if (thermometerSettingsCategory.getName().equals(category)) {
-                for (ThermometerSettingsStyle thermometerSettingsStyle : thermometerSettingsCategory.getStyles() ) {
-                    if ( thermometerSettingsStyle.getName().equals(style)) {
-                        temperatureMin.setValue(thermometerSettingsStyle.getTemperatureMin());
-                        temperatureMax.setValue(thermometerSettingsStyle.getTemperatureMax());
-                        isRange.setChecked(thermometerSettingsStyle.isRange());
+        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+            if ( catalog.getName().equals(catalogName)) {
+                for ( ThermometerSettingsCategory category : catalog.getCategories() ) {
+                    if ( category.getName().equals(categoryName) ) {
+                        for ( ThermometerSettingsStyle style : category.getStyles() ) {
+                            if ( style.getName().equals(styleName)) {
+                                temperatureMin.setValue(style.getTemperatureMin());
+                                temperatureMax.setValue(style.getTemperatureMax());
+                                isRange.setChecked(style.isRange());
 
-                        setPreferenceTitle(temperatureMin, R.string.setting_temperature_min, String.valueOf(temperatureMin.getValue()));
-                        setPreferenceTitle(temperatureMax, R.string.setting_temperature_max, String.valueOf(temperatureMax.getValue()));
-                        temperatureMax.setEnabled(thermometerSettingsStyle.isRange());
+                                temperatureMax.setEnabled(style.isRange());
+                                setPreferenceTitle(temperatureMin, R.string.setting_temperature_min, String.valueOf(temperatureMin.getValue()));
+                                setPreferenceTitle(temperatureMax, R.string.setting_temperature_max, String.valueOf(temperatureMax.getValue()));
 
-                        return;
+                                return;
+                            }
+                        }
                     }
                 }
             }

@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.data.ThermometerSettings;
+import rocks.voss.beatthemeat.data.ThermometerSettingsCatalog;
 import rocks.voss.beatthemeat.data.ThermometerSettingsCategory;
 import rocks.voss.beatthemeat.data.ThermometerSettingsStyle;
 
@@ -65,23 +66,31 @@ public class ThermometerSettingsCollectionService extends JobService {
                         ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
                         thermometerSettings.clear();
 
-                        JSONArray jsonCategories = jsonObject.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_CATEGORIES);
-                        for ( int i = 0; i < jsonCategories.length(); i++ ) {
-                            JSONObject jsonCategory = jsonCategories.getJSONObject(i);
+                        JSONArray jsonCatalogs = jsonObject.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_CATALOGS);
+                        for ( int i = 0; i < jsonCatalogs.length(); i++ ) {
+                            JSONObject jsonCatalog = jsonCatalogs.getJSONObject(i);
+                            ThermometerSettingsCatalog catalog = new ThermometerSettingsCatalog();
+                            catalog.setName(jsonCatalog.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
+                            thermometerSettings.getCatalogs().add(catalog);
 
-                            ThermometerSettingsCategory category = new ThermometerSettingsCategory();
-                            category.setName(jsonCategory.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
-                            thermometerSettings.getCategories().add(category);
+                            JSONArray jsonCategories = jsonCatalog.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_CATEGORIES);
+                            for (int j = 0; j < jsonCategories.length(); j++) {
+                                JSONObject jsonCategory = jsonCategories.getJSONObject(j);
 
-                            JSONArray jsonItems = jsonCategory.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_STYLES);
-                            for ( int j = 0; j < jsonItems.length(); j++ ) {
-                                JSONObject jsonItem = jsonItems.getJSONObject(j);
-                                ThermometerSettingsStyle style = new ThermometerSettingsStyle();
-                                style.setName(jsonItem.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
-                                style.setRange(jsonItem.getBoolean(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_IS_RANGE));
-                                style.setTemperatureMin(jsonItem.getInt(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MIN));
-                                style.setTemperatureMax(jsonItem.getInt(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MAX));
-                                category.getStyles().add(style);
+                                ThermometerSettingsCategory category = new ThermometerSettingsCategory();
+                                category.setName(jsonCategory.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
+                                catalog.getCategories().add(category);
+
+                                JSONArray jsonItems = jsonCategory.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_STYLES);
+                                for (int k = 0; k < jsonItems.length(); k++) {
+                                    JSONObject jsonItem = jsonItems.getJSONObject(k);
+                                    ThermometerSettingsStyle style = new ThermometerSettingsStyle();
+                                    style.setName(jsonItem.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
+                                    style.setRange(jsonItem.getBoolean(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_IS_RANGE));
+                                    style.setTemperatureMin(jsonItem.getInt(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MIN));
+                                    style.setTemperatureMax(jsonItem.getInt(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MAX));
+                                    category.getStyles().add(style);
+                                }
                             }
                         }
                     } catch (JSONException e) {

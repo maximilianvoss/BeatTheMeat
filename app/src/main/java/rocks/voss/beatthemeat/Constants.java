@@ -19,16 +19,19 @@ public class Constants {
     public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL = "thermometerSettingsWebserviceURL";
     public static final String SETTING_GENERAL_ALARM = "alarm";
 
-    public static final String SETTING_TEMPERATURE_CURRENT = "temperatureCurrent";
-    public static final String SETTING_TEMPERATURE_IS_RANGE = "isRange";
+    public static final String SETTING_TEMPERATURE_CATALOG = "temperatureCatalog";
     public static final String SETTING_TEMPERATURE_CATEGORY = "temperatureCategory";
     public static final String SETTING_TEMPERATURE_STYLE = "temperatureStyle";
+    public static final String SETTING_TEMPERATURE_IS_RANGE = "isRange";
     public static final String SETTING_TEMPERATURE_MIN = "temperatureMin";
     public static final String SETTING_TEMPERATURE_MAX = "temperatureMax";
+    public static final String SETTING_TEMPERATURE_CURRENT = "temperatureCurrent";
 
     public static final String THERMOMETER_CANVAS_ID = "rocks.voss.beatthemeat.widgets.ThermometerCanvas.id";
 
     public static final String JSON_TEMPERATURES_OBJECT = "temperatures";
+
+    public static final String JSON_THERMOMETER_SETTINGS_CATALOGS = "catalogs";
     public static final String JSON_THERMOMETER_SETTINGS_CATEGORIES = "categories";
     public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_NAME = "name";
     public static final String JSON_THERMOMETER_SETTINGS_STYLES = "styles";

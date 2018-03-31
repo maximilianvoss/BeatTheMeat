@@ -10,10 +10,11 @@
     <string name="setting_general_thermometer_settings_webservice_url">Thermometer Settings Web Service URL</string>
     <string name="setting_general_alarm">Alarm Sound</string>
 
+    <string name="setting_temperature_catalog">Preparating Catalog:</string>
+    <string name="setting_temperature_category">Preparating Category:</string>
+    <string name="setting_temperature_style">Preparation Style:</string>
     <string name="setting_temperature_isrange">Temperature is Range</string>
     <string name="setting_temperature_min">Temperature Min:</string>
     <string name="setting_temperature_max">Temperature Max:</string>
-    <string name="setting_temperature_category">Preparating Category:</string>
-    <string name="setting_temperature_style">Preparation Style:</string>
 
 </resources>

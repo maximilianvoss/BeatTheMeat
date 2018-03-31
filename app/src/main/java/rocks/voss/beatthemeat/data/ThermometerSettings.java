@@ -13,7 +13,7 @@ public class ThermometerSettings {
     private static ThermometerSettings instance = null;
 
     @Getter
-    private List<ThermometerSettingsCategory> categories = new ArrayList<>();
+    private List<ThermometerSettingsCatalog> catalogs = new ArrayList<>();
 
     public static ThermometerSettings getInstance() {
         if (instance == null) {
@@ -23,9 +23,12 @@ public class ThermometerSettings {
     }
 
     public void clear() {
-        for ( int i = 0; i < categories.size(); i++ ) {
-            categories.get(i).getStyles().clear();
+        for ( ThermometerSettingsCatalog catalog : catalogs ) {
+            for ( ThermometerSettingsCategory category : catalog.getCategories() ) {
+                category.getStyles().clear();
+            }
+            catalog.getCategories().clear();
         }
-        categories.clear();
+        catalogs.clear();
     }
 }
