@@ -74,7 +74,7 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
 
         temperatureStyle = new ListPreference(this.getContext());
         temperatureStyle.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_STYLE, id));
-        temperatureStyle.setEnabled(temperatureCategory.getValue() == null || temperatureCategory.getValue().equals("") ? false : true);
+        temperatureStyle.setEnabled(!(temperatureCategory.getValue() == null || temperatureCategory.getValue().equals("")));
         temperatureStyle.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {

@@ -44,7 +44,6 @@ public class ThermometerCanvas extends SurfaceView {
     @Setter
     private Paint colorSeparator;
 
-    private boolean isRange;
     private int temperatureCurrent;
     private int temperatureMin;
     private int temperatureMax;
@@ -93,7 +92,7 @@ public class ThermometerCanvas extends SurfaceView {
         super.onDraw(canvas);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, this.id), true);
+        boolean isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, this.id), true);
         temperatureCurrent = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, this.id), -9999);
         temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, this.id), 50);
         temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, this.id), 100);
