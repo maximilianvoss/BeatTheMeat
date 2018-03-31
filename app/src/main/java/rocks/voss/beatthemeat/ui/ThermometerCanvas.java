@@ -22,6 +22,9 @@ import rocks.voss.beatthemeat.utils.TemperatureUtil;
  * Created by voss on 11.03.18.
  */
 public class ThermometerCanvas extends SurfaceView {
+    private static final int TEMPERATURE_THRESHOLD = 20;
+    private static final int DEGREES_YELLOW = 5;
+
     @Setter
     private int id;
     @Setter
@@ -113,16 +116,16 @@ public class ThermometerCanvas extends SurfaceView {
         int displayTemperatureMin;
         int displayTemperatureMax;
         if (temperatureCurrent < temperatureMin) {
-            displayTemperatureMin = temperatureCurrent - 20;
-            displayTemperatureMax = temperatureMin + 20;
+            displayTemperatureMin = temperatureCurrent - TEMPERATURE_THRESHOLD;
+            displayTemperatureMax = temperatureMin + TEMPERATURE_THRESHOLD;
         } else {
-            displayTemperatureMin = temperatureMin - 20;
-            displayTemperatureMax = temperatureCurrent + 20;
+            displayTemperatureMin = temperatureMin - TEMPERATURE_THRESHOLD;
+            displayTemperatureMax = temperatureCurrent + TEMPERATURE_THRESHOLD;
         }
         float anglePerC = 180f / ((float) displayTemperatureMax - (float) displayTemperatureMin);
 
         float angleGreen = -anglePerC * (displayTemperatureMax - temperatureMin);
-        float angleYellow = -anglePerC * 5;
+        float angleYellow = -anglePerC * DEGREES_YELLOW;
         float angleRed = -180f - angleGreen - angleYellow;
 
         drawTemperatureArc(canvas, 0f, angleGreen, colorGreen);
@@ -141,20 +144,20 @@ public class ThermometerCanvas extends SurfaceView {
         int displayTemperatureMax;
 
         if (temperatureCurrent < temperatureMin) {
-            displayTemperatureMin = temperatureCurrent - 20;
+            displayTemperatureMin = temperatureCurrent - TEMPERATURE_THRESHOLD;
         } else {
-            displayTemperatureMin = temperatureMin - 20;
+            displayTemperatureMin = temperatureMin - TEMPERATURE_THRESHOLD;
         }
         if (temperatureCurrent > temperatureMax) {
-            displayTemperatureMax = temperatureCurrent + 20;
+            displayTemperatureMax = temperatureCurrent + TEMPERATURE_THRESHOLD;
         } else {
-            displayTemperatureMax = temperatureMax + 20;
+            displayTemperatureMax = temperatureMax + TEMPERATURE_THRESHOLD;
         }
 
         float anglePerC = 180f / ((float) displayTemperatureMax - (float) displayTemperatureMin);
 
-        float angleRed1 = -anglePerC * (temperatureMin - displayTemperatureMin - 5);
-        float angleYellow = -anglePerC * 5;
+        float angleRed1 = -anglePerC * (temperatureMin - displayTemperatureMin - DEGREES_YELLOW);
+        float angleYellow = -anglePerC * DEGREES_YELLOW;
         float angleGreen = -anglePerC * (temperatureMax - temperatureMin);
         float angleRed2 = -180f - angleRed1 - 2 * angleYellow - angleGreen;
 
