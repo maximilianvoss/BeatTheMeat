@@ -5,5 +5,7 @@
         <item name="colorThermometerGreen">@color/colorThermometerGreen</item>
         <item name="colorThermometerText">@color/colorThermometerText</item>
         <item name="colorThermometerTextAlarm">@color/colorThermometerTextAlarm</item>
+        <item name="colorThermometerIndicator">@color/colorThermometerIndicator</item>
+        <item name="colorThermometerSeparator">@color/colorThermometerSeparator</item>
     </style>
 </resources>

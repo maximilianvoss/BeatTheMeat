@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     private void setupThermometerCanvas(ThermometerCanvas thermometerCanvas) {
-        int[] attrs = {android.R.attr.colorBackground, R.attr.colorThermometerRed, R.attr.colorThermometerYellow, R.attr.colorThermometerGreen, R.attr.colorThermometerText, R.attr.colorThermometerTextAlarm};
+        int[] attrs = {android.R.attr.colorBackground, R.attr.colorThermometerRed, R.attr.colorThermometerYellow, R.attr.colorThermometerGreen, R.attr.colorThermometerText, R.attr.colorThermometerTextAlarm, R.attr.colorThermometerIndicator, R.attr.colorThermometerSeparator};
         TypedArray ta = obtainStyledAttributes(R.style.AppTheme, attrs);
 
         Paint paintBackground = new Paint();
@@ -177,6 +177,16 @@ public class MainActivity extends AppCompatActivity {
         Paint paintTextAlarm = new Paint();
         paintTextAlarm.setColor(ta.getColor(5, Color.RED));
         thermometerCanvas.setColorTextAlarm(paintTextAlarm);
+
+        Paint paintIndicator = new Paint();
+        paintIndicator.setColor(ta.getColor(6, Color.WHITE));
+        paintIndicator.setStrokeWidth(15f);
+        thermometerCanvas.setColorIndicator(paintIndicator);
+
+        Paint paintSeparator = new Paint();
+        paintSeparator.setColor(ta.getColor(7, Color.DKGRAY));
+        paintSeparator.setStrokeWidth(2f);
+        thermometerCanvas.setColorSeparator(paintSeparator);
 
         ta.recycle();
     }

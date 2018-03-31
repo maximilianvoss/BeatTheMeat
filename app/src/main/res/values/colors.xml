@@ -5,4 +5,6 @@
     <color name="colorThermometerGreen">#0cce23</color>
     <color name="colorThermometerText">#ffffff</color>
     <color name="colorThermometerTextAlarm">#ff0000</color>
+    <color name="colorThermometerIndicator">#ffffff</color>
+    <color name="colorThermometerSeparator">#333333</color>
 </resources>

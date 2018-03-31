@@ -5,4 +5,6 @@
     <attr name="colorThermometerGreen" format="color"/>
     <attr name="colorThermometerText" format="color"/>
     <attr name="colorThermometerTextAlarm" format="color"/>
+    <attr name="colorThermometerIndicator" format="color"/>
+    <attr name="colorThermometerSeparator" format="color"/>
 </resources>
