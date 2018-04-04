@@ -10,14 +10,21 @@
         android:roundIcon="@mipmap/beatthemeat_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".activities.MainActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name=".activities.ThermometerSettingsActivity" />
+        <activity android:name=".activities.AppSettingsActivity" />
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ThermometerSettingsActivity" />
-        <activity android:name=".activities.AppSettingsActivity" />
 
         <service
             android:name=".services.TemperatureCollectionService"
@@ -35,8 +42,7 @@
         <receiver
             android:name=".services.DismissReceiver"
             android:enabled="true"
-            android:exported="false">
-        </receiver>
+            android:exported="false"></receiver>
     </application>
 
 </manifest>

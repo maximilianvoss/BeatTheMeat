@@ -24,6 +24,7 @@ public class AppSettingsFragment extends PreferenceFragment {
 
         SwitchPreference temperatureWebserviceEnable = new SwitchPreference(this.getContext());
         temperatureWebserviceEnable.setTitle(R.string.setting_general_temperature_webservice_enable);
+        temperatureWebserviceEnable.setKey(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_ENABLED);
         temperatureWebserviceEnable.setDefaultValue(true);
         temperatureWebserviceEnable.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

@@ -14,6 +14,7 @@ public class Constants {
     public static final String NOTIFICATION_DISMISS = "Dismiss";
     public final static int NOTIFICIATION_TEMPERATURE_ID = 1;
 
+    public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_ENABLED = "temperatureWebserviceEnabled";
     public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL = "temperatureWebserviceURL";
     public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL = "temperatureWebserviceInterval";
     public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL = "thermometerSettingsWebserviceURL";
