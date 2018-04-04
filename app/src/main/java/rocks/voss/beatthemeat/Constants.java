@@ -18,6 +18,7 @@ public class Constants {
     public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL = "temperatureWebserviceURL";
     public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL = "temperatureWebserviceInterval";
     public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL = "thermometerSettingsWebserviceURL";
+    public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL_DEFAULT = "https://maximilian.voss.rocks/bin/thermometer.json";
     public static final String SETTING_GENERAL_ALARM = "alarm";
 
     public static final String SETTING_TEMPERATURE_CATALOG = "temperatureCatalog";

@@ -56,7 +56,7 @@ public class ThermometerSettingsCollectionService extends JobService {
 
     private void execute(JobParameters params) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL, "");
+        String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL, Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL_DEFAULT);
 
         try {
             JsonDownloadThread service = new JsonDownloadThread(this, webserviceUrl, new JsonDownloadCallbackInterface() {

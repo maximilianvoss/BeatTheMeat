@@ -52,6 +52,7 @@ public class AppSettingsFragment extends PreferenceFragment {
         EditTextPreference thermometerSettingsWebserviceUrl = new EditTextPreference(this.getContext());
         thermometerSettingsWebserviceUrl.setTitle(R.string.setting_general_thermometer_settings_webservice_url);
         thermometerSettingsWebserviceUrl.setKey(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL);
+        thermometerSettingsWebserviceUrl.setDefaultValue(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL_DEFAULT);
         thermometerSettingsWebserviceUrl.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
