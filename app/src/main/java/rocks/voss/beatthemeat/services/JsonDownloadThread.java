@@ -38,6 +38,9 @@ public class JsonDownloadThread extends Thread {
         try {
             if ( url != null ) {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setConnectTimeout(2000);
+                urlConnection.setReadTimeout(2000);
+                urlConnection.connect();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"), 8);
                 StringBuilder sb = new StringBuilder();

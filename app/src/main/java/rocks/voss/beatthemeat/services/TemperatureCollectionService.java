@@ -15,12 +15,14 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.threeten.bp.OffsetDateTime;
 
 import java.net.MalformedURLException;
 
 import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
+import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
@@ -83,7 +85,9 @@ public class TemperatureCollectionService extends JobService {
                         SharedPreferences.Editor editor = sharedPref.edit();
                         JSONArray temperatures = jsonObject.getJSONArray(Constants.JSON_TEMPERATURES_OBJECT);
                         for (int i = 0; i < temperatures.length(); i++) {
-                            editor.putInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, i), temperatures.getInt(i));
+                            int temperature = temperatures.getInt(i);
+                            editor.putInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, i), temperature);
+                            insertTemperatureIntoDatabase(i , temperature);
                         }
                         editor.apply();
                         MainActivity.refreshThermometers();
@@ -124,5 +128,13 @@ public class TemperatureCollectionService extends JobService {
             Intent intent = new Intent(this, NotificationSoundService.class);
             stopService(intent);
         }
+    }
+
+    private void insertTemperatureIntoDatabase(int id, int temperatureValue) {
+        Temperature temperature = new Temperature();
+        temperature.thermometerId = id;
+        temperature.temperature = temperatureValue;
+        temperature.time = OffsetDateTime.now();
+        MainActivity.getTemperatureDatabase().temperatureDao().insertAll(temperature);
     }
 }

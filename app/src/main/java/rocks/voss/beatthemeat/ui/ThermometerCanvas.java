@@ -79,6 +79,13 @@ public class ThermometerCanvas extends SurfaceView {
                 v.getContext().startActivity(intent);
             }
         });
+
+        this.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
     }
 
 

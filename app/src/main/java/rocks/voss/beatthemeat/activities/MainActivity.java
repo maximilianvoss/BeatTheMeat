@@ -25,8 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.ui.ThermometerCanvas;
@@ -38,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
     @Getter
     private static final List<ThermometerCanvas> thermometers = new ArrayList<>();
+
+    @Setter
+    @Getter
+    private static TemperatureDatabase temperatureDatabase;
 
     @Getter
     private static Switch switchAlarm;
