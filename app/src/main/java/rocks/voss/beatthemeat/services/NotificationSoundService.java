@@ -26,6 +26,8 @@ import rocks.voss.beatthemeat.activities.MainActivity;
 
 public class NotificationSoundService extends Service {
     private MediaPlayer mp;
+    private NotificationEnum notificationType;
+    private static boolean active = false;
 
     @Nullable
     @Override
@@ -34,7 +36,12 @@ public class NotificationSoundService extends Service {
     }
 
     @Override
-    public void onCreate() {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if ( active) {
+            return super.onStartCommand(intent, flags, startId);
+        }
+        active = true;
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String alarm = sharedPref.getString(Constants.SETTING_GENERAL_ALARM, "");
         Uri notificationUri;
@@ -48,38 +55,55 @@ public class NotificationSoundService extends Service {
 
         createNotificationChannel();
 
+        notificationType = NotificationEnum.valueOf(intent.getStringExtra(Constants.NOTIFICATION_ALERT_TYPE));
+
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
-        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
+        mainActivityIntent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, notificationType.name());
+        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent snoozeReceiverIntent = new Intent(this, DismissReceiver.class);
+        snoozeReceiverIntent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, notificationType.name());
+        snoozeReceiverIntent.putExtra(Constants.NOTIFICATION_DISMISS_TYPE, DismissTypeEnum.Snooze.name());
+        PendingIntent snoozeReceiverPendingIntent = PendingIntent.getBroadcast(this, 1, snoozeReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent dismissReceiverIntent = new Intent(this, DismissReceiver.class);
-        PendingIntent dismissReceiverPendingIntent = PendingIntent.getBroadcast(this, 0, dismissReceiverIntent, 0);
+        dismissReceiverIntent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, notificationType.name());
+        dismissReceiverIntent.putExtra(Constants.NOTIFICATION_DISMISS_TYPE, DismissTypeEnum.Dismiss.name());
+        PendingIntent dismissReceiverPendingIntent = PendingIntent.getBroadcast(this, 2, dismissReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, Constants.NOTIFICIATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.beatthemeat)
-                .setContentTitle(Constants.NOTIFICATION_TITLE)
-                .setContentText(Constants.NOTIFICATION_TEXT)
                 .setContentIntent(mainActivityPendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
-                .addAction(R.mipmap.beatthemeat, Constants.NOTIFICATION_DISMISS, dismissReceiverPendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .addAction(R.mipmap.beatthemeat, Constants.NOTIFICATION_SNOOZE, snoozeReceiverPendingIntent)
+                .addAction(R.mipmap.beatthemeat, Constants.NOTIFICATION_DISMISS, dismissReceiverPendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(Constants.NOTIFICIATION_TEMPERATURE_ID, mBuilder.build());
+        switch (notificationType) {
+            case TemperatureAlarm:
+                mBuilder.setContentTitle(Constants.NOTIFICATION_TEMPERATURE_TITLE);
+                mBuilder.setContentText(Constants.NOTIFICATION_TEMPERATURE_TEXT);
+                break;
+            case WebserviceAlarm:
+                mBuilder.setContentTitle(Constants.NOTIFICATION_WEBSERVICE_TITLE);
+                mBuilder.setContentText(Constants.NOTIFICATION_WEBSERVICE_TEXT);
+                break;
+            default:
+        }
+
+        notificationManager.notify(Constants.NOTIFICIATION_ID, mBuilder.build());
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(Constants.NOTIFICIATION_TEMPERATURE_ID);
         mp.stop();
-        TemperatureCollectionService.setNotificationActive(false);
-    }
-
-    @Override
-    public void onStart(Intent intent, int startid) {
-        mp.start();
+        notificationManager.cancel(Constants.NOTIFICIATION_ID);
+        active = false;
     }
 
     private void createNotificationChannel() {

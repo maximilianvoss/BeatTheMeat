@@ -19,7 +19,6 @@ import org.threeten.bp.OffsetDateTime;
 
 import java.net.MalformedURLException;
 
-import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
@@ -33,9 +32,6 @@ public class TemperatureCollectionService extends JobService {
 
     private static final int SEC = 1000;
     private static final int COUNT = 5;
-
-    @Setter
-    private static boolean notificationActive = false;
 
     public static void schedule(Context context) {
         ComponentName component = new ComponentName(context, TemperatureCollectionService.class);
@@ -96,6 +92,13 @@ public class TemperatureCollectionService extends JobService {
                         Log.e(getClass().toString(), "JSONException", e);
                     }
                 }
+
+                @Override
+                public void onConnectionFailure(Context context) {
+                    Intent intent = new Intent(context, NotificationSoundService.class);
+                    intent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, NotificationEnum.WebserviceAlarm.name());
+                    context.startService(intent);
+                }
             });
 
             service.start();
@@ -115,16 +118,15 @@ public class TemperatureCollectionService extends JobService {
     }
 
     private void activateNotification() {
-        if (TemperatureUtil.isEnabled() && !notificationActive) {
-            notificationActive = true;
+        if (TemperatureUtil.isEnabled() ) {
             Intent intent = new Intent(this, NotificationSoundService.class);
+            intent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, NotificationEnum.TemperatureAlarm.name());
             startService(intent);
         }
     }
 
     private void deactivateNotification() {
-        if (TemperatureUtil.isEnabled() && notificationActive) {
-            notificationActive = false;
+        if (TemperatureUtil.isEnabled()) {
             Intent intent = new Intent(this, NotificationSoundService.class);
             stopService(intent);
         }

@@ -1,5 +1,6 @@
 package rocks.voss.beatthemeat.services;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.json.JSONObject;
@@ -10,4 +11,5 @@ import org.json.JSONObject;
 
 public interface JsonDownloadCallbackInterface {
     void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject);
+    void onConnectionFailure(Context context);
 }

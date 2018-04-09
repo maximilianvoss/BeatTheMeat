@@ -57,10 +57,9 @@ public class JsonDownloadThread extends Thread {
             }
         } catch (IOException e) {
             Log.e(this.getClass().toString(), "IOException", e);
+            jsonDownloadCallback.onConnectionFailure(context);
         } catch (JSONException e) {
             Log.e(this.getClass().toString(), "JSONException", e);
         }
     }
-
-
 }

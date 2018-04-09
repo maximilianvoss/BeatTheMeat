@@ -97,6 +97,11 @@ public class ThermometerSettingsCollectionService extends JobService {
                         Log.e(getClass().toString(), "JSONException", e);
                     }
                 }
+
+                @Override
+                public void onConnectionFailure(Context context) {
+
+                }
             });
 
             service.start();
