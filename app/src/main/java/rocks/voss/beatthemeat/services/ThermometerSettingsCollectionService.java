@@ -103,11 +103,8 @@ public class ThermometerSettingsCollectionService extends JobService {
 
                 }
             });
-
             service.start();
-            service.join();
-        } catch (InterruptedException e) {
-            Log.e(this.getClass().toString(), "InterruptedException", e);
+
         } catch (MalformedURLException e) {
             Log.e(this.getClass().toString(), "MalformedURLException", e);
         }

@@ -88,6 +88,12 @@ public class TemperatureCollectionService extends JobService {
                         editor.apply();
                         MainActivity.refreshThermometers();
 
+                        boolean isAlarm = TemperatureUtil.isAlarm(getBaseContext());
+                        if (isAlarm) {
+                            activateNotification();
+                        } else {
+                            deactivateNotification();
+                        }
                     } catch (JSONException e) {
                         Log.e(getClass().toString(), "JSONException", e);
                     }
@@ -102,15 +108,6 @@ public class TemperatureCollectionService extends JobService {
             });
 
             service.start();
-            service.join();
-            boolean isAlarm = TemperatureUtil.isAlarm(this);
-            if (isAlarm) {
-                activateNotification();
-            } else {
-                deactivateNotification();
-            }
-        } catch (InterruptedException e) {
-            Log.e(this.getClass().toString(), "InterruptedException", e);
         } catch (MalformedURLException e) {
             Log.e(this.getClass().toString(), "MalformedURLException", e);
         }
