@@ -16,6 +16,7 @@ import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.ThermometerSettingsActivity;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
+import rocks.voss.beatthemeat.utils.UiUtil;
 
 
 /**
@@ -43,10 +44,17 @@ public class ThermometerCanvas extends SurfaceView {
     private Paint colorIndicator;
     @Setter
     private Paint colorSeparator;
+    @Setter
+    private boolean displayTemperature = true;
 
     private int temperatureCurrent;
     private int temperatureMin;
     private int temperatureMax;
+
+    private float paddingPixel;
+    private float maxWidth;
+    private float maxHeight;
+    private float squareSize;
 
     private Paint colorBlack;
 
@@ -88,12 +96,6 @@ public class ThermometerCanvas extends SurfaceView {
         });
     }
 
-
-    protected void reDraw() {
-        this.invalidate();
-    }
-
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -104,32 +106,40 @@ public class ThermometerCanvas extends SurfaceView {
         temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, this.id), 50);
         temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, this.id), 100);
 
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), colorBackground);
-        canvas.drawArc(20f, 20f, 510f, 510f, 180f, 180f, true, colorBlack);
-        if (isRange) {
-            drawRange(canvas);
+        paddingPixel = UiUtil.getStandardPaddingPixel(getContext());
+        maxWidth = canvas.getWidth() - paddingPixel;
+        maxHeight = canvas.getHeight() - paddingPixel;
+        if (maxWidth / 2 < maxHeight) {
+            squareSize = maxWidth / 2;
         } else {
-            drawTarget(canvas);
+            squareSize = maxHeight;
         }
-        if (temperatureCurrent == -9999) {
-            drawTemperature(canvas, " N/A");
+
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), colorBackground);
+        canvas.drawArc(paddingPixel, paddingPixel, 2 * squareSize, 2 * squareSize, 180f, 180f, true, colorBlack);
+
+        int displayTemperatureMin = calcDisplayTemperatureMin();
+        int displayTemperatureMax = calcDisplayTemperatureMax(isRange);
+        float anglePerC = 180f / ((float) displayTemperatureMax - (float) displayTemperatureMin);
+
+        if (isRange) {
+            drawRange(canvas, displayTemperatureMin, anglePerC);
         } else {
-            drawTemperature(canvas, String.valueOf(temperatureCurrent));
+            drawTarget(canvas, displayTemperatureMax, anglePerC);
+        }
+
+        drawIndicator(canvas, displayTemperatureMax, anglePerC);
+
+        if ( displayTemperature) {
+            if (temperatureCurrent == -9999) {
+                drawTemperature(canvas, "N/A");
+            } else {
+                drawTemperature(canvas, String.valueOf(temperatureCurrent));
+            }
         }
     }
 
-    private void drawTarget(Canvas canvas) {
-        int displayTemperatureMin;
-        int displayTemperatureMax;
-        if (temperatureCurrent < temperatureMin) {
-            displayTemperatureMin = temperatureCurrent - TEMPERATURE_THRESHOLD;
-            displayTemperatureMax = temperatureMin + TEMPERATURE_THRESHOLD;
-        } else {
-            displayTemperatureMin = temperatureMin - TEMPERATURE_THRESHOLD;
-            displayTemperatureMax = temperatureCurrent + TEMPERATURE_THRESHOLD;
-        }
-        float anglePerC = 180f / ((float) displayTemperatureMax - (float) displayTemperatureMin);
-
+    private void drawTarget(Canvas canvas, int displayTemperatureMax, float anglePerC) {
         float angleGreen = -anglePerC * (displayTemperatureMax - temperatureMin);
         float angleYellow = -anglePerC * DEGREES_YELLOW;
         float angleRed = -180f - angleGreen - angleYellow;
@@ -138,30 +148,11 @@ public class ThermometerCanvas extends SurfaceView {
         drawTemperatureArc(canvas, angleGreen, angleYellow, colorYellow);
         drawTemperatureArc(canvas, angleGreen + angleYellow, angleRed, colorRed);
 
-        drawTemperatureLine(canvas, colorSeparator, 240f, -angleGreen);
-        drawTemperatureLine(canvas, colorSeparator, 240f, -angleGreen - angleYellow);
-
-        float currentTemp = anglePerC * (displayTemperatureMax - temperatureCurrent);
-        drawTemperatureLine(canvas, colorIndicator, 250f, currentTemp);
+        drawTemperatureLine(canvas, colorSeparator, squareSize, -angleGreen);
+        drawTemperatureLine(canvas, colorSeparator, squareSize, -angleGreen - angleYellow);
     }
 
-    private void drawRange(Canvas canvas) {
-        int displayTemperatureMin;
-        int displayTemperatureMax;
-
-        if (temperatureCurrent < temperatureMin) {
-            displayTemperatureMin = temperatureCurrent - TEMPERATURE_THRESHOLD;
-        } else {
-            displayTemperatureMin = temperatureMin - TEMPERATURE_THRESHOLD;
-        }
-        if (temperatureCurrent > temperatureMax) {
-            displayTemperatureMax = temperatureCurrent + TEMPERATURE_THRESHOLD;
-        } else {
-            displayTemperatureMax = temperatureMax + TEMPERATURE_THRESHOLD;
-        }
-
-        float anglePerC = 180f / ((float) displayTemperatureMax - (float) displayTemperatureMin);
-
+    private void drawRange(Canvas canvas, int displayTemperatureMin, float anglePerC) {
         float angleRed1 = -anglePerC * (temperatureMin - displayTemperatureMin - DEGREES_YELLOW);
         float angleYellow = -anglePerC * DEGREES_YELLOW;
         float angleGreen = -anglePerC * (temperatureMax - temperatureMin);
@@ -173,30 +164,29 @@ public class ThermometerCanvas extends SurfaceView {
         drawTemperatureArc(canvas, angleRed2 + angleYellow + angleGreen, angleYellow, colorYellow);
         drawTemperatureArc(canvas, angleRed2 + angleYellow + angleGreen + angleYellow, angleRed1, colorRed);
 
-        drawTemperatureLine(canvas, colorSeparator, 240f, -angleRed2);
-        drawTemperatureLine(canvas, colorSeparator, 240f, -angleRed2 - angleYellow);
-        drawTemperatureLine(canvas, colorSeparator, 240f, -angleRed2 - angleYellow - angleGreen);
-        drawTemperatureLine(canvas, colorSeparator, 240f, -angleRed2 - angleYellow - angleGreen - angleYellow);
+        drawTemperatureLine(canvas, colorSeparator, squareSize, -angleRed2);
+        drawTemperatureLine(canvas, colorSeparator, squareSize, -angleRed2 - angleYellow);
+        drawTemperatureLine(canvas, colorSeparator, squareSize, -angleRed2 - angleYellow - angleGreen);
+        drawTemperatureLine(canvas, colorSeparator, squareSize, -angleRed2 - angleYellow - angleGreen - angleYellow);
+    }
 
+    private void drawIndicator(Canvas canvas, int displayTemperatureMax, float anglePerC) {
         float currentTemp = anglePerC * (displayTemperatureMax - temperatureCurrent);
-        drawTemperatureLine(canvas, colorIndicator, 250f, currentTemp);
+        drawTemperatureLine(canvas, colorIndicator, squareSize, currentTemp);
     }
 
     private void drawTemperatureArc(Canvas canvas, float startAngle, float sweepAngle, Paint paint) {
-        canvas.drawArc(25f, 25f, 500f, 500f, startAngle, sweepAngle, true, paint);
+        canvas.drawArc(paddingPixel + 2f, paddingPixel + 2f, 2 * squareSize - 4f, 2 * squareSize - 4f, startAngle, sweepAngle, true, paint);
     }
 
     private void drawTemperatureLine(Canvas canvas, Paint paint, float length, float angle) {
         double x = Math.cos(Math.toRadians(angle)) * length;
         double y = Math.sin(Math.toRadians(angle)) * length;
 
-        canvas.drawLine(263f, 263f, 263f + (float) x, 263f - (float) y, paint);
+        canvas.drawLine(squareSize + paddingPixel / 2, squareSize + paddingPixel / 2, squareSize + paddingPixel / 2 + (float) x, squareSize + paddingPixel / 2 - (float) y, paint);
     }
 
     private void drawTemperature(Canvas canvas, String temperature) {
-        while (temperature.length() < 3) {
-            temperature = " " + temperature;
-        }
         Paint color;
         if (TemperatureUtil.isAlarm(getContext(), id)) {
             color = colorTextAlarm;
@@ -204,9 +194,35 @@ public class ThermometerCanvas extends SurfaceView {
             color = colorText;
         }
 
-        color.setTextSize(200);
+        color.setTextSize(canvas.getHeight() - 2 * paddingPixel);
         color.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(temperature, canvas.getWidth() - 25, 225, color);
+        canvas.drawText(temperature, maxWidth, maxHeight, color);
     }
 
+    private int calcDisplayTemperatureMin() {
+        int displayTemperatureMin;
+        if (temperatureCurrent > temperatureMin) {
+            displayTemperatureMin = temperatureMin - TEMPERATURE_THRESHOLD;
+        } else {
+            displayTemperatureMin = temperatureCurrent - TEMPERATURE_THRESHOLD;
+        }
+        if (displayTemperatureMin < 0) {
+            return 0;
+        }
+        return displayTemperatureMin;
+    }
+
+    private int calcDisplayTemperatureMax(boolean isRange) {
+        if (isRange) {
+            if (temperatureCurrent > temperatureMax) {
+                return temperatureCurrent + TEMPERATURE_THRESHOLD;
+            }
+            return temperatureMax + TEMPERATURE_THRESHOLD;
+        } else {
+            if (temperatureCurrent < temperatureMin) {
+                return temperatureMin + TEMPERATURE_THRESHOLD;
+            }
+            return temperatureCurrent + TEMPERATURE_THRESHOLD;
+        }
+    }
 }

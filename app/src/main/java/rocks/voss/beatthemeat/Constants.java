@@ -45,4 +45,6 @@ public class Constants {
     public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_IS_RANGE = "temperatureIsRange";
     public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MIN = "temperatureMin";
     public static final String JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MAX = "temperatureMax";
+
+    public static final int STANDARD_PADDING = 16;
 }

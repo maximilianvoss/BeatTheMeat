@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void scheduleSplashScreen() {
-        int spashScreenDuration = 3000;
+        int spashScreenDuration = 1000;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

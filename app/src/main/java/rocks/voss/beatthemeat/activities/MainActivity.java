@@ -34,6 +34,7 @@ import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.ui.ThermometerCanvas;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
+import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -194,11 +195,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void fillLinearLayout() {
+        float paddingPixel = UiUtil.getStandardPaddingPixel(this);
+
         switchAlarm = new Switch(context);
         switchAlarm.setText(R.string.setting_general_alarm_enable);
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
         switchAlarm.setChecked(TemperatureUtil.isEnabled());
-        switchAlarm.setPadding(25, 0, 25, 0);
+        switchAlarm.setPadding((int) paddingPixel, (int) paddingPixel, (int) paddingPixel, 0);
         switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
