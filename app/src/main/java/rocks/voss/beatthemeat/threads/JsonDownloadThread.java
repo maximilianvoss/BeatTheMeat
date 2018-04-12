@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.services;
+package rocks.voss.beatthemeat.threads;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,15 +21,15 @@ import java.net.URL;
 public class JsonDownloadThread extends Thread {
     private URL url = null;
     private final Context context;
-    private JsonDownloadCallbackInterface jsonDownloadCallback;
+    private JsonDownloadThreadCallback jsonDownloadCallback;
 
-    public JsonDownloadThread(Context context, URL url, JsonDownloadCallbackInterface jsonDownloadCallback) {
+    public JsonDownloadThread(Context context, URL url, JsonDownloadThreadCallback jsonDownloadCallback) {
         this.context = context;
         this.url = url;
         this.jsonDownloadCallback = jsonDownloadCallback;
     }
 
-    public JsonDownloadThread(Context context, String url, JsonDownloadCallbackInterface jsonDownloadCallback) throws MalformedURLException {
+    public JsonDownloadThread(Context context, String url, JsonDownloadThreadCallback jsonDownloadCallback) throws MalformedURLException {
         this(context, new URL(url), jsonDownloadCallback);
     }
 

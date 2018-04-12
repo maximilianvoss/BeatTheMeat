@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.services;
+package rocks.voss.beatthemeat.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +8,10 @@ import android.preference.PreferenceManager;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
+import rocks.voss.beatthemeat.enums.DismissTypeEnum;
+import rocks.voss.beatthemeat.enums.NotificationEnum;
+import rocks.voss.beatthemeat.services.NotificationSoundService;
+import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 /**

@@ -2,82 +2,39 @@ package rocks.voss.beatthemeat.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.SurfaceView;
 import android.view.View;
 
-import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
+import rocks.voss.beatthemeat.activities.ThermometerDisplayActivity;
 import rocks.voss.beatthemeat.activities.ThermometerSettingsActivity;
-import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
-import rocks.voss.beatthemeat.utils.UiUtil;
 
 
 /**
  * Created by voss on 11.03.18.
  */
-public class ThermometerCanvas extends SurfaceView {
-    private static final int TEMPERATURE_THRESHOLD = 20;
-    private static final int DEGREES_YELLOW = 5;
+public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
 
-    @Setter
-    private int id;
-    @Setter
-    private Paint colorBackground;
-    @Setter
-    private Paint colorText;
-    @Setter
-    private Paint colorTextAlarm;
-    @Setter
-    private Paint colorRed;
-    @Setter
-    private Paint colorYellow;
-    @Setter
-    private Paint colorGreen;
-    @Setter
-    private Paint colorIndicator;
-    @Setter
-    private Paint colorSeparator;
-    @Setter
-    private boolean displayTemperature = true;
-
-    private int temperatureCurrent;
-    private int temperatureMin;
-    private int temperatureMax;
-
-    private float paddingPixel;
-    private float maxWidth;
-    private float maxHeight;
     private float squareSize;
 
-    private Paint colorBlack;
-
-
-    public ThermometerCanvas(Context context, int id) {
+    public CurrentTemperatureCanvas(Context context, int id) {
         this(context);
         this.id = id;
     }
 
-    public ThermometerCanvas(Context context) {
+    public CurrentTemperatureCanvas(Context context) {
         this(context, null);
     }
 
-    public ThermometerCanvas(Context context, AttributeSet attrs) {
+    public CurrentTemperatureCanvas(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ThermometerCanvas(final Context context, AttributeSet attrs, int defStyleAttr) {
+    public CurrentTemperatureCanvas(final Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.setWillNotDraw(false);
-
-        colorBlack = new Paint();
-        colorBlack.setColor(Color.BLACK);
 
         this.setOnClickListener(new OnClickListener() {
             @Override
@@ -91,35 +48,29 @@ public class ThermometerCanvas extends SurfaceView {
         this.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                return false;
+                Intent intent = new Intent(v.getContext(), ThermometerDisplayActivity.class);
+                intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
+                v.getContext().startActivity(intent);
+                return true;
             }
         });
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    protected void doOnDraw(Canvas canvas) {
+        colorIndicator.setStrokeWidth(15f);
+        colorSeparator.setStrokeWidth(2f);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        boolean isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, this.id), true);
-        temperatureCurrent = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, this.id), -9999);
-        temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, this.id), 50);
-        temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, this.id), 100);
-
-        paddingPixel = UiUtil.getStandardPaddingPixel(getContext());
-        maxWidth = canvas.getWidth() - paddingPixel;
-        maxHeight = canvas.getHeight() - paddingPixel;
         if (maxWidth / 2 < maxHeight) {
             squareSize = maxWidth / 2;
         } else {
             squareSize = maxHeight;
         }
 
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), colorBackground);
         canvas.drawArc(paddingPixel, paddingPixel, 2 * squareSize, 2 * squareSize, 180f, 180f, true, colorBlack);
 
         int displayTemperatureMin = calcDisplayTemperatureMin();
-        int displayTemperatureMax = calcDisplayTemperatureMax(isRange);
+        int displayTemperatureMax = calcDisplayTemperatureMax();
         float anglePerC = 180f / ((float) displayTemperatureMax - (float) displayTemperatureMin);
 
         if (isRange) {
@@ -130,12 +81,10 @@ public class ThermometerCanvas extends SurfaceView {
 
         drawIndicator(canvas, displayTemperatureMax, anglePerC);
 
-        if ( displayTemperature) {
-            if (temperatureCurrent == -9999) {
-                drawTemperature(canvas, "N/A");
-            } else {
-                drawTemperature(canvas, String.valueOf(temperatureCurrent));
-            }
+        if (temperatureCurrent == -9999) {
+            drawTemperature(canvas, "N/A");
+        } else {
+            drawTemperature(canvas, String.valueOf(temperatureCurrent));
         }
     }
 
@@ -212,7 +161,7 @@ public class ThermometerCanvas extends SurfaceView {
         return displayTemperatureMin;
     }
 
-    private int calcDisplayTemperatureMax(boolean isRange) {
+    private int calcDisplayTemperatureMax() {
         if (isRange) {
             if (temperatureCurrent > temperatureMax) {
                 return temperatureCurrent + TEMPERATURE_THRESHOLD;

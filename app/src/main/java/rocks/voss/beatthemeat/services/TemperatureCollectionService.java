@@ -22,6 +22,9 @@ import java.net.MalformedURLException;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
+import rocks.voss.beatthemeat.enums.NotificationEnum;
+import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
+import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
@@ -74,7 +77,7 @@ public class TemperatureCollectionService extends JobService {
         String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL, "");
 
         try {
-            JsonDownloadThread service = new JsonDownloadThread(this, webserviceUrl, new JsonDownloadCallbackInterface() {
+            JsonDownloadThread service = new JsonDownloadThread(this, webserviceUrl, new JsonDownloadThreadCallback() {
                 @Override
                 public void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject) {
                     try {

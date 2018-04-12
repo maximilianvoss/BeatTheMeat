@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
+import rocks.voss.beatthemeat.threads.HistoryTemperatureDeleteThread;
 
 public class SplashActivity extends AppCompatActivity {
+
+    private HistoryTemperatureDeleteThread historyTemperatureDeleteThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +26,9 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         scheduleSplashScreen();
         MainActivity.setTemperatureDatabase(Room.databaseBuilder(getApplicationContext(), TemperatureDatabase.class, "temperatures").build());
-//        MainActivity.getTemperatureDatabase().temperatureDao().deleteAll();
+
+        historyTemperatureDeleteThread = new HistoryTemperatureDeleteThread();
+        historyTemperatureDeleteThread.start();
 
         ThermometerSettingsCollectionService.schedule(this);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -37,6 +43,11 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                try {
+                    historyTemperatureDeleteThread.join();
+                } catch (InterruptedException e) {
+                    Log.e("SplashActivity", "InterruptedException", e);
+                }
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();

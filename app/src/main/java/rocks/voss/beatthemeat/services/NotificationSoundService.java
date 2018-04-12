@@ -19,6 +19,9 @@ import android.support.v4.app.NotificationCompat;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.activities.MainActivity;
+import rocks.voss.beatthemeat.enums.DismissTypeEnum;
+import rocks.voss.beatthemeat.enums.NotificationEnum;
+import rocks.voss.beatthemeat.receiver.DismissReceiver;
 
 /**
  * Created by voss on 27.03.18.

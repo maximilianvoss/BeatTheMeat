@@ -7,6 +7,7 @@ package rocks.voss.beatthemeat;
 public class Constants {
     public final static int SERVICE_TEMPERATURE_COLLECTION_SERVICE_ID = 1;
     public final static int SERVICE_THERMOMETER_SETTINGS_COLLECTION_SERVICE_ID = 2;
+    public final static int SERVICE_HISTORY_TEMPERATURE_SERVICE_ID = 3;
 
     public final static String NOTIFICATION_ALERT_TYPE = "rocks.voss.beatthemeat.services.NotificationSoundService.alarmType";
     public final static String NOTIFICATION_DISMISS_TYPE = "rocks.voss.beatthemeat.services.NotificationSoundService.dismissType";

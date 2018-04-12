@@ -18,8 +18,11 @@ public interface TemperatureDao {
     @Query("SELECT * FROM temperature")
     List<Temperature> getAll();
 
-    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId AND time=:time LIMIT 1")
-    Temperature findByTimestamp(int thermometerId, OffsetDateTime time);
+    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId ORDER BY datetime(time)")
+    List<Temperature> getAll(int thermometerId);
+
+    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId AND datetime(time)>datetime(:time) ORDER BY datetime(time)")
+    List<Temperature> getAll(int thermometerId, OffsetDateTime time);
 
     @Insert
     void insertAll(Temperature ... temperatures);
