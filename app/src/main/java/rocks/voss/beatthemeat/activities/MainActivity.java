@@ -25,8 +25,10 @@ import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.TemperatureDatabase;
+import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
+import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.CurrentTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
@@ -104,6 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.removeThermometer();
                 onResume();
                 return true;
+            case R.id.quit:
+                HistoryTemperatureService.cancelJob(this);
+                TemperatureCollectionService.cancelJob(this);
+                ThermometerSettingsCollectionService.cancelJob(this);
+                this.finishAndRemoveTask();
+                this.finishAffinity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -119,12 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
         thermometers.clear();
         fillLinearLayout();
-    }
-
-    @Override
-    public void onDestroy() {
-        TemperatureCollectionService.schedule(this);
-        super.onDestroy();
     }
 
     public static void removeThermometer() {

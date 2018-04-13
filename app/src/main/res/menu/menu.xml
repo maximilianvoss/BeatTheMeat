@@ -9,4 +9,7 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="Settings"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/quit"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="Quit"/>
 </menu>
