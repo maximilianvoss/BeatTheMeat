@@ -10,6 +10,8 @@
         android:title="Settings"
         app:showAsAction="ifRoom" />
     <item android:id="@+id/quit"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="Quit"/>
+        android:icon="@android:drawable/ic_delete"
+        android:title="Quit"
+        app:showAsAction="ifRoom"
+        />
 </menu>
