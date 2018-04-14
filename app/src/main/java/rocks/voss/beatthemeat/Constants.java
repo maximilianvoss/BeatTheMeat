@@ -18,7 +18,7 @@ public class Constants {
     public static final String NOTIFICATION_TEMPERATURE_TITLE = "Beat The Meat Alarm";
     public static final String NOTIFICATION_TEMPERATURE_TEXT = "Check the meat!";
     public static final String NOTIFICATION_WEBSERVICE_TITLE = "Beat The Meat Connection Alarm";
-    public static final String NOTIFICATION_WEBSERVICE_TEXT = "Check the Internet connection";
+    public static final String NOTIFICATION_WEBSERVICE_TEXT = "Check the Network connection";
 
     public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_ENABLED = "temperatureWebserviceEnabled";
     public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL = "temperatureWebserviceURL";

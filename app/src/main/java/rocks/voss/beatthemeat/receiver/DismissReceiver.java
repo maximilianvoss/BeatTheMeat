@@ -12,6 +12,7 @@ import rocks.voss.beatthemeat.enums.DismissTypeEnum;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
+import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 /**
@@ -29,8 +30,9 @@ public class DismissReceiver extends BroadcastReceiver {
         NotificationEnum notificationType = NotificationEnum.valueOf(intent.getStringExtra(Constants.NOTIFICATION_ALERT_TYPE));
 
         Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
-        notificationSoundServiceIntent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, notificationType.name());
         context.stopService(notificationSoundServiceIntent);
+
+        NotificationUtil.stopNotification(context);
 
         if ( dismissType.equals(DismissTypeEnum.Dismiss)) {
             switch (notificationType) {

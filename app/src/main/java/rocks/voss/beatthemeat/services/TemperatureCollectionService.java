@@ -6,7 +6,6 @@ import android.app.job.JobScheduler;
 import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -26,6 +25,7 @@ import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
 import rocks.voss.beatthemeat.utils.KeyUtil;
+import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 /**
@@ -104,9 +104,7 @@ public class TemperatureCollectionService extends JobService {
 
                 @Override
                 public void onConnectionFailure(Context context) {
-                    Intent intent = new Intent(context, NotificationSoundService.class);
-                    intent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, NotificationEnum.WebserviceAlarm.name());
-                    context.startService(intent);
+                    NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
                 }
             });
 
@@ -119,16 +117,13 @@ public class TemperatureCollectionService extends JobService {
 
     private void activateNotification() {
         if (TemperatureUtil.isEnabled() ) {
-            Intent intent = new Intent(this, NotificationSoundService.class);
-            intent.putExtra(Constants.NOTIFICATION_ALERT_TYPE, NotificationEnum.TemperatureAlarm.name());
-            startService(intent);
+            NotificationUtil.createNotification(this, NotificationEnum.TemperatureAlarm);
         }
     }
 
     private void deactivateNotification() {
         if (TemperatureUtil.isEnabled()) {
-            Intent intent = new Intent(this, NotificationSoundService.class);
-            stopService(intent);
+            NotificationUtil.stopNotification(this);
         }
     }
 

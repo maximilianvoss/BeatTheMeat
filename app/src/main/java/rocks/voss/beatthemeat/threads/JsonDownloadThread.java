@@ -15,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import rocks.voss.beatthemeat.utils.NotificationUtil;
+
 /**
  * Created by voss on 24.03.18.
  */
@@ -38,8 +40,8 @@ public class JsonDownloadThread extends Thread {
         try {
             if ( url != null ) {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setConnectTimeout(1000);
-                urlConnection.setReadTimeout(1000);
+                urlConnection.setConnectTimeout(2000);
+                urlConnection.setReadTimeout(2000);
                 urlConnection.connect();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"), 8);
@@ -52,6 +54,7 @@ public class JsonDownloadThread extends Thread {
                 reader.close();
                 urlConnection.disconnect();
 
+                NotificationUtil.stopNotification(context);
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
                 jsonDownloadCallback.onDownloadComplete(sharedPref, new JSONObject(sb.toString()));
             }
