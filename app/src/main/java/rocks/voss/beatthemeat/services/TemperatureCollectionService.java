@@ -15,8 +15,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.zone.ZoneRulesException;
 
 import java.net.MalformedURLException;
+import java.util.TimeZone;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
@@ -88,7 +90,7 @@ public class TemperatureCollectionService extends JobService {
                         for (int i = 0; i < temperatures.length(); i++) {
                             int temperature = temperatures.getInt(i);
                             editor.putInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, i), temperature);
-                            insertTemperatureIntoDatabase(i , temperature);
+                            insertTemperatureIntoDatabase(i, temperature);
                         }
                         editor.apply();
                         MainActivity.refreshThermometers();
@@ -118,7 +120,7 @@ public class TemperatureCollectionService extends JobService {
     }
 
     private void activateNotification() {
-        if (TemperatureUtil.isEnabled() ) {
+        if (TemperatureUtil.isEnabled()) {
             NotificationUtil.createNotification(this, NotificationEnum.TemperatureAlarm);
         }
     }
@@ -133,14 +135,20 @@ public class TemperatureCollectionService extends JobService {
         Temperature temperature = new Temperature();
         temperature.thermometerId = id;
         temperature.temperature = temperatureValue;
-        temperature.time = OffsetDateTime.now();
+        try {
+            temperature.time = OffsetDateTime.now();
+        } catch (ZoneRulesException e) {
+            Log.e("TemperatureCollectionSe", "ZoneRulesException", e);
+            TimeZone.setDefault(TimeZone.getTimeZone("Z"));
+            temperature.time = OffsetDateTime.now();
+        }
 
         TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
-        if ( temperatureDatabase == null) {
+        if (temperatureDatabase == null) {
             return;
         }
         TemperatureDao temperatureDao = temperatureDatabase.temperatureDao();
-        if ( temperatureDao == null ) {
+        if (temperatureDao == null) {
             return;
         }
         temperatureDao.insertAll(temperature);

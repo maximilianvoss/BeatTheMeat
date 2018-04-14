@@ -24,14 +24,14 @@ public class HistoryTemperatureThread extends Thread {
         }
         OffsetDateTime time = HistoryScaleEnum.getTime(canvas.getScale());
         TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
-        if (temperatureDatabase == null ) {
+        if (temperatureDatabase == null) {
             return;
         }
         TemperatureDao temperatureDao = temperatureDatabase.temperatureDao();
-        if ( temperatureDao == null ) {
+        if (temperatureDao == null) {
             return;
         }
-        List<Temperature> temperatures =temperatureDao.getAll(canvas.getId(), time);
+        List<Temperature> temperatures = temperatureDao.getAll(canvas.getId(), time);
         canvas.setTemperatures(temperatures);
         canvas.invalidate();
     }
