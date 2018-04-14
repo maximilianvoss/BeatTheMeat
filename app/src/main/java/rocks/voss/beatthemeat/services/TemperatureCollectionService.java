@@ -21,6 +21,8 @@ import java.net.MalformedURLException;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
+import rocks.voss.beatthemeat.database.TemperatureDao;
+import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
@@ -132,6 +134,15 @@ public class TemperatureCollectionService extends JobService {
         temperature.thermometerId = id;
         temperature.temperature = temperatureValue;
         temperature.time = OffsetDateTime.now();
-        MainActivity.getTemperatureDatabase().temperatureDao().insertAll(temperature);
+
+        TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
+        if ( temperatureDatabase == null) {
+            return;
+        }
+        TemperatureDao temperatureDao = temperatureDatabase.temperatureDao();
+        if ( temperatureDao == null ) {
+            return;
+        }
+        temperatureDao.insertAll(temperature);
     }
 }

@@ -7,6 +7,8 @@ import java.util.List;
 import lombok.Setter;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
+import rocks.voss.beatthemeat.database.TemperatureDao;
+import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 
@@ -21,7 +23,15 @@ public class HistoryTemperatureThread extends Thread {
             return;
         }
         OffsetDateTime time = HistoryScaleEnum.getTime(canvas.getScale());
-        List<Temperature> temperatures = MainActivity.getTemperatureDatabase().temperatureDao().getAll(canvas.getId(), time);
+        TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
+        if (temperatureDatabase == null ) {
+            return;
+        }
+        TemperatureDao temperatureDao = temperatureDatabase.temperatureDao();
+        if ( temperatureDao == null ) {
+            return;
+        }
+        List<Temperature> temperatures =temperatureDao.getAll(canvas.getId(), time);
         canvas.setTemperatures(temperatures);
         canvas.invalidate();
     }
