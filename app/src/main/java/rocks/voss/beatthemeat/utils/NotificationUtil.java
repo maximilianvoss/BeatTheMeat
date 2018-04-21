@@ -43,14 +43,14 @@ public class NotificationUtil {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.NOTIFICIATION_CHANNEL_ID)
-                .setSmallIcon(R.mipmap.beatthemeat)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setContentIntent(mainActivityPendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .addAction(R.mipmap.beatthemeat, Constants.NOTIFICATION_SNOOZE, snoozeReceiverPendingIntent)
-                .addAction(R.mipmap.beatthemeat, Constants.NOTIFICATION_DISMISS, dismissReceiverPendingIntent);
+                .addAction(R.mipmap.ic_launcher_foreground, Constants.NOTIFICATION_SNOOZE, snoozeReceiverPendingIntent)
+                .addAction(R.mipmap.ic_launcher_foreground, Constants.NOTIFICATION_DISMISS, dismissReceiverPendingIntent);
 
         switch (notificationType) {
             case TemperatureAlarm:
