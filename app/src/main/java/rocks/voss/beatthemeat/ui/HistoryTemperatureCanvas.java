@@ -194,28 +194,28 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
     private void drawRange(Canvas canvas) {
         float start = maxHeight;
         float end = maxHeight - (temperatureMin - displayTemperatureMin - DEGREES_YELLOW) * pixelPerC;
-        drawRangeBar(canvas, start, end, colorRed);
+        drawRangeBar(canvas, start, end, colorLightRed);
 
         start = end;
         end = maxHeight - (temperatureMin - displayTemperatureMin) * pixelPerC;
-        drawRangeBar(canvas, start, end, colorYellow);
+        drawRangeBar(canvas, start, end, colorLightYellow);
 
         if (isRange) {
             start = end;
             end = maxHeight - (temperatureMax - displayTemperatureMin) * pixelPerC;
-            drawRangeBar(canvas, start, end, colorGreen);
+            drawRangeBar(canvas, start, end, colorLightGreen);
 
             start = end;
             end = maxHeight - (temperatureMax - displayTemperatureMin + DEGREES_YELLOW) * pixelPerC;
-            drawRangeBar(canvas, start, end, colorYellow);
+            drawRangeBar(canvas, start, end, colorLightYellow);
 
             start = end;
             end = paddingPixel;
-            drawRangeBar(canvas, start, end, colorRed);
+            drawRangeBar(canvas, start, end, colorLightRed);
         } else {
             start = end;
             end = paddingPixel;
-            drawRangeBar(canvas, start, end, colorGreen);
+            drawRangeBar(canvas, start, end, colorLightGreen);
         }
     }
 

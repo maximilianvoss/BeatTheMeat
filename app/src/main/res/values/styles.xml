@@ -3,6 +3,9 @@
         <item name="colorThermometerRed">@color/colorThermometerRed</item>
         <item name="colorThermometerYellow">@color/colorThermometerYellow</item>
         <item name="colorThermometerGreen">@color/colorThermometerGreen</item>
+        <item name="colorThermometerLightRed">@color/colorThermometerLightRed</item>
+        <item name="colorThermometerLightYellow">@color/colorThermometerLightYellow</item>
+        <item name="colorThermometerLightGreen">@color/colorThermometerLightGreen</item>
         <item name="colorThermometerText">@color/colorThermometerText</item>
         <item name="colorThermometerTextAlarm">@color/colorThermometerTextAlarm</item>
         <item name="colorThermometerIndicator">@color/colorThermometerIndicator</item>

@@ -3,6 +3,9 @@
     <attr name="colorThermometerRed" format="color"/>
     <attr name="colorThermometerYellow" format="color"/>
     <attr name="colorThermometerGreen" format="color"/>
+    <attr name="colorThermometerLightRed" format="color"/>
+    <attr name="colorThermometerLightYellow" format="color"/>
+    <attr name="colorThermometerLightGreen" format="color"/>
     <attr name="colorThermometerText" format="color"/>
     <attr name="colorThermometerTextAlarm" format="color"/>
     <attr name="colorThermometerIndicator" format="color"/>
