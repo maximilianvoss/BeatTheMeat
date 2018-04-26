@@ -13,6 +13,9 @@ import rocks.voss.beatthemeat.ui.AbstractTemperatureCanvas;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 
 public class UiUtil {
+
+    private static final float STROKE_WIDTH = 5f;
+
     public static float getStandardPaddingPixel(Context context) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Constants.STANDARD_PADDING, context.getResources().getDisplayMetrics());
     }
@@ -44,32 +47,32 @@ public class UiUtil {
 
         Paint paintRed = new Paint();
         paintRed.setColor(ta.getColor(index++, Color.RED));
-        paintRed.setStrokeWidth(5f);
+        paintRed.setStrokeWidth(STROKE_WIDTH);
         canvas.setColorRed(paintRed);
 
         Paint paintYellow = new Paint();
         paintYellow.setColor(ta.getColor(index++, Color.YELLOW));
-        paintYellow.setStrokeWidth(5f);
+        paintYellow.setStrokeWidth(STROKE_WIDTH);
         canvas.setColorYellow(paintYellow);
 
         Paint paintGreen = new Paint();
         paintGreen.setColor(ta.getColor(index++, Color.GREEN));
-        paintGreen.setStrokeWidth(5f);
+        paintGreen.setStrokeWidth(STROKE_WIDTH);
         canvas.setColorGreen(paintGreen);
 
         Paint paintLightRed = new Paint();
         paintLightRed.setColor(ta.getColor(index++, Color.RED));
-        paintLightRed.setStrokeWidth(5f);
+        paintLightRed.setStrokeWidth(STROKE_WIDTH);
         canvas.setColorLightRed(paintLightRed);
 
         Paint paintLightYellow = new Paint();
         paintLightYellow.setColor(ta.getColor(index++, Color.YELLOW));
-        paintLightYellow.setStrokeWidth(5f);
+        paintLightYellow.setStrokeWidth(STROKE_WIDTH);
         canvas.setColorLightYellow(paintLightYellow);
 
         Paint paintLightGreen = new Paint();
         paintLightGreen.setColor(ta.getColor(index++, Color.GREEN));
-        paintLightGreen.setStrokeWidth(5f);
+        paintLightGreen.setStrokeWidth(STROKE_WIDTH);
         canvas.setColorLightGreen(paintLightGreen);
 
         Paint paintText = new Paint();

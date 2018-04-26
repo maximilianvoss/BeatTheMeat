@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -20,7 +22,8 @@ import rocks.voss.beatthemeat.utils.UiUtil;
 public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
 
     private float squareSize;
-    private final static int indicatorSize = 7;
+    private final static int temperatureIndicatorSize = 7;
+    private final static int indicatorWidth = 7;
 
     public CurrentTemperatureCanvas(Context context, int id) {
         this(context);
@@ -60,7 +63,6 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
 
     @Override
     protected void doOnDraw(Canvas canvas) {
-        colorIndicator.setStrokeWidth(15f);
         colorSeparator.setStrokeWidth(2f);
 
         if (maxWidth / 2 < maxHeight) {
@@ -69,30 +71,32 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
             squareSize = maxHeight;
         }
 
-        canvas.drawArc(paddingPixel, paddingPixel, 2 * squareSize, 2 * squareSize, 180f, 180f, true, colorBlack);
         if (isRange) {
             drawRange(canvas);
         } else {
             drawTarget(canvas);
         }
-
         drawMarkers(canvas);
-        drawIndicator(canvas);
 
         if (temperatureCurrent == -9999) {
             drawTemperature(canvas, "N/A");
         } else {
             drawTemperature(canvas, String.valueOf(temperatureCurrent));
         }
+
+        colorBlack.setStyle(Paint.Style.STROKE);
+        canvas.drawArc(paddingPixel, paddingPixel, 2 * squareSize, 2 * squareSize, 180f, 180f, false, colorBlack);
+
+        drawIndicator(canvas);
     }
 
     private float getAnglePerTemperature(float temperature) {
         int displayTemperatureMin = calcDisplayTemperatureMin();
         int displayTemperatureMax = calcDisplayTemperatureMax();
-        if ( temperature < displayTemperatureMin ) {
+        if (temperature < displayTemperatureMin) {
             return 0f;
         }
-        if ( temperature > displayTemperatureMax ) {
+        if (temperature > displayTemperatureMax) {
             return 180f;
         }
         float anglePerC = 180f / (displayTemperatureMax - displayTemperatureMin);
@@ -100,22 +104,22 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     }
 
     private void drawMarkers(Canvas canvas) {
-        if ( isRange ) {
-            for ( int i = calcDisplayTemperatureMin() + 5; i < calcDisplayTemperatureMax(); i+=5 ) {
+        if (isRange) {
+            for (int i = calcDisplayTemperatureMin() + 5; i < calcDisplayTemperatureMax(); i += 5) {
                 Paint color;
-                if ( i <= temperatureMin - DEGREES_YELLOW ) {
+                if (i <= temperatureMin - DEGREES_YELLOW) {
                     color = colorRed;
-                } else if ( i <= temperatureMin ) {
+                } else if (i <= temperatureMin) {
                     color = colorYellow;
-                } else if ( i <= temperatureMax ) {
+                } else if (i <= temperatureMax) {
                     color = colorGreen;
-                } else if ( i <= temperatureMax + DEGREES_YELLOW ) {
+                } else if (i <= temperatureMax + DEGREES_YELLOW) {
                     color = colorYellow;
                 } else {
                     color = colorRed;
                 }
                 float angle = 180f - getAnglePerTemperature(i);
-                drawTemperatureIndicator(canvas, color, squareSize - paddingPixel / 2, angle, true);
+                drawTemperatureLine(canvas, color, squareSize - paddingPixel / 2, angle, true);
             }
         } else {
             for (int i = calcDisplayTemperatureMin() + 5; i < calcDisplayTemperatureMax(); i += 5) {
@@ -128,7 +132,7 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
                     color = colorRed;
                 }
                 float angle = 180f - getAnglePerTemperature(i);
-                drawTemperatureIndicator(canvas, color, squareSize - paddingPixel / 2, angle, true);
+                drawTemperatureLine(canvas, color, squareSize - paddingPixel / 2, angle, true);
             }
         }
     }
@@ -165,30 +169,28 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
         drawTemperatureLine(canvas, colorSeparator, squareSize - paddingPixel / 2, 180f - angleYellow2);
     }
 
-    private void drawIndicator(Canvas canvas) {
-        float angleCurrentTemp = 180f - getAnglePerTemperature(temperatureCurrent);
-        drawTemperatureLine(canvas, colorIndicator, squareSize, angleCurrentTemp);
-    }
-
     private void drawTemperatureArc(Canvas canvas, float startAngle, float sweepAngle, Paint paint) {
         canvas.drawArc(paddingPixel + 2f, paddingPixel + 2f, 2 * squareSize - 4f, 2 * squareSize - 4f, startAngle, sweepAngle, true, paint);
     }
 
     private void drawTemperatureLine(Canvas canvas, Paint paint, float length, float angle) {
-        drawTemperatureIndicator(canvas, paint, length, angle, false);
+        drawTemperatureLine(canvas, paint, length, angle, false);
     }
 
-    private void drawTemperatureIndicator(Canvas canvas, Paint paint, float length, float angle, boolean isIndicator) {
-        double xStart = squareSize + paddingPixel / 2;
-        double yStart = squareSize + paddingPixel / 2;
-        double yEnd = squareSize + paddingPixel / 2 - Math.sin(Math.toRadians(angle)) * length;
-        double xEnd = squareSize + paddingPixel / 2 + Math.cos(Math.toRadians(angle)) * length;
+    private void drawTemperatureLine(Canvas canvas, Paint paint, float length, float angle, boolean isIndicator) {
+        Point start = new Point();
+        start.x = (int) (squareSize + paddingPixel / 2);
+        start.y = (int) (squareSize + paddingPixel / 2);
+
+        Point end = new Point();
+        end.x = (int) (squareSize + paddingPixel / 2 + Math.cos(Math.toRadians(angle)) * length);
+        end.y = (int) (squareSize + paddingPixel / 2 - Math.sin(Math.toRadians(angle)) * length);
 
         if (isIndicator) {
-            xStart += Math.cos(Math.toRadians(angle)) * (length - UiUtil.getStandardPaddingPixel(getContext(), indicatorSize));
-            yStart -= Math.sin(Math.toRadians(angle)) * (length - UiUtil.getStandardPaddingPixel(getContext(), indicatorSize));
+            start.x += Math.cos(Math.toRadians(angle)) * (length - UiUtil.getStandardPaddingPixel(getContext(), temperatureIndicatorSize));
+            start.y -= Math.sin(Math.toRadians(angle)) * (length - UiUtil.getStandardPaddingPixel(getContext(), temperatureIndicatorSize));
         }
-        canvas.drawLine((float) xStart, (float) yStart, (float) xEnd, (float) yEnd, paint);
+        canvas.drawLine(start.x, start.y, end.x, end.y, paint);
     }
 
     private void drawTemperature(Canvas canvas, String temperature) {
@@ -202,5 +204,41 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
         color.setTextSize(canvas.getHeight() - 2 * paddingPixel);
         color.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText(temperature, maxWidth, maxHeight, color);
+    }
+
+    private void drawIndicator(Canvas canvas) {
+        float angle = 180f - getAnglePerTemperature(temperatureCurrent);
+        float length = UiUtil.getStandardPaddingPixel(getContext(), indicatorWidth);
+
+        Point end = new Point();
+        end.x = (int) (squareSize + paddingPixel / 2 + Math.cos(Math.toRadians(angle)) * (squareSize - paddingPixel / 2));
+        end.y = (int) (squareSize + paddingPixel / 2 - Math.sin(Math.toRadians(angle)) * (squareSize - paddingPixel / 2));
+
+        Point center = new Point();
+        center.x = (int) (squareSize + paddingPixel / 2);
+        center.y = (int) (squareSize + paddingPixel / 2 - length);
+
+        Point rear = new Point();
+        rear.x = (int) (center.x - Math.cos(Math.toRadians(angle)) * length);
+        rear.y = (int) (center.y + Math.sin(Math.toRadians(angle)) * length);
+
+        Point mid1 = new Point();
+        mid1.x = (int) (center.x + Math.cos(Math.toRadians(angle + 90)) * length);
+        mid1.y = (int) (center.y - Math.sin(Math.toRadians(angle + 90)) * length);
+
+        Point mid2 = new Point();
+        mid2.x = (int) (center.x + Math.cos(Math.toRadians(angle - 90)) * length);
+        mid2.y = (int) (center.y - Math.sin(Math.toRadians(angle - 90)) * length);
+
+        Path path = new Path();
+        path.moveTo(rear.x, rear.y);
+        path.lineTo(mid1.x, mid1.y);
+        path.lineTo(end.x, end.y);
+        path.lineTo(mid2.x, mid2.y);
+        path.lineTo(rear.x, rear.y);
+
+        canvas.drawPath(path, colorIndicator);
+        colorBlack.setStyle(Paint.Style.FILL_AND_STROKE);
+        canvas.drawCircle(center.x, center.y, length / 3, colorBlack);
     }
 }
