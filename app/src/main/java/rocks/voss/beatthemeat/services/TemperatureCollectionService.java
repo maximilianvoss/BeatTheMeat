@@ -14,11 +14,8 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.zone.ZoneRulesException;
 
 import java.net.MalformedURLException;
-import java.util.TimeZone;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
@@ -31,6 +28,7 @@ import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
+import rocks.voss.beatthemeat.utils.TimeUtil;
 
 /**
  * Created by voss on 24.03.18.
@@ -136,13 +134,7 @@ public class TemperatureCollectionService extends JobService {
         Temperature temperature = new Temperature();
         temperature.thermometerId = id;
         temperature.temperature = temperatureValue;
-        try {
-            temperature.time = OffsetDateTime.now();
-        } catch (ZoneRulesException e) {
-            Log.e("TemperatureCollectionSe", "ZoneRulesException", e);
-            TimeZone.setDefault(TimeZone.getTimeZone("Z"));
-            temperature.time = OffsetDateTime.now();
-        }
+        temperature.time = TimeUtil.getNow();
 
         TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
         if (temperatureDatabase == null) {

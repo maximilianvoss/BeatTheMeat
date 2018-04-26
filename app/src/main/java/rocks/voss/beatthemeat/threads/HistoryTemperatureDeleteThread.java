@@ -5,6 +5,7 @@ import org.threeten.bp.OffsetDateTime;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.TemperatureDao;
 import rocks.voss.beatthemeat.database.TemperatureDatabase;
+import rocks.voss.beatthemeat.utils.TimeUtil;
 
 public class HistoryTemperatureDeleteThread extends Thread {
     @Override
@@ -18,7 +19,7 @@ public class HistoryTemperatureDeleteThread extends Thread {
             return;
         }
 
-        OffsetDateTime time = OffsetDateTime.now();
+        OffsetDateTime time = TimeUtil.getNow();
         time.minusDays(1);
         temperatureDao.deleteOld(time);
     }

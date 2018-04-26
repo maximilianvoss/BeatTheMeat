@@ -2,6 +2,8 @@ package rocks.voss.beatthemeat.enums;
 
 import org.threeten.bp.OffsetDateTime;
 
+import rocks.voss.beatthemeat.utils.TimeUtil;
+
 public enum HistoryScaleEnum {
     min15,
     min30,
@@ -25,7 +27,7 @@ public enum HistoryScaleEnum {
     }
 
     public static OffsetDateTime getTime(HistoryScaleEnum scaleEnum) {
-        OffsetDateTime time = OffsetDateTime.now();
+        OffsetDateTime time = TimeUtil.getNow();
         switch (scaleEnum) {
             case min15:
                 return time.minusMinutes(15);

@@ -18,6 +18,7 @@ import lombok.Setter;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
+import rocks.voss.beatthemeat.utils.TimeUtil;
 
 public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
@@ -106,7 +107,7 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
         calcDisplayMinMax();
 
-        OffsetDateTime currentTime = OffsetDateTime.now();
+        OffsetDateTime currentTime = TimeUtil.getNow();
         OffsetDateTime historyTime = HistoryScaleEnum.getTime(scale);
         long timeFrame;
         if (HistoryScaleEnum.isCalcInSeconds(scale)) {
