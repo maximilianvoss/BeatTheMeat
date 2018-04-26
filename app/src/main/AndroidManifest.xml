@@ -42,7 +42,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".activities.ThermometerDisplayActivity"></activity>
+        <activity android:name=".activities.HistoryActivity"></activity>
     </application>
 
 </manifest>

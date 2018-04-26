@@ -11,7 +11,7 @@ import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
-public class ThermometerDisplayActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
 
     @Getter
     private static HistoryTemperatureCanvas canvas;
@@ -19,7 +19,7 @@ public class ThermometerDisplayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_thermometer_display);
+        setContentView(R.layout.activity_history);
 
         int id = getIntent().getIntExtra(Constants.THERMOMETER_CANVAS_ID, 0);
 

@@ -19,12 +19,14 @@ import rocks.voss.beatthemeat.services.NotificationSoundService;
 public class NotificationUtil {
 
     private static boolean notificationActive = false;
+    private static NotificationEnum notificationType;
 
     public static void createNotification(Context context, NotificationEnum notificationType) {
         if ( notificationActive ) {
             return;
         }
         notificationActive = true;
+        NotificationUtil.notificationType = notificationType;
         createNotificationChannel(context);
 
         Intent mainActivityIntent = new Intent(context, MainActivity.class);
@@ -71,6 +73,13 @@ public class NotificationUtil {
             context.startService(soundNotification);
         }
     }
+
+    public static void stopNotification(Context context, NotificationEnum notificationType) {
+        if (NotificationUtil.notificationType == notificationType) {
+            stopNotification(context);
+        }
+    }
+
 
     public static void stopNotification(Context context) {
         if ( notificationActive) {

@@ -11,7 +11,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 
 import rocks.voss.beatthemeat.Constants;
-import rocks.voss.beatthemeat.activities.ThermometerDisplayActivity;
+import rocks.voss.beatthemeat.activities.HistoryActivity;
 import rocks.voss.beatthemeat.threads.HistoryTemperatureThread;
 
 /**
@@ -36,6 +36,7 @@ public class HistoryTemperatureService extends JobService {
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
+        execute();
     }
 
     public static void cancelJob(Context context) {
@@ -57,10 +58,14 @@ public class HistoryTemperatureService extends JobService {
         return false;
     }
 
-    private void execute(JobParameters params) {
+    public static void execute() {
         HistoryTemperatureThread thread = new HistoryTemperatureThread();
-        thread.setCanvas(ThermometerDisplayActivity.getCanvas());
+        thread.setCanvas(HistoryActivity.getCanvas());
         thread.start();
+    }
+
+    private void execute(JobParameters params) {
+        execute();
         jobFinished(params, false);
     }
 }

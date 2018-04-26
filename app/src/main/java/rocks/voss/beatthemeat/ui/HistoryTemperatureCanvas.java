@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
+import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 
 public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
@@ -84,7 +85,7 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
                 } else {
                     scale = scale.prev();
                 }
-                invalidate();
+                HistoryTemperatureService.execute();
                 return true;
             }
         });

@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import rocks.voss.beatthemeat.Constants;
-import rocks.voss.beatthemeat.activities.ThermometerDisplayActivity;
+import rocks.voss.beatthemeat.activities.HistoryActivity;
 import rocks.voss.beatthemeat.activities.ThermometerSettingsActivity;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
@@ -53,7 +53,7 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
         this.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Intent intent = new Intent(v.getContext(), ThermometerDisplayActivity.class);
+                Intent intent = new Intent(v.getContext(), HistoryActivity.class);
                 intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
                 v.getContext().startActivity(intent);
                 return true;
