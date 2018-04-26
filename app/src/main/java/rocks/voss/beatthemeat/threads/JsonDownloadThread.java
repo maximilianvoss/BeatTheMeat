@@ -34,7 +34,9 @@ public class JsonDownloadThread extends Thread {
     }
 
     public void addUrl(String url) throws MalformedURLException {
-        addUrl(new URL(url));
+        if (url != null && !url.equals("")) {
+            addUrl(new URL(url));
+        }
     }
 
     public void addUrl(URL url) {
