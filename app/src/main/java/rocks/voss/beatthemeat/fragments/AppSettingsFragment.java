@@ -42,6 +42,10 @@ public class AppSettingsFragment extends PreferenceFragment {
         temperatureWebserviceUrl.setTitle(R.string.setting_general_temperature_webservice_url);
         temperatureWebserviceUrl.setKey(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL);
 
+        EditTextPreference temperatureAlternativeWebserviceUrl = new EditTextPreference(this.getContext());
+        temperatureAlternativeWebserviceUrl.setTitle(R.string.setting_general_temperature_alternative_webservice_url);
+        temperatureAlternativeWebserviceUrl.setKey(Constants.SETTING_GENERAL_TEMPERATURE_ALTERNATIVE_WEBSERVICE_URL);
+
         NumberPickerPreference temperatureWebserviceInterval = new NumberPickerPreference(this.getContext());
         temperatureWebserviceInterval.setKey(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL);
         temperatureWebserviceInterval.setTitle(R.string.setting_general_temperature_webservice_interval);
@@ -68,6 +72,7 @@ public class AppSettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_appsettings);
         getPreferenceScreen().addPreference(temperatureWebserviceEnable);
         getPreferenceScreen().addPreference(temperatureWebserviceUrl);
+        getPreferenceScreen().addPreference(temperatureAlternativeWebserviceUrl);
         getPreferenceScreen().addPreference(temperatureWebserviceInterval);
         getPreferenceScreen().addPreference(thermometerSettingsWebserviceUrl);
         getPreferenceScreen().addPreference(alarmSound);

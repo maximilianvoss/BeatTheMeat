@@ -6,6 +6,7 @@
     <string name="setting_general_alarm_enable">Enable Alarm</string>
     <string name="setting_general_temperature_webservice_enable">Temperature Web Service Enabled</string>
     <string name="setting_general_temperature_webservice_url">Temperature Web Service URL</string>
+    <string name="setting_general_temperature_alternative_webservice_url">Alternative Temperature Web Service URL</string>
     <string name="setting_general_temperature_webservice_interval">Temperature Web Service Call Interval (in seconds)</string>
     <string name="setting_general_thermometer_settings_webservice_url">Thermometer Settings Web Service URL</string>
     <string name="setting_general_alarm">Alarm Sound</string>

@@ -21,8 +21,8 @@ import rocks.voss.beatthemeat.data.ThermometerSettings;
 import rocks.voss.beatthemeat.data.ThermometerSettingsCatalog;
 import rocks.voss.beatthemeat.data.ThermometerSettingsCategory;
 import rocks.voss.beatthemeat.data.ThermometerSettingsStyle;
-import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
+import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
 
 /**
  * Created by voss on 24.03.18.
@@ -61,7 +61,7 @@ public class ThermometerSettingsCollectionService extends JobService {
         String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL, Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL_DEFAULT);
 
         try {
-            JsonDownloadThread service = new JsonDownloadThread(this, webserviceUrl, new JsonDownloadThreadCallback() {
+            JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThreadCallback() {
                 @Override
                 public void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject) {
                     try {
@@ -105,8 +105,9 @@ public class ThermometerSettingsCollectionService extends JobService {
 
                 }
             });
-            service.start();
 
+            service.addUrl(webserviceUrl);
+            service.start();
         } catch (MalformedURLException e) {
             Log.e(this.getClass().toString(), "MalformedURLException", e);
         }

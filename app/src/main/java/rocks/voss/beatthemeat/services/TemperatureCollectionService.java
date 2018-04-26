@@ -79,9 +79,10 @@ public class TemperatureCollectionService extends JobService {
     private void execute(JobParameters params) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL, "");
+        String alternativeWebserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_TEMPERATURE_ALTERNATIVE_WEBSERVICE_URL, "");
 
         try {
-            JsonDownloadThread service = new JsonDownloadThread(this, webserviceUrl, new JsonDownloadThreadCallback() {
+            JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThreadCallback() {
                 @Override
                 public void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject) {
                     try {
@@ -111,7 +112,7 @@ public class TemperatureCollectionService extends JobService {
                     NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
                 }
             });
-
+            service.addUrls(webserviceUrl, alternativeWebserviceUrl);
             service.start();
         } catch (MalformedURLException e) {
             Log.e(this.getClass().toString(), "MalformedURLException", e);
