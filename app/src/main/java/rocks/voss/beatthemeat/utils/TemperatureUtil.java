@@ -31,9 +31,13 @@ public class TemperatureUtil {
     public static boolean isAlarm(Context context, int id) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         boolean isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id), true);
-        int temperatureCurrent = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, id), 100);
         int temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id), 50);
         int temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id), 100);
+        int temperatureCurrent = DatabaseUtil.getCurrentTemperature(id);
+
+        if (temperatureCurrent == Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET) {
+            return false;
+        }
 
         if (isRange) {
             if (temperatureCurrent < temperatureMin || temperatureCurrent > temperatureMax) {

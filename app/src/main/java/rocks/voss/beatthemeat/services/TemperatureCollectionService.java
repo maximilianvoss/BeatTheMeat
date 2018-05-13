@@ -25,7 +25,6 @@ import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
 import rocks.voss.beatthemeat.utils.DatabaseUtil;
-import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.TimeUtil;
@@ -88,7 +87,6 @@ public class TemperatureCollectionService extends JobService {
                         JSONArray temperatures = jsonObject.getJSONArray(Constants.JSON_TEMPERATURES_OBJECT);
                         for (int i = 0; i < temperatures.length(); i++) {
                             int temperature = temperatures.getInt(i);
-                            editor.putInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CURRENT, i), temperature);
                             insertTemperatureIntoDatabase(i, temperature);
                         }
                         editor.apply();

@@ -78,7 +78,7 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
         }
         drawMarkers(canvas);
 
-        if (temperatureCurrent == -9999) {
+        if (temperatureCurrent == Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET) {
             drawTemperature(canvas, "N/A");
         } else {
             drawTemperature(canvas, String.valueOf(temperatureCurrent));

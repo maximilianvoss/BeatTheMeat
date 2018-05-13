@@ -34,7 +34,7 @@ public class Constants {
     public static final String SETTING_TEMPERATURE_IS_RANGE = "isRange";
     public static final String SETTING_TEMPERATURE_MIN = "temperatureMin";
     public static final String SETTING_TEMPERATURE_MAX = "temperatureMax";
-    public static final String SETTING_TEMPERATURE_CURRENT = "temperatureCurrent";
+    public static final int FALLBACK_VALUE_TEMPERATURE_NOT_SET = -9999;
 
     public static final String THERMOMETER_CANVAS_ID = "rocks.voss.beatthemeat.widgets.ThermometerCanvas.id";
 
