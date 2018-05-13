@@ -12,7 +12,7 @@ import android.view.View;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.HistoryActivity;
 import rocks.voss.beatthemeat.activities.ThermometerSettingsActivity;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
+import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 
@@ -195,7 +195,7 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
 
     private void drawTemperature(Canvas canvas, String temperature) {
         Paint color;
-        if (TemperatureUtil.isAlarm(getContext(), id)) {
+        if (AlarmUtil.isAlarm(getContext(), id)) {
             color = colorTextAlarm;
         } else {
             color = colorText;

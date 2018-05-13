@@ -47,8 +47,7 @@ public class ThermometerSettingsCollectionService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        execute(params);
-        return true;
+        return execute(params);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class ThermometerSettingsCollectionService extends JobService {
         return false;
     }
 
-    private void execute(JobParameters params) {
+    private boolean execute(JobParameters params) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL, Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL_DEFAULT);
 
@@ -112,5 +111,6 @@ public class ThermometerSettingsCollectionService extends JobService {
             Log.e(this.getClass().toString(), "MalformedURLException", e);
         }
         jobFinished(params, false);
+        return true;
     }
 }

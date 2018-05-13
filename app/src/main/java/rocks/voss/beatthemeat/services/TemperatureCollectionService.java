@@ -16,18 +16,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
-import rocks.voss.beatthemeat.database.Temperature;
-import rocks.voss.beatthemeat.database.TemperatureDao;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
-import rocks.voss.beatthemeat.utils.DatabaseUtil;
+import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
-import rocks.voss.beatthemeat.utils.TimeUtil;
 
 /**
  * Created by voss on 24.03.18.
@@ -83,16 +82,15 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject) {
                     try {
-                        SharedPreferences.Editor editor = sharedPref.edit();
                         JSONArray temperatures = jsonObject.getJSONArray(Constants.JSON_TEMPERATURES_OBJECT);
+                        List<Integer> temperatureList = new ArrayList<>();
                         for (int i = 0; i < temperatures.length(); i++) {
-                            int temperature = temperatures.getInt(i);
-                            insertTemperatureIntoDatabase(i, temperature);
+                            temperatureList.add(temperatures.getInt(i));
                         }
-                        editor.apply();
+                        TemperatureUtil.saveTemperature(temperatureList);
                         MainActivity.refreshThermometers();
 
-                        boolean isAlarm = TemperatureUtil.isAlarm(getBaseContext());
+                        boolean isAlarm = AlarmUtil.isAlarm(getBaseContext());
                         if (isAlarm) {
                             activateNotification();
                         } else {
@@ -117,31 +115,14 @@ public class TemperatureCollectionService extends JobService {
     }
 
     private void activateNotification() {
-        if (TemperatureUtil.isEnabled()) {
+        if (AlarmUtil.isEnabled()) {
             NotificationUtil.createNotification(this, NotificationEnum.TemperatureAlarm);
         }
     }
 
     private void deactivateNotification() {
-        if (TemperatureUtil.isEnabled()) {
+        if (AlarmUtil.isEnabled()) {
             NotificationUtil.stopNotification(this);
-        }
-    }
-
-    private void insertTemperatureIntoDatabase(int id, int temperatureValue) {
-        Temperature temperature = new Temperature();
-        temperature.thermometerId = id;
-        temperature.temperature = temperatureValue;
-        temperature.time = TimeUtil.getNow();
-
-        TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
-        if (temperatureDao == null) {
-            return;
-        }
-
-        Temperature lastTemperature = temperatureDao.getLast(id);
-        if (lastTemperature == null || lastTemperature.temperature != temperatureValue) {
-            temperatureDao.insertAll(temperature);
         }
     }
 }

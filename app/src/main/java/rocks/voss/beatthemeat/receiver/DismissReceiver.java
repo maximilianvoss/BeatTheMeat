@@ -12,8 +12,8 @@ import rocks.voss.beatthemeat.enums.DismissTypeEnum;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
+import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 /**
  * Created by voss on 28.03.18.
@@ -37,7 +37,7 @@ public class DismissReceiver extends BroadcastReceiver {
         if ( dismissType.equals(DismissTypeEnum.Dismiss)) {
             switch (notificationType) {
                 case TemperatureAlarm:
-                    TemperatureUtil.setEnabled(false);
+                    AlarmUtil.setEnabled(false);
                     MainActivity.getSwitchAlarm().setChecked(false);
                     break;
                 case WebserviceAlarm:

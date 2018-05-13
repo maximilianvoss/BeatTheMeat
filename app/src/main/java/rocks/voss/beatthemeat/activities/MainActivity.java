@@ -28,8 +28,8 @@ import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.CurrentTemperatureCanvas;
+import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this;
-        TemperatureUtil.setEnabled(true);
+        AlarmUtil.setEnabled(true);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -148,12 +148,12 @@ public class MainActivity extends AppCompatActivity {
         switchAlarm = new Switch(context);
         switchAlarm.setText(R.string.setting_general_alarm_enable);
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
-        switchAlarm.setChecked(TemperatureUtil.isEnabled());
+        switchAlarm.setChecked(AlarmUtil.isEnabled());
         switchAlarm.setPadding((int) paddingPixel, (int) paddingPixel, (int) paddingPixel, 0);
         switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                TemperatureUtil.setEnabled(b);
+                AlarmUtil.setEnabled(b);
                 if (!b) {
                     Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
                     context.stopService(notificationSoundServiceIntent);
