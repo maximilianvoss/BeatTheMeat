@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -68,23 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         thermometers.clear();
         fillLinearLayout();
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CurrentTemperatureCanvas currentTemperatureCanvas = new CurrentTemperatureCanvas(context, thermometers.size());
-                currentTemperatureCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
-                UiUtil.setupTemperatureCanvas(context, currentTemperatureCanvas);
-                linearLayout.addView(currentTemperatureCanvas);
-                thermometers.add(currentTemperatureCanvas);
-                linearLayout.postInvalidate();
-
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
-                editor.apply();
-            }
-        });
     }
 
     @Override
@@ -101,6 +82,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.settings:
                 intent = new Intent(this, AppSettingsActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.add:
+                CurrentTemperatureCanvas currentTemperatureCanvas = new CurrentTemperatureCanvas(context, thermometers.size());
+                currentTemperatureCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
+                UiUtil.setupTemperatureCanvas(context, currentTemperatureCanvas);
+                linearLayout.addView(currentTemperatureCanvas);
+                thermometers.add(currentTemperatureCanvas);
+                linearLayout.postInvalidate();
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
+                editor.apply();
                 return true;
             case R.id.remove:
                 MainActivity.removeThermometer();
