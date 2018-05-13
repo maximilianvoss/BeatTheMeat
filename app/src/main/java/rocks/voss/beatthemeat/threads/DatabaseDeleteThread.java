@@ -2,11 +2,16 @@ package rocks.voss.beatthemeat.threads;
 
 import org.threeten.bp.OffsetDateTime;
 
+import lombok.Setter;
 import rocks.voss.beatthemeat.database.TemperatureDao;
 import rocks.voss.beatthemeat.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.utils.TimeUtil;
 
-public class HistoryTemperatureDeleteThread extends Thread {
+public class DatabaseDeleteThread extends Thread {
+
+    @Setter
+    private int thermometerId = -1;
+
     @Override
     public void run() {
         TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
@@ -14,8 +19,12 @@ public class HistoryTemperatureDeleteThread extends Thread {
             return;
         }
 
-        OffsetDateTime time = TimeUtil.getNow();
-        time.minusDays(1);
-        temperatureDao.deleteOld(time);
+        if (thermometerId == -1) {
+            OffsetDateTime time = TimeUtil.getNow();
+            time.minusDays(1);
+            temperatureDao.delete(time);
+        } else {
+            temperatureDao.delete(thermometerId);
+        }
     }
 }

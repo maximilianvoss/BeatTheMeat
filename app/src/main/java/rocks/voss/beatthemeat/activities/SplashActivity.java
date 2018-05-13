@@ -14,21 +14,26 @@ import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
-import rocks.voss.beatthemeat.threads.HistoryTemperatureDeleteThread;
+import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
+import rocks.voss.beatthemeat.utils.DatabaseUtil;
+import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private HistoryTemperatureDeleteThread historyTemperatureDeleteThread;
+    private DatabaseDeleteThread databaseDeleteThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         scheduleSplashScreen();
-        MainActivity.setTemperatureDatabase(Room.databaseBuilder(getApplicationContext(), TemperatureDatabase.class, "temperatures").build());
+        DatabaseUtil.setTemperatureDatabase(Room.databaseBuilder(getApplicationContext(), TemperatureDatabase.class, Constants.DATABASE_NAME).build());
 
-        historyTemperatureDeleteThread = new HistoryTemperatureDeleteThread();
-        historyTemperatureDeleteThread.start();
+        TemperatureUtil.getTemperatures().clear();
+        MainActivity.getThermometers().clear();
+
+        databaseDeleteThread = new DatabaseDeleteThread();
+        databaseDeleteThread.start();
 
         ThermometerSettingsCollectionService.schedule(this);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -44,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    historyTemperatureDeleteThread.join();
+                    databaseDeleteThread.join();
                 } catch (InterruptedException e) {
                     Log.e("SplashActivity", "InterruptedException", e);
                 }

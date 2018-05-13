@@ -1,12 +1,17 @@
 package rocks.voss.beatthemeat.utils;
 
-import rocks.voss.beatthemeat.activities.MainActivity;
+import lombok.Getter;
+import lombok.Setter;
 import rocks.voss.beatthemeat.database.TemperatureDao;
 import rocks.voss.beatthemeat.database.TemperatureDatabase;
 
 public class DatabaseUtil {
+
+    @Setter
+    @Getter
+    private static TemperatureDatabase temperatureDatabase;
+
     public static TemperatureDao getTemperatureDao() {
-        TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
         if (temperatureDatabase == null) {
             return null;
         }

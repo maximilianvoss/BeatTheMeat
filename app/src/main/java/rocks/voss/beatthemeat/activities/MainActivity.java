@@ -19,10 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
-import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
-import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
@@ -30,6 +28,7 @@ import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.CurrentTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
+import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
     @Getter
     private static final List<CurrentTemperatureCanvas> thermometers = new ArrayList<>();
-
-    @Setter
-    @Getter
-    private static TemperatureDatabase temperatureDatabase;
 
     @Getter
     private static Switch switchAlarm;
@@ -64,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         scrollView.addView(linearLayout);
 
-        thermometers.clear();
         fillLinearLayout();
     }
 
@@ -133,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
             editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id));
             editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
             editor.apply();
+            TemperatureUtil.removeThermometer(id);
         }
     }
 

@@ -3,12 +3,15 @@ package rocks.voss.beatthemeat.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
+import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
 
 public class TemperatureUtil {
 
+    @Getter
     private static List<Integer> temperatures = new ArrayList<>();
 
     public static int getCurrentTemperature(int thermometerId) {
@@ -30,10 +33,10 @@ public class TemperatureUtil {
 
             if (currentTemperature != lastTemperatature) {
 
-                if (temperatures.size() <= i) {
-                    temperatures.add(currentTemperature);
-                } else {
+                if (i < temperatures.size()) {
                     temperatures.set(i, currentTemperature);
+                } else {
+                    temperatures.add(currentTemperature);
                 }
 
                 temperature = new Temperature();
@@ -51,6 +54,16 @@ public class TemperatureUtil {
             return;
         }
         temperatureDao.insertAll(temperature);
+    }
+
+    public static void removeThermometer(int thermometerId) {
+        if (thermometerId < temperatures.size()) {
+            temperatures.remove(thermometerId);
+        }
+
+        DatabaseDeleteThread thread = new DatabaseDeleteThread();
+        thread.setThermometerId(thermometerId);
+        thread.start();
     }
 }
 

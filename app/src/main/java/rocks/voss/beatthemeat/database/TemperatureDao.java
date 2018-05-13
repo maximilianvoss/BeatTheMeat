@@ -17,9 +17,6 @@ public interface TemperatureDao {
     @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId AND datetime(time)>datetime(:time) ORDER BY datetime(time)")
     List<Temperature> getAll(int thermometerId, OffsetDateTime time);
 
-    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId ORDER BY datetime(time) DESC LIMIT 1")
-    Temperature getLast(int thermometerId);
-
     @Insert
     void insertAll(Temperature ... temperatures);
 
@@ -27,5 +24,5 @@ public interface TemperatureDao {
     void delete(int thermometerId);
 
     @Query("DELETE FROM temperature WHERE datetime(time)<datetime(:time)")
-    void deleteOld(OffsetDateTime time);
+    void delete(OffsetDateTime time);
 }
