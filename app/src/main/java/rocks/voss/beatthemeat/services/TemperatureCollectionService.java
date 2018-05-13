@@ -136,11 +136,14 @@ public class TemperatureCollectionService extends JobService {
         temperature.temperature = temperatureValue;
         temperature.time = TimeUtil.getNow();
 
-
         TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
         if (temperatureDao == null) {
             return;
         }
-        temperatureDao.insertAll(temperature);
+
+        Temperature lastTemperature = temperatureDao.getLast(id);
+        if (lastTemperature == null || lastTemperature.temperature != temperatureValue) {
+            temperatureDao.insertAll(temperature);
+        }
     }
 }
