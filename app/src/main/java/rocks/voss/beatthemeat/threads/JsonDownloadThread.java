@@ -43,12 +43,6 @@ public class JsonDownloadThread extends Thread {
         urls.add(url);
     }
 
-    public void addUrls(URL... urls) {
-        for (URL url : urls) {
-            addUrl(url);
-        }
-    }
-
     public void addUrls(String... urls) throws MalformedURLException {
         for (String url : urls) {
             addUrl(url);

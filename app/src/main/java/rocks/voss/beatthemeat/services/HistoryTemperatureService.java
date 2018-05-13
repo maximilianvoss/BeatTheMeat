@@ -12,14 +12,12 @@ import android.preference.PreferenceManager;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.HistoryActivity;
-import rocks.voss.beatthemeat.threads.HistoryTemperatureThread;
+import rocks.voss.beatthemeat.threads.HistoryTemperatureCanvasThread;
 
 /**
  * Created by voss on 24.03.18.
  */
 public class HistoryTemperatureService extends JobService {
-
-    private static final int SEC = 1000;
     private static final int COUNT = 5;
 
     public static void schedule(Context context) {
@@ -29,9 +27,9 @@ public class HistoryTemperatureService extends JobService {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         int webserviceUrlCalls = sharedPref.getInt(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL, COUNT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            builder.setMinimumLatency(webserviceUrlCalls * SEC);
+            builder.setMinimumLatency(webserviceUrlCalls * 1000);
         } else {
-            builder.setPeriodic(webserviceUrlCalls * SEC);
+            builder.setPeriodic(webserviceUrlCalls * 1000);
         }
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -59,7 +57,7 @@ public class HistoryTemperatureService extends JobService {
     }
 
     public static void execute() {
-        HistoryTemperatureThread thread = new HistoryTemperatureThread();
+        HistoryTemperatureCanvasThread thread = new HistoryTemperatureCanvasThread();
         thread.setCanvas(HistoryActivity.getCanvas());
         thread.start();
     }

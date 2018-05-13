@@ -27,10 +27,11 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         scheduleSplashScreen();
-        DatabaseUtil.setTemperatureDatabase(Room.databaseBuilder(getApplicationContext(), TemperatureDatabase.class, Constants.DATABASE_NAME).build());
 
         TemperatureUtil.getTemperatures().clear();
         MainActivity.getThermometers().clear();
+
+        DatabaseUtil.setTemperatureDatabase(Room.databaseBuilder(getApplicationContext(), TemperatureDatabase.class, Constants.DATABASE_NAME).build());
 
         databaseDeleteThread = new DatabaseDeleteThread();
         databaseDeleteThread.start();

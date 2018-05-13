@@ -28,14 +28,13 @@ import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
  * Created by voss on 24.03.18.
  */
 public class ThermometerSettingsCollectionService extends JobService {
-    private static final int SEC = 1000;
     private static final int MAX_WAITING_TIME = 0;
 
     public static void schedule(Context context) {
         ComponentName component = new ComponentName(context, ThermometerSettingsCollectionService.class);
         JobInfo.Builder builder = new JobInfo.Builder(Constants.SERVICE_THERMOMETER_SETTINGS_COLLECTION_SERVICE_ID, component);
 
-        builder.setMinimumLatency(MAX_WAITING_TIME * SEC);
+        builder.setMinimumLatency(MAX_WAITING_TIME * 1000);
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
     }

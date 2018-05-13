@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
+import lombok.Getter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.activities.MainActivity;
@@ -18,6 +19,7 @@ import rocks.voss.beatthemeat.services.NotificationSoundService;
 
 public class NotificationUtil {
 
+    @Getter
     private static boolean notificationActive = false;
     private static NotificationEnum notificationType;
 

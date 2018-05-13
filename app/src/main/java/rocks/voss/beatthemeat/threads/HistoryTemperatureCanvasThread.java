@@ -11,7 +11,7 @@ import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.DatabaseUtil;
 
-public class HistoryTemperatureThread extends Thread {
+public class HistoryTemperatureCanvasThread extends Thread {
 
     @Setter
     private HistoryTemperatureCanvas canvas;

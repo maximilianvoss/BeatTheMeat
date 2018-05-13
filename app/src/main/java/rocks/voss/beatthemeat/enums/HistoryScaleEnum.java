@@ -15,11 +15,15 @@ public enum HistoryScaleEnum {
     private static HistoryScaleEnum[] vals = values();
 
     public HistoryScaleEnum next() {
-        return vals[(this.ordinal() + 1) % vals.length];
+        int value = this.ordinal() + 1;
+        if (value > vals.length - 1) {
+            value = 0;
+        }
+        return vals[value];
     }
 
     public HistoryScaleEnum prev() {
-        int value = (this.ordinal() - 1) % vals.length;
+        int value = this.ordinal() - 1;
         if (value < 0) {
             value = vals.length - 1;
         }

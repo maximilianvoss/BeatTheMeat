@@ -32,8 +32,6 @@ import rocks.voss.beatthemeat.utils.TemperatureUtil;
  * Created by voss on 24.03.18.
  */
 public class TemperatureCollectionService extends JobService {
-
-    private static final int SEC = 1000;
     private static final int COUNT = 5;
 
     public static void schedule(Context context) {
@@ -44,9 +42,9 @@ public class TemperatureCollectionService extends JobService {
         int webserviceUrlCalls = sharedPref.getInt(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL, COUNT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            builder.setMinimumLatency(webserviceUrlCalls * SEC);
+            builder.setMinimumLatency(webserviceUrlCalls * 1000);
         } else {
-            builder.setPeriodic(webserviceUrlCalls * SEC);
+            builder.setPeriodic(webserviceUrlCalls * 1000);
         }
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);

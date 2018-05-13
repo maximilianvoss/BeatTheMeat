@@ -202,7 +202,6 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     }
 
     private void fillThermometerSettings(String catalogName, String categoryName, String styleName) {
-
         ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
         for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
             if (catalog.getName().equals(catalogName)) {

@@ -28,20 +28,18 @@ import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.CurrentTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
+import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
+
     @Getter
     private static final List<CurrentTemperatureCanvas> thermometers = new ArrayList<>();
 
-    @Getter
-    private static Switch switchAlarm;
-
     private Context context;
-    private LinearLayout linearLayout;
     private static SharedPreferences sharedPref;
 
     @Override
@@ -49,17 +47,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.context = this;
         AlarmUtil.setEnabled(true);
-
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         setContentView(R.layout.activity_main);
-        ScrollView scrollView = findViewById(R.id.scrollview);
-        linearLayout = new LinearLayout(this);
-        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        scrollView.addView(linearLayout);
-
-        fillLinearLayout();
+        createUI();
     }
 
     @Override
@@ -78,20 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.add:
-                CurrentTemperatureCanvas currentTemperatureCanvas = new CurrentTemperatureCanvas(context, thermometers.size());
-                currentTemperatureCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
-                UiUtil.setupTemperatureCanvas(context, currentTemperatureCanvas);
-                linearLayout.addView(currentTemperatureCanvas);
-                thermometers.add(currentTemperatureCanvas);
-                linearLayout.postInvalidate();
-
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
-                editor.apply();
+                addThermometer();
                 return true;
             case R.id.remove:
-                MainActivity.removeThermometer();
-                onResume();
+                removeThermometer();
                 return true;
             case R.id.quit:
                 HistoryTemperatureService.cancelJob(this);
@@ -108,16 +89,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        linearLayout.removeAllViews();
-
-        Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
-        context.stopService(notificationSoundServiceIntent);
-
-        thermometers.clear();
-        fillLinearLayout();
+        if (NotificationUtil.isNotificationActive()) {
+            AlarmUtil.setEnabled(false);
+            NotificationUtil.stopNotification(context);
+        }
+        createUI();
     }
 
-    public static void removeThermometer() {
+    private void removeThermometer() {
         if (thermometers.size() > 0) {
             int id = thermometers.size() - 1;
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -129,6 +108,14 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
             TemperatureUtil.removeThermometer(id);
         }
+        createUI();
+    }
+
+    private void addThermometer() {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size() + 1);
+        editor.apply();
+        createUI();
     }
 
     public static void refreshThermometers() {
@@ -137,19 +124,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fillLinearLayout() {
+    private void createUI() {
+        thermometers.clear();
         float paddingPixel = UiUtil.getStandardPaddingPixel(this);
 
-        switchAlarm = new Switch(context);
+        ScrollView scrollView = findViewById(R.id.scrollview);
+        scrollView.removeAllViews();
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        scrollView.addView(linearLayout);
+
+        Switch switchAlarm = new Switch(context);
         switchAlarm.setText(R.string.setting_general_alarm_enable);
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
         switchAlarm.setChecked(AlarmUtil.isEnabled());
         switchAlarm.setPadding((int) paddingPixel, (int) paddingPixel, (int) paddingPixel, 0);
         switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                AlarmUtil.setEnabled(b);
-                if (!b) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                AlarmUtil.setEnabled(isChecked);
+                if (!isChecked) {
                     Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
                     context.stopService(notificationSoundServiceIntent);
                 }

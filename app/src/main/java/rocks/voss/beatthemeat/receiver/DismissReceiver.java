@@ -7,10 +7,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import rocks.voss.beatthemeat.Constants;
-import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.enums.DismissTypeEnum;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
-import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
@@ -28,17 +26,12 @@ public class DismissReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         DismissTypeEnum dismissType = DismissTypeEnum.valueOf(intent.getStringExtra(Constants.NOTIFICATION_DISMISS_TYPE));
         NotificationEnum notificationType = NotificationEnum.valueOf(intent.getStringExtra(Constants.NOTIFICATION_ALERT_TYPE));
-
-        Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
-        context.stopService(notificationSoundServiceIntent);
-
         NotificationUtil.stopNotification(context);
 
         if ( dismissType.equals(DismissTypeEnum.Dismiss)) {
             switch (notificationType) {
                 case TemperatureAlarm:
                     AlarmUtil.setEnabled(false);
-                    MainActivity.getSwitchAlarm().setChecked(false);
                     break;
                 case WebserviceAlarm:
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
