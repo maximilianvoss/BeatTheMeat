@@ -26,8 +26,11 @@ public class TemperatureUtil {
         Temperature temperature;
         org.threeten.bp.OffsetDateTime time = TimeUtil.getNow();
 
-        for (int i = 0; i < temperatureList.size(); i++) {
+        while (temperatures.size() > temperatureList.size()) {
+            temperatures.remove(temperatures.size() - 1);
+        }
 
+        for (int i = 0; i < temperatureList.size(); i++) {
             int lastTemperatature = getCurrentTemperature(i);
             int currentTemperature = temperatureList.get(i);
 

@@ -104,6 +104,8 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onConnectionFailure(Context context) {
                     NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
+                    TemperatureUtil.saveTemperature(new ArrayList<Integer>());
+                    MainActivity.refreshThermometers();
                 }
             });
             service.addUrls(webserviceUrl, alternativeWebserviceUrl);
