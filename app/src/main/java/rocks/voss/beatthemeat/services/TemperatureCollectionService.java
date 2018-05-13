@@ -21,10 +21,10 @@ import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
-import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
+import rocks.voss.beatthemeat.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
@@ -136,11 +136,8 @@ public class TemperatureCollectionService extends JobService {
         temperature.temperature = temperatureValue;
         temperature.time = TimeUtil.getNow();
 
-        TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
-        if (temperatureDatabase == null) {
-            return;
-        }
-        TemperatureDao temperatureDao = temperatureDatabase.temperatureDao();
+
+        TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
         if (temperatureDao == null) {
             return;
         }

@@ -5,12 +5,11 @@ import org.threeten.bp.OffsetDateTime;
 import java.util.List;
 
 import lombok.Setter;
-import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
-import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
+import rocks.voss.beatthemeat.utils.DatabaseUtil;
 
 public class HistoryTemperatureThread extends Thread {
 
@@ -23,11 +22,8 @@ public class HistoryTemperatureThread extends Thread {
             return;
         }
         OffsetDateTime time = HistoryScaleEnum.getTime(canvas.getScale());
-        TemperatureDatabase temperatureDatabase = MainActivity.getTemperatureDatabase();
-        if (temperatureDatabase == null) {
-            return;
-        }
-        TemperatureDao temperatureDao = temperatureDatabase.temperatureDao();
+
+        TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
         if (temperatureDao == null) {
             return;
         }
