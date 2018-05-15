@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.view.View;
+import android.view.MotionEvent;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.HistoryActivity;
@@ -24,6 +24,10 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     private float squareSize;
     private final static int temperatureIndicatorSize = 7;
     private final static int indicatorWidth = 7;
+    private final static int TOUCH_ACTION_HISTORY = 1;
+    private final static int TOUCH_ACTION_SETTINGS = 2;
+
+    private int touchAction;
 
     public CurrentTemperatureCanvas(Context context, int id) {
         this(context);
@@ -41,24 +45,31 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     public CurrentTemperatureCanvas(final Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ThermometerSettingsActivity.class);
-                intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
-                v.getContext().startActivity(intent);
-            }
-        });
+        this.setOnClickListener(
+                v -> {
+                    if (touchAction == TOUCH_ACTION_SETTINGS) {
+                        Intent intent = new Intent(v.getContext(), ThermometerSettingsActivity.class);
+                        intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
+                        v.getContext().startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(v.getContext(), HistoryActivity.class);
+                        intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
+                        v.getContext().startActivity(intent);
+                    }
+                }
+        );
 
-        this.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Intent intent = new Intent(v.getContext(), HistoryActivity.class);
-                intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
-                v.getContext().startActivity(intent);
-                return true;
-            }
-        });
+        this.setOnTouchListener((v, event) -> {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        if (event.getX() < v.getWidth() / 2) {
+                            touchAction = TOUCH_ACTION_HISTORY;
+                        } else {
+                            touchAction = TOUCH_ACTION_SETTINGS;
+                        }
+                    }
+                    return false;
+                }
+        );
     }
 
     @Override
