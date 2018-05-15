@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import rocks.voss.beatthemeat.Constants;
@@ -39,14 +40,11 @@ import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.threads.HistoryDatabaseThread;
 import rocks.voss.beatthemeat.utils.TimeUtil;
 
-import static android.content.ContentValues.TAG;
-
 public class UploadActivity extends Activity {
 
     protected static final int REQUEST_CODE_SIGN_IN = 0;
     protected static final int REQUEST_CODE_OPEN_ITEM = 1;
 
-    //    private DriveClient mDriveClient;
     private DriveResourceClient mDriveResourceClient;
 
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
@@ -77,7 +75,7 @@ public class UploadActivity extends Activity {
         switch (requestCode) {
             case REQUEST_CODE_SIGN_IN:
                 if (resultCode != RESULT_OK) {
-                    Log.e("UploadActivity", "Sign-in failed.");
+                    Log.e(this.getClass().toString(), "Sign-in failed.");
                     finish();
                     return;
                 }
@@ -86,7 +84,7 @@ public class UploadActivity extends Activity {
                 if (getAccountTask.isSuccessful()) {
                     initializeDriveClient(getAccountTask.getResult());
                 } else {
-                    Log.e("UploadActivity", "Sign-in failed.");
+                    Log.e(this.getClass().toString(), "Sign-in failed.");
                     finish();
                 }
                 break;
@@ -120,22 +118,26 @@ public class UploadActivity extends Activity {
     }
 
     private void initializeDriveClient(GoogleSignInAccount signInAccount) {
-//        mDriveClient = Drive.getDriveClient(getApplicationContext(), signInAccount);
         mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), signInAccount);
-        writeFile();
+        prepareFile();
     }
 
-    private void writeFile() {
+    private void prepareFile() {
+        int thermometerId = getIntent().getIntExtra(Constants.THERMOMETER_CANVAS_ID, 0);
+        HistoryDatabaseThread historyDatabaseThread = new HistoryDatabaseThread(thermometerId,
+                temperatures -> {
+                    writeFile(temperatures);
+                }
+        );
+        historyDatabaseThread.start();
+    }
+
+    private void writeFile(List<Temperature> temperatures) {
         EditText textfieldFilename = findViewById(R.id.filename);
         String filename = textfieldFilename.getText().toString();
         if (filename == null || filename.equals("")) {
             return;
         }
-
-        int thermometerId = getIntent().getIntExtra(Constants.THERMOMETER_CANVAS_ID, 0);
-        HistoryDatabaseThread historyDatabaseThread = new HistoryDatabaseThread();
-        historyDatabaseThread.setThermometerId(thermometerId);
-        historyDatabaseThread.start();
 
         final Task<DriveFolder> rootFolderTask = mDriveResourceClient.getRootFolder();
         final Task<DriveContents> createContentsTask = mDriveResourceClient.createContents();
@@ -146,8 +148,7 @@ public class UploadActivity extends Activity {
                             OutputStream outputStream = contents.getOutputStream();
                             try (Writer writer = new OutputStreamWriter(outputStream)) {
                                 writer.write("Time,Temperature\r\n");
-                                historyDatabaseThread.join();
-                                for (Temperature temperature : historyDatabaseThread.getTemperatures()) {
+                                for (Temperature temperature : temperatures) {
                                     writer.write(temperature.time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                                     writer.write(",");
                                     writer.write(String.valueOf(temperature.temperature));
@@ -166,12 +167,12 @@ public class UploadActivity extends Activity {
                 )
                 .addOnSuccessListener(this,
                         driveFile -> {
-                            Log.e(TAG, "File created");
+                            Log.d(this.getClass().toString(), "File created");
                             finish();
                         }
                 )
                 .addOnFailureListener(this, e -> {
-                            Log.e(TAG, "Unable to create file", e);
+                    Log.e(this.getClass().toString(), "Unable to create file", e);
                             finish();
                         }
                 );

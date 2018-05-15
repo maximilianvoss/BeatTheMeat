@@ -1,21 +1,27 @@
 package rocks.voss.beatthemeat.threads;
 
+import org.threeten.bp.OffsetDateTime;
+
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
 import rocks.voss.beatthemeat.utils.DatabaseUtil;
 
-// TODO: merge with HistoryTemperatureCanvasThread
 public class HistoryDatabaseThread extends Thread {
-
-    @Setter
     private int thermometerId;
+    private HistoryDatabaseThreadCallback callback;
+    private OffsetDateTime time;
 
-    @Getter
-    private List<Temperature> temperatures;
+    public HistoryDatabaseThread(int thermometerId, HistoryDatabaseThreadCallback callback) {
+        this(thermometerId, null, callback);
+    }
+
+    public HistoryDatabaseThread(int thermometerId, OffsetDateTime time, HistoryDatabaseThreadCallback callback) {
+        this.thermometerId = thermometerId;
+        this.time = time;
+        this.callback = callback;
+    }
 
     @Override
     public void run() {
@@ -23,6 +29,17 @@ public class HistoryDatabaseThread extends Thread {
         if (temperatureDao == null) {
             return;
         }
-        temperatures = temperatureDao.getAll(thermometerId);
+
+        List<Temperature> temperatures;
+        if (time == null) {
+            temperatures = temperatureDao.getAll(thermometerId);
+        } else {
+            temperatures = temperatureDao.getAll(thermometerId, time);
+        }
+        callback.onDataReady(temperatures);
+    }
+
+    public interface HistoryDatabaseThreadCallback {
+        void onDataReady(List<Temperature> temperatures);
     }
 }

@@ -12,7 +12,9 @@ import android.preference.PreferenceManager;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.HistoryActivity;
-import rocks.voss.beatthemeat.threads.HistoryTemperatureCanvasThread;
+import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
+import rocks.voss.beatthemeat.threads.HistoryDatabaseThread;
+import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 
 /**
  * Created by voss on 24.03.18.
@@ -57,8 +59,18 @@ public class HistoryTemperatureService extends JobService {
     }
 
     public static void execute() {
-        HistoryTemperatureCanvasThread thread = new HistoryTemperatureCanvasThread();
-        thread.setCanvas(HistoryActivity.getCanvas());
+        HistoryTemperatureCanvas canvas = HistoryActivity.getCanvas();
+        if (canvas == null) {
+            return;
+        }
+
+        HistoryDatabaseThread thread = new HistoryDatabaseThread(canvas.getId(), HistoryScaleEnum.getTime(canvas.getScale()),
+                temperatures -> {
+                    canvas.setTemperatures(temperatures);
+                    canvas.invalidate();
+                }
+        );
+
         thread.start();
     }
 

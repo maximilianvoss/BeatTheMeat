@@ -23,7 +23,6 @@ import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
-import rocks.voss.beatthemeat.threads.JsonDownloadThreadCallback;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
@@ -76,7 +75,7 @@ public class TemperatureCollectionService extends JobService {
         String alternativeWebserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_TEMPERATURE_ALTERNATIVE_WEBSERVICE_URL, "");
 
         try {
-            JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThreadCallback() {
+            JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThread.JsonDownloadThreadCallback() {
                 @Override
                 public void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject) {
                     try {

@@ -104,4 +104,10 @@ public class JsonDownloadThread extends Thread {
             return null;
         }
     }
+
+    public interface JsonDownloadThreadCallback {
+        void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject);
+
+        void onConnectionFailure(Context context);
+    }
 }
