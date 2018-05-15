@@ -165,6 +165,7 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
                 path.lineTo(x, y);
             }
         }
+        path.lineTo(maxWidth, y);
 
         colorIndicator.setStrokeWidth(10f);
         colorIndicator.setStyle(Paint.Style.STROKE);
