@@ -43,16 +43,14 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
 
         temperatureCatalog = new ListPreference(this.getContext());
         temperatureCatalog.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CATALOG, id));
-        temperatureCatalog.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                setPreferenceTitle(preference, R.string.setting_temperature_catalog, (String) o);
-                updateTemperatureCategoryLists(temperatureCategory, o.toString(), null, SelectionType.Category);
-                invalidateCategory();
-                temperatureCategory.setEnabled(true);
-                return true;
-            }
-        });
+        temperatureCatalog.setOnPreferenceChangeListener((preference, o) -> {
+                    setPreferenceTitle(preference, R.string.setting_temperature_catalog, (String) o);
+                    updateTemperatureCategoryLists(temperatureCategory, o.toString(), null, SelectionType.Category);
+                    invalidateCategory();
+                    temperatureCategory.setEnabled(true);
+                    return true;
+                }
+        );
         updateTemperatureCategoryLists(temperatureCatalog, null, null, SelectionType.Catalog);
         getPreferenceScreen().addPreference(temperatureCatalog);
         setPreferenceTitle(temperatureCatalog, R.string.setting_temperature_catalog, temperatureCatalog.getValue());
@@ -60,16 +58,14 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         temperatureCategory = new ListPreference(this.getContext());
         temperatureCategory.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CATEGORY, id));
         temperatureCategory.setEnabled(!(temperatureCatalog.getValue() == null || temperatureCatalog.getValue().equals("")));
-        temperatureCategory.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                setPreferenceTitle(preference, R.string.setting_temperature_category, (String) o);
-                updateTemperatureCategoryLists(temperatureStyle, temperatureCatalog.getValue(), o.toString(), SelectionType.Style);
-                invalidateStyle();
-                temperatureStyle.setEnabled(true);
-                return true;
-            }
-        });
+        temperatureCategory.setOnPreferenceChangeListener((preference, o) -> {
+                    setPreferenceTitle(preference, R.string.setting_temperature_category, (String) o);
+                    updateTemperatureCategoryLists(temperatureStyle, temperatureCatalog.getValue(), o.toString(), SelectionType.Style);
+                    invalidateStyle();
+                    temperatureStyle.setEnabled(true);
+                    return true;
+                }
+        );
         updateTemperatureCategoryLists(temperatureCategory, temperatureCatalog.getValue(), null, SelectionType.Category);
         getPreferenceScreen().addPreference(temperatureCategory);
         setPreferenceTitle(temperatureCategory, R.string.setting_temperature_category, temperatureCategory.getValue());
@@ -78,14 +74,12 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         temperatureStyle = new ListPreference(this.getContext());
         temperatureStyle.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_STYLE, id));
         temperatureStyle.setEnabled(!(temperatureCategory.getValue() == null || temperatureCategory.getValue().equals("")));
-        temperatureStyle.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                setPreferenceTitle(preference, R.string.setting_temperature_style, (String) o);
-                fillThermometerSettings(temperatureCatalog.getValue(), temperatureCategory.getValue(), (String) o);
-                return true;
-            }
-        });
+        temperatureStyle.setOnPreferenceChangeListener((preference, o) -> {
+                    setPreferenceTitle(preference, R.string.setting_temperature_style, (String) o);
+                    fillThermometerSettings(temperatureCatalog.getValue(), temperatureCategory.getValue(), (String) o);
+                    return true;
+                }
+        );
         updateTemperatureCategoryLists(temperatureStyle, temperatureCatalog.getValue(), temperatureCategory.getValue(), SelectionType.Style);
         getPreferenceScreen().addPreference(temperatureStyle);
         setPreferenceTitle(temperatureStyle, R.string.setting_temperature_style, temperatureStyle.getValue());
@@ -95,28 +89,24 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         isRange.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id));
         isRange.setTitle(R.string.setting_temperature_isrange);
         isRange.setDefaultValue(true);
-        isRange.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                temperatureMax.setEnabled((boolean) newValue);
-                invalidateCategory();
-                return true;
-            }
-        });
+        isRange.setOnPreferenceChangeListener((preference, newValue) -> {
+                    temperatureMax.setEnabled((boolean) newValue);
+                    invalidateCategory();
+                    return true;
+                }
+        );
         getPreferenceScreen().addPreference(isRange);
 
 
         temperatureMin = new NumberPickerPreference(this.getContext());
         temperatureMin.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id));
         temperatureMin.setDefaultValue(50);
-        temperatureMin.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                setPreferenceTitle(preference, R.string.setting_temperature_min, String.valueOf(o));
-                invalidateCategory();
-                return true;
-            }
-        });
+        temperatureMin.setOnPreferenceChangeListener((preference, o) -> {
+                    setPreferenceTitle(preference, R.string.setting_temperature_min, String.valueOf(o));
+                    invalidateCategory();
+                    return true;
+                }
+        );
         getPreferenceScreen().addPreference(temperatureMin);
         setPreferenceTitle(temperatureMin, R.string.setting_temperature_min, String.valueOf(temperatureMin.getValue()));
 
@@ -125,14 +115,12 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         temperatureMax.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
         temperatureMax.setDefaultValue(100);
         temperatureMax.setEnabled(isRange.isChecked());
-        temperatureMax.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                setPreferenceTitle(preference, R.string.setting_temperature_max, String.valueOf(o));
-                invalidateCategory();
-                return true;
-            }
-        });
+        temperatureMax.setOnPreferenceChangeListener((preference, o) -> {
+                    setPreferenceTitle(preference, R.string.setting_temperature_max, String.valueOf(o));
+                    invalidateCategory();
+                    return true;
+                }
+        );
         getPreferenceScreen().addPreference(temperatureMax);
         setPreferenceTitle(temperatureMax, R.string.setting_temperature_max, String.valueOf(temperatureMax.getValue()));
     }

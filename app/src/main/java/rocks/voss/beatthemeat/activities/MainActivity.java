@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -141,16 +140,14 @@ public class MainActivity extends AppCompatActivity {
         switchAlarm.setLayoutParams(new ViewGroup.LayoutParams(-1, 150));
         switchAlarm.setChecked(AlarmUtil.isEnabled());
         switchAlarm.setPadding((int) paddingPixel, (int) paddingPixel, (int) paddingPixel, 0);
-        switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                AlarmUtil.setEnabled(isChecked);
-                if (!isChecked) {
-                    Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
-                    context.stopService(notificationSoundServiceIntent);
+        switchAlarm.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                    AlarmUtil.setEnabled(isChecked);
+                    if (!isChecked) {
+                        Intent notificationSoundServiceIntent = new Intent(context, NotificationSoundService.class);
+                        context.stopService(notificationSoundServiceIntent);
+                    }
                 }
-            }
-        });
+        );
         linearLayout.addView(switchAlarm);
 
         int numberOfThermometers = sharedPref.getInt(NUMBER_OF_THERMOMETERS, 0);
