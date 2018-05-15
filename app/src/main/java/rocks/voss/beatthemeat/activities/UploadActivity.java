@@ -39,6 +39,7 @@ import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.threads.HistoryDatabaseThread;
 import rocks.voss.beatthemeat.utils.TimeUtil;
+import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class UploadActivity extends Activity {
 
@@ -76,6 +77,7 @@ public class UploadActivity extends Activity {
             case REQUEST_CODE_SIGN_IN:
                 if (resultCode != RESULT_OK) {
                     Log.e(this.getClass().toString(), "Sign-in failed.");
+                    UiUtil.createLongToast(this, "Sign-in failed");
                     finish();
                     return;
                 }
@@ -85,6 +87,7 @@ public class UploadActivity extends Activity {
                     initializeDriveClient(getAccountTask.getResult());
                 } else {
                     Log.e(this.getClass().toString(), "Sign-in failed.");
+                    UiUtil.createLongToast(this, "Sign-in failed");
                     finish();
                 }
                 break;
@@ -168,6 +171,7 @@ public class UploadActivity extends Activity {
                 .addOnSuccessListener(this,
                         driveFile -> {
                             Log.d(this.getClass().toString(), "File created");
+                            UiUtil.createLongToast(this, "File created");
                             finish();
                         }
                 )
