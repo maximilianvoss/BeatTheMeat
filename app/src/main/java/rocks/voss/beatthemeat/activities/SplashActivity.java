@@ -1,12 +1,12 @@
 package rocks.voss.beatthemeat.activities;
 
+import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import rocks.voss.beatthemeat.Constants;
@@ -18,7 +18,7 @@ import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
 import rocks.voss.beatthemeat.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
 
     private DatabaseDeleteThread databaseDeleteThread;
 
