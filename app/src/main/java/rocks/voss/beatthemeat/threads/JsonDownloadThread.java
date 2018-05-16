@@ -95,8 +95,8 @@ public class JsonDownloadThread extends Thread {
         try {
             HttpURLConnection urlConnection = null;
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(2000);
-            urlConnection.setReadTimeout(2000);
+            urlConnection.setConnectTimeout(1000);
+            urlConnection.setReadTimeout(1000);
             urlConnection.connect();
             return urlConnection;
         } catch (IOException e) {
