@@ -11,6 +11,7 @@ import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
+import rocks.voss.beatthemeat.ui.StringArrayPreference;
 
 /**
  * Created by voss on 26.03.18.
@@ -36,13 +37,10 @@ public class AppSettingsFragment extends PreferenceFragment {
                 }
         );
 
-        EditTextPreference temperatureWebserviceUrl = new EditTextPreference(this.getContext());
+        StringArrayPreference temperatureWebserviceUrl = new StringArrayPreference(this.getContext());
         temperatureWebserviceUrl.setTitle(R.string.setting_general_temperature_webservice_url);
         temperatureWebserviceUrl.setKey(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL);
-
-        EditTextPreference temperatureAlternativeWebserviceUrl = new EditTextPreference(this.getContext());
-        temperatureAlternativeWebserviceUrl.setTitle(R.string.setting_general_temperature_alternative_webservice_url);
-        temperatureAlternativeWebserviceUrl.setKey(Constants.SETTING_GENERAL_TEMPERATURE_ALTERNATIVE_WEBSERVICE_URL);
+        temperatureWebserviceUrl.setNumberOptions(3);
 
         NumberPickerPreference temperatureWebserviceInterval = new NumberPickerPreference(this.getContext());
         temperatureWebserviceInterval.setKey(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL);
@@ -68,7 +66,6 @@ public class AppSettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_appsettings);
         getPreferenceScreen().addPreference(temperatureWebserviceEnable);
         getPreferenceScreen().addPreference(temperatureWebserviceUrl);
-        getPreferenceScreen().addPreference(temperatureAlternativeWebserviceUrl);
         getPreferenceScreen().addPreference(temperatureWebserviceInterval);
         getPreferenceScreen().addPreference(thermometerSettingsWebserviceUrl);
         getPreferenceScreen().addPreference(alarmSound);

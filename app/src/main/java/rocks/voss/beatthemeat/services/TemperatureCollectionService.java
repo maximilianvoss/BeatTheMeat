@@ -17,7 +17,10 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
@@ -71,8 +74,7 @@ public class TemperatureCollectionService extends JobService {
 
     private void execute(JobParameters params) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String webserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL, "");
-        String alternativeWebserviceUrl = sharedPref.getString(Constants.SETTING_GENERAL_TEMPERATURE_ALTERNATIVE_WEBSERVICE_URL, "");
+        Set<String> webserviceUrls = sharedPref.getStringSet(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL, new LinkedHashSet<>());
 
         try {
             JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThread.JsonDownloadThreadCallback() {
@@ -105,7 +107,11 @@ public class TemperatureCollectionService extends JobService {
                     MainActivity.refreshThermometers();
                 }
             });
-            service.addUrls(webserviceUrl, alternativeWebserviceUrl);
+
+            Iterator<String> iterator = webserviceUrls.iterator();
+            while (iterator.hasNext()) {
+                service.addUrl(iterator.next());
+            }
             service.start();
         } catch (MalformedURLException e) {
             Log.e(this.getClass().toString(), "MalformedURLException", e);
