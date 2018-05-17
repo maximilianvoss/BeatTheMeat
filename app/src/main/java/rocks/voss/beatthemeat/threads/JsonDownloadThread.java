@@ -57,13 +57,10 @@ public class JsonDownloadThread extends Thread {
 
     @Override
     public void run() {
+        HttpURLConnection urlConnection = null;
         for (URL url : urls) {
-            HttpURLConnection urlConnection = establishConnection(url);
-            if (urlConnection == null) {
-                continue;
-            }
-
             try {
+                urlConnection = establishConnection(url);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
                 StringBuilder sb = new StringBuilder();
 
@@ -77,10 +74,9 @@ public class JsonDownloadThread extends Thread {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
 
                 jsonDownloadCallback.onDownloadComplete(sharedPref, new JSONObject(sb.toString()));
-                break;
+                return;
             } catch (IOException e) {
                 Log.e(this.getClass().toString(), "IOException", e);
-                jsonDownloadCallback.onConnectionFailure(context);
             } catch (JSONException e) {
                 Log.e(this.getClass().toString(), "JSONException", e);
             } finally {
@@ -89,20 +85,15 @@ public class JsonDownloadThread extends Thread {
                 }
             }
         }
+        jsonDownloadCallback.onConnectionFailure(context);
     }
 
-    private HttpURLConnection establishConnection(URL url) {
-        try {
-            HttpURLConnection urlConnection = null;
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(1000);
-            urlConnection.setReadTimeout(1000);
-            urlConnection.connect();
-            return urlConnection;
-        } catch (IOException e) {
-            Log.e(this.getClass().toString(), "IOException", e);
-            return null;
-        }
+    private HttpURLConnection establishConnection(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setConnectTimeout(1000);
+        urlConnection.setReadTimeout(1000);
+        urlConnection.connect();
+        return urlConnection;
     }
 
     public interface JsonDownloadThreadCallback {

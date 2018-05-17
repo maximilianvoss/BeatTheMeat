@@ -97,6 +97,7 @@ public class TemperatureCollectionService extends JobService {
                         }
                     } catch (JSONException e) {
                         Log.e(getClass().toString(), "JSONException", e);
+                        NotificationUtil.createNotification(getApplicationContext(), NotificationEnum.WebserviceAlarm);
                     }
                 }
 
