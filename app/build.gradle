@@ -22,8 +22,8 @@ android {
         applicationId "rocks.voss.beatthemeat"
         minSdkVersion 24
         targetSdkVersion 27
-        versionCode 14
-        versionName "1.13"
+        versionCode 15
+        versionName "1.14"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
