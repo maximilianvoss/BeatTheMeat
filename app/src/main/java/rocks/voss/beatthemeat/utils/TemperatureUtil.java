@@ -32,21 +32,29 @@ public class TemperatureUtil {
 
         for (int i = 0; i < temperatureList.size(); i++) {
             int lastTemperatature = getCurrentTemperature(i);
-            int currentTemperature = temperatureList.get(i);
 
-            if (currentTemperature != lastTemperatature) {
-
+            if (temperatureList.get(i) == null) {
                 if (i < temperatures.size()) {
-                    temperatures.set(i, currentTemperature);
+                    temperatures.set(i, Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET);
                 } else {
-                    temperatures.add(currentTemperature);
+                    temperatures.add(Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET);
                 }
+            } else {
+                int currentTemperature = temperatureList.get(i);
 
-                temperature = new Temperature();
-                temperature.time = time;
-                temperature.thermometerId = i;
-                temperature.temperature = currentTemperature;
-                insertTemperatureIntoDatabase(temperature);
+                if (currentTemperature != lastTemperatature) {
+                    if (i < temperatures.size()) {
+                        temperatures.set(i, currentTemperature);
+                    } else {
+                        temperatures.add(currentTemperature);
+                    }
+
+                    temperature = new Temperature();
+                    temperature.time = time;
+                    temperature.thermometerId = i;
+                    temperature.temperature = currentTemperature;
+                    insertTemperatureIntoDatabase(temperature);
+                }
             }
         }
     }

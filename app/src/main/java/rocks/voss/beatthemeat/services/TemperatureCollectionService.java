@@ -84,7 +84,11 @@ public class TemperatureCollectionService extends JobService {
                         JSONArray temperatures = jsonObject.getJSONArray(Constants.JSON_TEMPERATURES_OBJECT);
                         List<Integer> temperatureList = new ArrayList<>();
                         for (int i = 0; i < temperatures.length() && i < MainActivity.getThermometers().size(); i++) {
-                            temperatureList.add(temperatures.getInt(i));
+                            if (temperatures.isNull(i)) {
+                                temperatureList.add(null);
+                            } else {
+                                temperatureList.add(temperatures.getInt(i));
+                            }
                         }
                         TemperatureUtil.saveTemperature(temperatureList);
                         MainActivity.refreshThermometers();
