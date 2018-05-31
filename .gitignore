@@ -5,3 +5,4 @@ build/
 /app/release
 .DS_Store
 keystore.properties
+release.p12

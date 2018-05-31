@@ -1,10 +1,55 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
+    compileSdkVersion 27
+
+    def versionPropsFile = file('version.properties')
+    def value = 0
+    Properties versionProps = new Properties()
+    if (!versionPropsFile.exists()) {
+        versionProps['VERSION_MAJOR'] = "1"
+        versionProps['VERSION_MINOR'] = "0"
+        versionProps['VERSION_PATCH'] = "0"
+        versionProps['VERSION_NUMBER'] = "0"
+        versionProps['VERSION_BUILD'] = "-1"
+        // I set it to minus one so the first build is 0 which isn't super important.
+        versionProps.store(versionPropsFile.newWriter(), null)
+    }
+
+    def runTasks = gradle.startParameter.taskNames
+    if (':app:assembleRelease' in runTasks) {
+        value = 1
+    }
+
+    def mVersionName = ""
+
+    if (versionPropsFile.canRead()) {
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        versionProps['VERSION_PATCH'] = (versionProps['VERSION_PATCH'].toInteger() + value).toString()
+        versionProps['VERSION_NUMBER'] = (versionProps['VERSION_NUMBER'].toInteger() + value).toString()
+        versionProps['VERSION_BUILD'] = (versionProps['VERSION_BUILD'].toInteger() + 1).toString()
+
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        mVersionName = "v${versionProps['VERSION_MAJOR']}.${versionProps['VERSION_MINOR']}.${versionProps['VERSION_PATCH']}"
+
+        defaultConfig {
+            applicationId "rocks.voss.beatthemeat"
+            minSdkVersion 24
+            targetSdkVersion 27
+            versionCode versionProps['VERSION_NUMBER'].toInteger()
+            versionName "${mVersionName} Build: ${versionProps['VERSION_BUILD']}"
+        }
+    } else {
+        throw new FileNotFoundException("Could not read version.properties!")
+    }
+
     signingConfigs {
         signConfig {
             keyAlias keystoreProperties['keyAlias']
@@ -13,19 +58,12 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 27
-    defaultConfig {
-        applicationId "rocks.voss.beatthemeat"
-        minSdkVersion 24
-        targetSdkVersion 27
-        versionCode 15
-        versionName "1.14"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -38,6 +76,7 @@ android {
             signingConfig signingConfigs.signConfig
         }
     }
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -66,4 +105,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
+
+play {
+    serviceAccountEmail = 'appreleaser@api-7700700297653980727-165297.iam.gserviceaccount.com'
+    pk12File = file('../release.p12')
+    track = 'production'
+
 }
