@@ -8,7 +8,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     compileSdkVersion 27
 
-    def versionPropsFile = file('version.properties')
+    def versionPropsFile = rootProject.file('version.properties')
     def value = 0
     Properties versionProps = new Properties()
     if (!versionPropsFile.exists()) {
@@ -17,7 +17,6 @@ android {
         versionProps['VERSION_PATCH'] = "0"
         versionProps['VERSION_NUMBER'] = "0"
         versionProps['VERSION_BUILD'] = "-1"
-        // I set it to minus one so the first build is 0 which isn't super important.
         versionProps.store(versionPropsFile.newWriter(), null)
     }
 
@@ -49,6 +48,8 @@ android {
     } else {
         throw new FileNotFoundException("Could not read version.properties!")
     }
+
+
 
     signingConfigs {
         signConfig {
@@ -110,6 +111,29 @@ dependencies {
 play {
     serviceAccountEmail = 'appreleaser@api-7700700297653980727-165297.iam.gserviceaccount.com'
     pk12File = file('../release.p12')
-    track = 'production'
+//    track = 'production'
+}
 
+task gittag {
+    doLast {
+        def runTasks = gradle.startParameter.taskNames
+        if (':app:assembleRelease' in runTasks) {
+            exec {
+                workingDir rootProject.getRootDir()
+                commandLine 'git', 'add', "${rootProject.path}/version.properties"
+            }
+            exec {
+                workingDir rootProject.getRootDir()
+                commandLine 'git', 'commit', '-m', 'release build'
+            }
+            exec {
+                workingDir rootProject.getRootDir()
+                commandLine 'git', 'tag', $ { mVersionName }
+            }
+            exec {
+                workingDir rootProject.getRootDir()
+                commandLine 'git', 'push'
+            }
+        }
+    }
 }

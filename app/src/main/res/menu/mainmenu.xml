@@ -12,6 +12,8 @@
         app:showAsAction="ifRoom" />
     <item android:id="@+id/settings"
         android:title="Settings" />
+    <item android:id="@+id/about"
+        android:title="About" />
     <item android:id="@+id/quit"
         android:title="Quit"
         />

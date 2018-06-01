@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, AppSettingsActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.about:
+                intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.add:
                 addThermometer();
                 return true;

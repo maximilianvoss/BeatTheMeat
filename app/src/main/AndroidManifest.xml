@@ -16,6 +16,7 @@
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -43,7 +44,7 @@
             android:exported="false" />
 
         <activity android:name=".activities.HistoryActivity" />
-        <activity android:name=".activities.UploadActivity"></activity>
+        <activity android:name=".activities.UploadActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -52,6 +53,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name=".activities.AboutActivity"></activity>
     </application>
 
 </manifest>
