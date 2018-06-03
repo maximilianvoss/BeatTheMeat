@@ -18,4 +18,5 @@
     <string name="setting_temperature_min">Temperature Min:</string>
     <string name="setting_temperature_max">Temperature Max:</string>
 
+    <string name="copyrighttext">&#169; Copyright 2018 by Maximilian Voss\n&#174; All rights reserved by Maximilian Voss\nWebsite: <a href="https://maximilian.voss.rocks/diy/beat-the-meat.html">https://maximilian.voss.rocks</a>\nEmail: <a href="mailto: maximilian@voss.rocks">maximilian@voss.rocks</a>\nBeat The Meat Version: X</string>
 </resources>
