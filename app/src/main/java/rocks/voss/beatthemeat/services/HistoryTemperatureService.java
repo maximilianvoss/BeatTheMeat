@@ -67,7 +67,7 @@ public class HistoryTemperatureService extends JobService {
         HistoryDatabaseThread thread = new HistoryDatabaseThread(canvas.getId(), HistoryScaleEnum.getTime(canvas.getScale()),
                 temperatures -> {
                     canvas.setTemperatures(temperatures);
-                    canvas.invalidate();
+                    canvas.postInvalidate();
                 }
         );
 
