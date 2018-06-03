@@ -4,6 +4,7 @@ apply plugin: 'com.github.triplet.play'
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def mVersionName = ""
 
 android {
     compileSdkVersion 27
@@ -21,11 +22,9 @@ android {
     }
 
     def runTasks = gradle.startParameter.taskNames
-    if (':app:assembleRelease' in runTasks) {
+    if ('assembleRelease' in runTasks) {
         value = 1
     }
-
-    def mVersionName = ""
 
     if (versionPropsFile.canRead()) {
         versionProps.load(new FileInputStream(versionPropsFile))
@@ -48,8 +47,6 @@ android {
     } else {
         throw new FileNotFoundException("Could not read version.properties!")
     }
-
-
 
     signingConfigs {
         signConfig {
@@ -114,26 +111,27 @@ play {
 //    track = 'production'
 }
 
-task gittag {
-    doLast {
-        def runTasks = gradle.startParameter.taskNames
-        if (':app:assembleRelease' in runTasks) {
-            exec {
-                workingDir rootProject.getRootDir()
-                commandLine 'git', 'add', "${rootProject.path}/version.properties"
-            }
-            exec {
-                workingDir rootProject.getRootDir()
-                commandLine 'git', 'commit', '-m', 'release build'
-            }
-            exec {
-                workingDir rootProject.getRootDir()
-                commandLine 'git', 'tag', $ { mVersionName }
-            }
-            exec {
-                workingDir rootProject.getRootDir()
-                commandLine 'git', 'push'
-            }
+task gittag() {
+    outputs.upToDateWhen { false }
+    inputs.file(rootProject.file('version.properties'))
+
+    def runTasks = gradle.startParameter.taskNames
+    if ('assembleRelease' in runTasks) {
+        exec {
+            workingDir rootProject.getRootDir()
+            commandLine 'git', 'add', "${rootProject.path}/version.properties"
+        }
+        exec {
+            workingDir rootProject.getRootDir()
+            commandLine 'git', 'commit', '-m', '"release build"'
+        }
+        exec {
+            workingDir rootProject.getRootDir()
+            commandLine 'git', 'tag', mVersionName
+        }
+        exec {
+            workingDir rootProject.getRootDir()
+            commandLine 'git', 'push'
         }
     }
 }
