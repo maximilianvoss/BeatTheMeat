@@ -2,9 +2,9 @@ package rocks.voss.beatthemeat.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -55,18 +55,15 @@ public class UploadActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
 
+        Resources res = getResources();
         EditText textfieldFilename = findViewById(R.id.filename);
         OffsetDateTime date = TimeUtil.getNow();
         String timestamp = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        textfieldFilename.setText(textfieldFilename.getText().toString() + "-" + timestamp + ".csv");
+        String text = String.format(res.getString(R.string.file_export), timestamp);
+        textfieldFilename.setText(text);
 
         Button createButton = findViewById(R.id.create);
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startExport();
-            }
-        });
+        createButton.setOnClickListener(v -> startExport());
     }
 
     @Override
@@ -128,9 +125,7 @@ public class UploadActivity extends Activity {
     private void prepareFile() {
         int thermometerId = getIntent().getIntExtra(Constants.THERMOMETER_CANVAS_ID, 0);
         HistoryDatabaseThread historyDatabaseThread = new HistoryDatabaseThread(thermometerId,
-                temperatures -> {
-                    writeFile(temperatures);
-                }
+                this::writeFile
         );
         historyDatabaseThread.start();
     }
@@ -138,7 +133,7 @@ public class UploadActivity extends Activity {
     private void writeFile(List<Temperature> temperatures) {
         EditText textfieldFilename = findViewById(R.id.filename);
         String filename = textfieldFilename.getText().toString();
-        if (filename == null || filename.equals("")) {
+        if (filename.equals("")) {
             return;
         }
 

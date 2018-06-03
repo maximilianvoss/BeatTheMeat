@@ -15,7 +15,6 @@ public class DatabaseUtil {
         if (temperatureDatabase == null) {
             return null;
         }
-        TemperatureDao temperatureDao = temperatureDatabase.temperatureDao();
-        return temperatureDao;
+        return temperatureDatabase.temperatureDao();
     }
 }

@@ -11,7 +11,7 @@ import org.threeten.bp.format.DateTimeFormatter;
  */
 
 public class TimeConverter {
-    private static DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @TypeConverter
     public static OffsetDateTime toOffsetDateTime(String value) {

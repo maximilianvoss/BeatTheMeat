@@ -55,7 +55,7 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
     protected float maxWidth;
     protected float maxHeight;
 
-    protected Paint colorBlack;
+    protected final Paint colorBlack;
 
     public AbstractTemperatureCanvas(final Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);

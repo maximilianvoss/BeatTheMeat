@@ -34,7 +34,7 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     private NumberPickerPreference temperatureMin;
     private NumberPickerPreference temperatureMax;
 
-    private enum SelectionType {Catalog, Category, Style};
+    private enum SelectionType {Catalog, Category, Style}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

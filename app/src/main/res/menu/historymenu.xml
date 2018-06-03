@@ -4,6 +4,6 @@
     <item
         android:id="@+id/upload"
         android:icon="@drawable/ic_upload"
-        android:title="Upload File"
+        android:title="@string/file_upload"
         app:showAsAction="ifRoom" />
 </menu>

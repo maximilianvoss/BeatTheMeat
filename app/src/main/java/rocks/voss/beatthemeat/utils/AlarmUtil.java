@@ -40,14 +40,9 @@ public class AlarmUtil {
         }
 
         if (isRange) {
-            if (temperatureCurrent < temperatureMin || temperatureCurrent > temperatureMax) {
-                return true;
-            }
+            return temperatureCurrent < temperatureMin || temperatureCurrent > temperatureMax;
         } else {
-            if (temperatureCurrent >= temperatureMin) {
-                return true;
-            }
+            return temperatureCurrent >= temperatureMin;
         }
-        return false;
     }
 }

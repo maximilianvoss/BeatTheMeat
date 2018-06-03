@@ -12,7 +12,7 @@ public enum HistoryScaleEnum {
     hrs5,
     hrs10;
 
-    private static HistoryScaleEnum[] vals = values();
+    private static final HistoryScaleEnum[] vals = values();
 
     public HistoryScaleEnum next() {
         int value = this.ordinal() + 1;
@@ -46,7 +46,7 @@ public enum HistoryScaleEnum {
             case hrs10:
                 return time.minusHours(10);
         }
-        return null;
+        return time;
     }
 
     public static boolean isCalcInSeconds(HistoryScaleEnum scaleEnum) {
@@ -74,6 +74,6 @@ public enum HistoryScaleEnum {
             case hrs10:
                 return "10 Hours";
         }
-        return null;
+        return "15 Minutes";
     }
 }

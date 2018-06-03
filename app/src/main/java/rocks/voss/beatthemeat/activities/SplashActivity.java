@@ -46,18 +46,15 @@ public class SplashActivity extends Activity {
     private void scheduleSplashScreen() {
         int spashScreenDuration = 1000;
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    databaseDeleteThread.join();
-                } catch (InterruptedException e) {
-                    Log.e("SplashActivity", "InterruptedException", e);
-                }
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
+        handler.postDelayed(() -> {
+            try {
+                databaseDeleteThread.join();
+            } catch (InterruptedException e) {
+                Log.e("SplashActivity", "InterruptedException", e);
             }
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
         }, spashScreenDuration);
     }
 }

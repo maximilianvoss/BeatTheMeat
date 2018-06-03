@@ -33,8 +33,7 @@ public class StringArrayPreference extends DialogPreference {
     @Setter
     private int numberOptions = DEFAULT_NUMBER_OPTIONS;
 
-    private List<TextInputEditText> textfields = new ArrayList<>();
-    ;
+    private final List<TextInputEditText> textfields = new ArrayList<>();
 
     public StringArrayPreference(Context context) {
         super(context);
@@ -87,7 +86,7 @@ public class StringArrayPreference extends DialogPreference {
 
             for (TextInputEditText textfield : textfields) {
                 String text = textfield.getText().toString();
-                if (text != null && !text.equals("")) {
+                if (!text.equals("")) {
                     values.add(text);
                 }
             }
@@ -106,7 +105,7 @@ public class StringArrayPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
         try {
-            setValue(restorePersistedValue ? getPersistedStringSet(values) : new LinkedHashSet<String>());
+            setValue(restorePersistedValue ? getPersistedStringSet(values) : new LinkedHashSet<>());
         } catch (ClassCastException e) {
             getEditor().remove(getKey()).apply();
             Set<String> values = new LinkedHashSet<>();

@@ -9,9 +9,9 @@ import rocks.voss.beatthemeat.database.TemperatureDao;
 import rocks.voss.beatthemeat.utils.DatabaseUtil;
 
 public class HistoryDatabaseThread extends Thread {
-    private int thermometerId;
-    private HistoryDatabaseThreadCallback callback;
-    private OffsetDateTime time;
+    private final int thermometerId;
+    private final HistoryDatabaseThreadCallback callback;
+    private final OffsetDateTime time;
 
     public HistoryDatabaseThread(int thermometerId, HistoryDatabaseThreadCallback callback) {
         this(thermometerId, null, callback);

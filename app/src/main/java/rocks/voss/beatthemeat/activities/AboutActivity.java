@@ -1,6 +1,7 @@
 package rocks.voss.beatthemeat.activities;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
@@ -15,10 +16,11 @@ public class AboutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        TextView copyrightText = (TextView) findViewById(R.id.copyrighttext);
+        TextView copyrightText = findViewById(R.id.copyrighttext);
         copyrightText.setMovementMethod(LinkMovementMethod.getInstance());
-        String text = copyrightText.getText().toString();
-        text = text.replace("Version: X", "Version : " + BuildConfig.VERSION_NAME);
+
+        Resources res = getResources();
+        String text = String.format(res.getString(R.string.copyrighttext), BuildConfig.VERSION_NAME);
         copyrightText.setText(text);
     }
 }

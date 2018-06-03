@@ -16,13 +16,12 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="export"
             tools:text="Filename" />
 
         <Button
             android:id="@+id/create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Export Data" />
+            android:text="@string/button_export_data" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

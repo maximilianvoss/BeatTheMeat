@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -108,14 +107,13 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onConnectionFailure(Context context) {
                     NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
-                    TemperatureUtil.saveTemperature(new ArrayList<Integer>());
+                    TemperatureUtil.saveTemperature(new ArrayList<>());
                     MainActivity.refreshThermometers();
                 }
             });
 
-            Iterator<String> iterator = webserviceUrls.iterator();
-            while (iterator.hasNext()) {
-                service.addUrl(iterator.next());
+            for (String webserviceUrl : webserviceUrls) {
+                service.addUrl(webserviceUrl);
             }
             service.start();
         } catch (MalformedURLException e) {

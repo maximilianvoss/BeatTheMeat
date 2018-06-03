@@ -4,17 +4,17 @@
     <item
         android:id="@+id/add"
         android:icon="@drawable/ic_thermometer_add"
-        android:title="Add Additional Thermometer"
+        android:title="@string/menu_add_thermometer"
         app:showAsAction="ifRoom" />
     <item android:id="@+id/remove"
-        android:title="Remove Last Thermometer"
+        android:title="@string/menu_remove_thermometer"
         android:icon="@drawable/ic_thermometer_delete"
         app:showAsAction="ifRoom" />
     <item android:id="@+id/settings"
-        android:title="Settings" />
+        android:title="@string/menu_settings" />
     <item android:id="@+id/about"
-        android:title="About" />
+        android:title="@string/menu_about" />
     <item android:id="@+id/quit"
-        android:title="Quit"
+        android:title="@string/menu_quit"
         />
 </menu>

@@ -22,7 +22,7 @@ import rocks.voss.beatthemeat.utils.TimeUtil;
 
 public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
-    private GestureDetector gestureDetector;
+    private final GestureDetector gestureDetector;
 
     @Setter
     private List<Temperature> temperatures;

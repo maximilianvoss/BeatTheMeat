@@ -21,7 +21,7 @@ public class DatabaseDeleteThread extends Thread {
 
         if (thermometerId == -1) {
             OffsetDateTime time = TimeUtil.getNow();
-            time.minusDays(1);
+            time = time.minusDays(1);
             temperatureDao.delete(time);
         } else {
             temperatureDao.delete(thermometerId);

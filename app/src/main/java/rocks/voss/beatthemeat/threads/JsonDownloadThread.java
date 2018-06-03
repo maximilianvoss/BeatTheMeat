@@ -24,9 +24,9 @@ import rocks.voss.beatthemeat.utils.NotificationUtil;
  * Created by voss on 24.03.18.
  */
 public class JsonDownloadThread extends Thread {
-    private List<URL> urls = new ArrayList<>();
+    private final List<URL> urls = new ArrayList<>();
     private final Context context;
-    private JsonDownloadThreadCallback jsonDownloadCallback;
+    private final JsonDownloadThreadCallback jsonDownloadCallback;
 
     public JsonDownloadThread(Context context, JsonDownloadThreadCallback jsonDownloadCallback) {
         this.context = context;
