@@ -21,10 +21,8 @@ import rocks.voss.beatthemeat.utils.TimeUtil;
 public class Temperature {
     @NonNull
     public org.threeten.bp.OffsetDateTime time;
-
     @NonNull
     public int thermometerId;
-
     public int temperature;
 
     public static Temperature createByThermometerData(ThermometerData thermometerData) {

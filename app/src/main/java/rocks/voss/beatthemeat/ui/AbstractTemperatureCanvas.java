@@ -12,6 +12,7 @@ import android.view.SurfaceView;
 import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
+import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
@@ -47,7 +48,8 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
     protected Paint colorSeparator;
 
     protected boolean isRange;
-    protected int temperatureCurrent = Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET;
+    protected Temperature temperature;
+    private int temperatureCurrent;
     protected int temperatureMin;
     protected int temperatureMax;
 
@@ -72,7 +74,13 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
         isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, this.id), true);
         temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, this.id), 50);
         temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, this.id), 100);
-        temperatureCurrent = TemperatureUtil.getCurrentTemperature(this.id);
+
+        temperature = TemperatureUtil.getCurrentTemperature(this.id);
+        if (temperature == null) {
+            temperatureCurrent = Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET;
+        } else {
+            temperatureCurrent = temperature.temperature;
+        }
 
         paddingPixel = UiUtil.getStandardPaddingPixel(getContext());
         maxWidth = canvas.getWidth() - paddingPixel;

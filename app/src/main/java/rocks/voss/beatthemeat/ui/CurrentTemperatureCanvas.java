@@ -89,10 +89,10 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
         }
         drawMarkers(canvas);
 
-        if (temperatureCurrent == Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET) {
+        if (temperature == null) {
             drawTemperature(canvas, "N/A");
         } else {
-            drawTemperature(canvas, String.valueOf(temperatureCurrent));
+            drawTemperature(canvas, String.valueOf(temperature.temperature));
         }
 
         colorBlack.setStyle(Paint.Style.STROKE);
@@ -218,7 +218,11 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     }
 
     private void drawIndicator(Canvas canvas) {
-        float angle = 180f - getAnglePerTemperature(temperatureCurrent);
+        if (temperature == null) {
+            return;
+        }
+
+        float angle = 180f - getAnglePerTemperature(temperature.temperature);
         float length = UiUtil.getStandardPaddingPixel(getContext(), indicatorWidth);
 
         Point end = new Point();
