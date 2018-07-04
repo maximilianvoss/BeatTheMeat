@@ -1,16 +1,10 @@
 package rocks.voss.beatthemeat.threads;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -59,27 +53,23 @@ public class JsonDownloadThread extends Thread {
     public void run() {
         HttpURLConnection urlConnection = null;
         for (URL url : urls) {
+            InputStream stream = null;
             try {
                 urlConnection = establishConnection(url);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                reader.close();
-
+                stream = urlConnection.getInputStream();
                 NotificationUtil.stopNotification(context, NotificationEnum.WebserviceAlarm);
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.context);
-
-                jsonDownloadCallback.onDownloadComplete(sharedPref, new JSONObject(sb.toString()));
+                jsonDownloadCallback.onDownloadComplete(stream);
                 return;
             } catch (IOException e) {
                 Log.e(this.getClass().toString(), "IOException", e);
-            } catch (JSONException e) {
-                Log.e(this.getClass().toString(), "JSONException", e);
             } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        Log.e(this.getClass().toString(), "IOException", e);
+                    }
+                }
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
@@ -97,8 +87,7 @@ public class JsonDownloadThread extends Thread {
     }
 
     public interface JsonDownloadThreadCallback {
-        void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject);
-
+        void onDownloadComplete(InputStream stream) throws IOException;
         void onConnectionFailure(Context context);
     }
 }

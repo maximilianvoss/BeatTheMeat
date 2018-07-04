@@ -10,17 +10,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 
 import rocks.voss.beatthemeat.Constants;
-import rocks.voss.beatthemeat.data.ThermometerSettings;
-import rocks.voss.beatthemeat.data.ThermometerSettingsCatalog;
-import rocks.voss.beatthemeat.data.ThermometerSettingsCategory;
-import rocks.voss.beatthemeat.data.ThermometerSettingsStyle;
+import rocks.voss.beatthemeat.thermometersettings.ThermometerSettingsDataWrapper;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 
 /**
@@ -60,46 +55,12 @@ public class ThermometerSettingsCollectionService extends JobService {
         try {
             JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThread.JsonDownloadThreadCallback() {
                 @Override
-                public void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject) {
-                    try {
-                        ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-                        thermometerSettings.clear();
-
-                        JSONArray jsonCatalogs = jsonObject.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_CATALOGS);
-                        for ( int i = 0; i < jsonCatalogs.length(); i++ ) {
-                            JSONObject jsonCatalog = jsonCatalogs.getJSONObject(i);
-                            ThermometerSettingsCatalog catalog = new ThermometerSettingsCatalog();
-                            catalog.setName(jsonCatalog.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
-                            thermometerSettings.getCatalogs().add(catalog);
-
-                            JSONArray jsonCategories = jsonCatalog.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_CATEGORIES);
-                            for (int j = 0; j < jsonCategories.length(); j++) {
-                                JSONObject jsonCategory = jsonCategories.getJSONObject(j);
-
-                                ThermometerSettingsCategory category = new ThermometerSettingsCategory();
-                                category.setName(jsonCategory.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
-                                catalog.getCategories().add(category);
-
-                                JSONArray jsonItems = jsonCategory.getJSONArray(Constants.JSON_THERMOMETER_SETTINGS_STYLES);
-                                for (int k = 0; k < jsonItems.length(); k++) {
-                                    JSONObject jsonItem = jsonItems.getJSONObject(k);
-                                    ThermometerSettingsStyle style = new ThermometerSettingsStyle();
-                                    style.setName(jsonItem.getString(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_NAME));
-                                    style.setRange(jsonItem.getBoolean(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_IS_RANGE));
-                                    style.setTemperatureMin(jsonItem.getInt(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MIN));
-                                    style.setTemperatureMax(jsonItem.getInt(Constants.JSON_THERMOMETER_SETTINGS_PROPERTY_TEMP_MAX));
-                                    category.getStyles().add(style);
-                                }
-                            }
-                        }
-                    } catch (JSONException e) {
-                        Log.e(getClass().toString(), "JSONException", e);
-                    }
+                public void onDownloadComplete(InputStream stream) throws IOException {
+                    ThermometerSettingsDataWrapper.createByStream(stream);
                 }
 
                 @Override
                 public void onConnectionFailure(Context context) {
-
                 }
             });
 

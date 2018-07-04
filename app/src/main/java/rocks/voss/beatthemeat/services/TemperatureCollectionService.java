@@ -11,10 +11,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -24,6 +22,8 @@ import java.util.Set;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
+import rocks.voss.beatthemeat.thermometer.ThermometerData;
+import rocks.voss.beatthemeat.thermometer.ThermometerDataWrapper;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
@@ -78,29 +78,24 @@ public class TemperatureCollectionService extends JobService {
         try {
             JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThread.JsonDownloadThreadCallback() {
                 @Override
-                public void onDownloadComplete(SharedPreferences sharedPref, JSONObject jsonObject) {
-                    try {
-                        JSONArray temperatures = jsonObject.getJSONArray(Constants.JSON_TEMPERATURES_OBJECT);
-                        List<Integer> temperatureList = new ArrayList<>();
-                        for (int i = 0; i < temperatures.length() && i < MainActivity.getThermometers().size(); i++) {
-                            if (temperatures.isNull(i)) {
-                                temperatureList.add(null);
-                            } else {
-                                temperatureList.add(temperatures.getInt(i));
-                            }
-                        }
-                        TemperatureUtil.saveTemperature(temperatureList);
-                        MainActivity.refreshThermometers();
-
-                        boolean isAlarm = AlarmUtil.isAlarm(getBaseContext());
-                        if (isAlarm) {
-                            activateNotification();
+                public void onDownloadComplete(InputStream stream) throws IOException {
+                    ThermometerDataWrapper thermometerDataWrapper = ThermometerDataWrapper.createByStream(stream);
+                    List<Integer> temperatureList = new ArrayList<>();
+                    for (ThermometerData thermometer : thermometerDataWrapper.getThermometers()) {
+                        if (thermometer.isActive()) {
+                            temperatureList.add((int) thermometer.getTemperature());
                         } else {
-                            deactivateNotification();
+                            temperatureList.add(null);
                         }
-                    } catch (JSONException e) {
-                        Log.e(getClass().toString(), "JSONException", e);
-                        NotificationUtil.createNotification(getApplicationContext(), NotificationEnum.WebserviceAlarm);
+                    }
+                    TemperatureUtil.saveTemperature(temperatureList);
+                    MainActivity.refreshThermometers();
+
+                    boolean isAlarm = AlarmUtil.isAlarm(getBaseContext());
+                    if (isAlarm) {
+                        activateNotification();
+                    } else {
+                        deactivateNotification();
                     }
                 }
 

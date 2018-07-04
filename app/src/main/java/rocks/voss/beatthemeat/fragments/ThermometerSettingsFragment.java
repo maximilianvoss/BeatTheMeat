@@ -12,10 +12,10 @@ import java.util.List;
 import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
-import rocks.voss.beatthemeat.data.ThermometerSettings;
-import rocks.voss.beatthemeat.data.ThermometerSettingsCatalog;
-import rocks.voss.beatthemeat.data.ThermometerSettingsCategory;
-import rocks.voss.beatthemeat.data.ThermometerSettingsStyle;
+import rocks.voss.beatthemeat.thermometersettings.ThermometerSettingsCatalogData;
+import rocks.voss.beatthemeat.thermometersettings.ThermometerSettingsCategoryData;
+import rocks.voss.beatthemeat.thermometersettings.ThermometerSettingsDataWrapper;
+import rocks.voss.beatthemeat.thermometersettings.ThermometerSettingsStyleData;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 
@@ -148,8 +148,8 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     private List<CharSequence> fillThermometerCatalog() {
         List<CharSequence> entries = new ArrayList<>();
 
-        ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+        ThermometerSettingsDataWrapper thermometerSettingsDataWrapper = ThermometerSettingsDataWrapper.getInstance();
+        for (ThermometerSettingsCatalogData catalog : thermometerSettingsDataWrapper.getCatalogs()) {
             entries.add(catalog.getName());
         }
         return entries;
@@ -158,10 +158,10 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     private List<CharSequence> fillThermometerCategories(String catalogName) {
         List<CharSequence> entries = new ArrayList<>();
 
-        ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+        ThermometerSettingsDataWrapper thermometerSettingsDataWrapper = ThermometerSettingsDataWrapper.getInstance();
+        for (ThermometerSettingsCatalogData catalog : thermometerSettingsDataWrapper.getCatalogs()) {
             if (catalog.getName().equals(catalogName)) {
-                for (ThermometerSettingsCategory category : catalog.getCategories()) {
+                for (ThermometerSettingsCategoryData category : catalog.getCategories()) {
                     entries.add(category.getName());
                 }
                 return entries;
@@ -173,12 +173,12 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     private List<CharSequence> fillThermometerStyle(String catalogName, String categoryName) {
         List<CharSequence> entries = new ArrayList<>();
 
-        ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+        ThermometerSettingsDataWrapper thermometerSettingsDataWrapper = ThermometerSettingsDataWrapper.getInstance();
+        for (ThermometerSettingsCatalogData catalog : thermometerSettingsDataWrapper.getCatalogs()) {
             if (catalog.getName().equals(catalogName)) {
-                for (ThermometerSettingsCategory category : catalog.getCategories()) {
+                for (ThermometerSettingsCategoryData category : catalog.getCategories()) {
                     if (category.getName().equals(categoryName)) {
-                        for (ThermometerSettingsStyle style : category.getStyles()) {
+                        for (ThermometerSettingsStyleData style : category.getStyles()) {
                             entries.add(style.getName());
                         }
                         return entries;
@@ -190,18 +190,18 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     }
 
     private void fillThermometerSettings(String catalogName, String categoryName, String styleName) {
-        ThermometerSettings thermometerSettings = ThermometerSettings.getInstance();
-        for (ThermometerSettingsCatalog catalog : thermometerSettings.getCatalogs()) {
+        ThermometerSettingsDataWrapper thermometerSettingsDataWrapper = ThermometerSettingsDataWrapper.getInstance();
+        for (ThermometerSettingsCatalogData catalog : thermometerSettingsDataWrapper.getCatalogs()) {
             if (catalog.getName().equals(catalogName)) {
-                for (ThermometerSettingsCategory category : catalog.getCategories()) {
+                for (ThermometerSettingsCategoryData category : catalog.getCategories()) {
                     if (category.getName().equals(categoryName)) {
-                        for (ThermometerSettingsStyle style : category.getStyles()) {
+                        for (ThermometerSettingsStyleData style : category.getStyles()) {
                             if (style.getName().equals(styleName)) {
                                 temperatureMin.setValue(style.getTemperatureMin());
                                 temperatureMax.setValue(style.getTemperatureMax());
-                                isRange.setChecked(style.isRange());
+                                isRange.setChecked(style.isTemperatureIsRange());
 
-                                temperatureMax.setEnabled(style.isRange());
+                                temperatureMax.setEnabled(style.isTemperatureIsRange());
                                 setPreferenceTitle(temperatureMin, R.string.setting_temperature_min, String.valueOf(temperatureMin.getValue()));
                                 setPreferenceTitle(temperatureMax, R.string.setting_temperature_max, String.valueOf(temperatureMax.getValue()));
 
