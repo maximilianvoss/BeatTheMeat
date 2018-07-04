@@ -63,13 +63,6 @@ public class JsonDownloadThread extends Thread {
             } catch (IOException e) {
                 Log.e(this.getClass().toString(), "IOException", e);
             } finally {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        Log.e(this.getClass().toString(), "IOException", e);
-                    }
-                }
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
@@ -88,6 +81,7 @@ public class JsonDownloadThread extends Thread {
 
     public interface JsonDownloadThreadCallback {
         void onDownloadComplete(InputStream stream) throws IOException;
+
         void onConnectionFailure(Context context);
     }
 }

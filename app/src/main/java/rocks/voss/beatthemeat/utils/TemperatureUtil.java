@@ -1,60 +1,46 @@
 package rocks.voss.beatthemeat.utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Getter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
+import rocks.voss.beatthemeat.thermometer.ThermometerData;
+import rocks.voss.beatthemeat.thermometer.ThermometerDataWrapper;
 import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
 
 public class TemperatureUtil {
 
     @Getter
-    private static List<Integer> temperatures = new ArrayList<>();
+    private static Map<Integer, Temperature> temperatures = new HashMap();
 
+    // TODO: return Temperature Object and null on empty
     public static int getCurrentTemperature(int thermometerId) {
-        if (temperatures.size() <= thermometerId) {
+        if (!temperatures.containsKey(thermometerId)) {
             return Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET;
-        } else {
-            return temperatures.get(thermometerId);
         }
+        return temperatures.get(thermometerId).temperature;
     }
 
-    public static void saveTemperature(List<Integer> temperatureList) {
-        Temperature temperature;
-        org.threeten.bp.OffsetDateTime time = TimeUtil.getNow();
-
-        while (temperatures.size() > temperatureList.size()) {
-            temperatures.remove(temperatures.size() - 1);
+    public static void saveTemperature(ThermometerDataWrapper thermometerDataWrapper) {
+        if (thermometerDataWrapper == null) {
+            temperatures.clear();
+            return;
         }
 
-        for (int i = 0; i < temperatureList.size(); i++) {
-            int lastTemperatature = getCurrentTemperature(i);
+        for (ThermometerData thermometerData : thermometerDataWrapper.getThermometers()) {
+            Temperature temperature = Temperature.createByThermometerData(thermometerData);
+            if (temperature == null) {
+                temperatures.remove(thermometerData.getId());
+                continue;
+            }
 
-            if (temperatureList.get(i) == null) {
-                if (i < temperatures.size()) {
-                    temperatures.set(i, Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET);
-                } else {
-                    temperatures.add(Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET);
-                }
-            } else {
-                int currentTemperature = temperatureList.get(i);
-
-                if (currentTemperature != lastTemperatature) {
-                    if (i < temperatures.size()) {
-                        temperatures.set(i, currentTemperature);
-                    } else {
-                        temperatures.add(currentTemperature);
-                    }
-
-                    temperature = new Temperature();
-                    temperature.time = time;
-                    temperature.thermometerId = i;
-                    temperature.temperature = currentTemperature;
-                    insertTemperatureIntoDatabase(temperature);
-                }
+            Temperature oldTemp = temperatures.get(thermometerData.getId());
+            if (!temperature.equals(oldTemp)) {
+                temperatures.put(thermometerData.getId(), temperature);
+                insertTemperatureIntoDatabase(temperature);
             }
         }
     }

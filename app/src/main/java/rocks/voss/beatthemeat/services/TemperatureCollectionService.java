@@ -14,15 +14,12 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
-import rocks.voss.beatthemeat.thermometer.ThermometerData;
 import rocks.voss.beatthemeat.thermometer.ThermometerDataWrapper;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
@@ -80,15 +77,7 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onDownloadComplete(InputStream stream) throws IOException {
                     ThermometerDataWrapper thermometerDataWrapper = ThermometerDataWrapper.createByStream(stream);
-                    List<Integer> temperatureList = new ArrayList<>();
-                    for (ThermometerData thermometer : thermometerDataWrapper.getThermometers()) {
-                        if (thermometer.isActive()) {
-                            temperatureList.add((int) thermometer.getTemperature());
-                        } else {
-                            temperatureList.add(null);
-                        }
-                    }
-                    TemperatureUtil.saveTemperature(temperatureList);
+                    TemperatureUtil.saveTemperature(thermometerDataWrapper);
                     MainActivity.refreshThermometers();
 
                     boolean isAlarm = AlarmUtil.isAlarm(getBaseContext());
@@ -102,7 +91,7 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onConnectionFailure(Context context) {
                     NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
-                    TemperatureUtil.saveTemperature(new ArrayList<>());
+                    TemperatureUtil.saveTemperature(null);
                     MainActivity.refreshThermometers();
                 }
             });
