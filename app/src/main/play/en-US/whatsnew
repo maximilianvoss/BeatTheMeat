@@ -1,0 +1,3 @@
+
+- In which our hero fixed a null pointer exception if the database is still empty
+- In which our hero fixed the last typo

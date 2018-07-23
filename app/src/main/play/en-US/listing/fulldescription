@@ -1,0 +1,5 @@
+I love BBQ! There is nothing better than smoking a great piece of Pulled Pork, Brisket or trying a new style of Spare Ribs. As smoking is not only low, it is also slow, I had special requirements for keeping track of the temperatures - within the meat as well as the smoker.
+Coming from a radio transmitting thermometer which was very limited I ended with a Bluetooth thermometer. Soon, I recognized that Bluetooth is nice but when I'm at the rear end of my apartment I will lose connection and I'm somehow bound the the house. No little walk, running small errands without the fear that the temperatures are going nuts.
+So I decided to build my own thermometer based on an Arduino Yun which gives me all the freedom as it transmits all temperature states via Wifi to the World Wide Web - and this app is consuming it.
+
+Find more on http://maximilian.voss.rocks/diy/thermometer.html

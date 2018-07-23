@@ -131,11 +131,24 @@ task gittag() {
         }
         exec {
             workingDir rootProject.getRootDir()
-            commandLine 'git', 'tag', mVersionName
+            commandLine "bash", "-c", "git tag -a ${mVersionName} -m ${mVersionName}"
         }
         exec {
             workingDir rootProject.getRootDir()
             commandLine 'git', 'push'
+        }
+    }
+}
+
+task gitchangelog() {
+    outputs.upToDateWhen { false }
+    inputs.file(rootProject.file('version.properties'))
+
+    def runTasks = gradle.startParameter.taskNames
+    if ('assembleRelease' in runTasks) {
+        exec {
+            workingDir rootProject.getRootDir()
+            commandLine "bash", "-c", "git log --pretty=format:\"- %s\" `git for-each-ref --sort=taggerdate --format '%(refname)' refs/tags | tail -2 | head -1 | sed 's/refs\\/tags\\///'`..`git for-each-ref --sort=taggerdate --format '%(refname)' refs/tags | tail -1 | sed 's/refs\\/tags\\///'` | sed 's/- release build//g' | sed '/^[[:space:]]*\\\$/d' >${rootProject.getRootDir()}/app/src/main/play/en-US/whatsnew"
         }
     }
 }
