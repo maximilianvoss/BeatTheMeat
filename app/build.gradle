@@ -111,7 +111,7 @@ dependencies {
 
 play {
     serviceAccountEmail = 'appreleaser@api-7700700297653980727-165297.iam.gserviceaccount.com'
-    pk12File = file('../release.p12')
+    pk12File = file('../../release.p12')
     track = 'production'
 }
 
