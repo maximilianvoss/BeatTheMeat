@@ -137,6 +137,10 @@ task gittag() {
             workingDir rootProject.getRootDir()
             commandLine 'git', 'push'
         }
+        exec {
+            workingDir rootProject.getRootDir()
+            commandLine 'git', 'push', '--tags'
+        }
     }
 }
 
