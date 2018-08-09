@@ -15,7 +15,6 @@ import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 public class SplashActivity extends Activity {
 
@@ -27,7 +26,6 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         scheduleSplashScreen();
 
-        TemperatureUtil.getTemperatures().clear();
         DatabaseUtil databaseUtil = new DatabaseUtil();
         databaseUtil.openDatabase(getApplicationContext(), TemperatureDatabase.class, Constants.DATABASE_NAME);
 

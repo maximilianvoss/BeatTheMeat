@@ -19,6 +19,7 @@ import java.util.List;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
@@ -27,7 +28,6 @@ import rocks.voss.beatthemeat.ui.CurrentTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id));
             editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
             editor.apply();
-            TemperatureUtil.removeThermometer(id);
+            TemperatureCache.deleteTemperatures(id);
         }
         createUI();
     }

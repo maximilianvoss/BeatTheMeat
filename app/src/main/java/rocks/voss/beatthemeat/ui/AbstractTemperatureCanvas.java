@@ -13,8 +13,8 @@ import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.database.Temperature;
+import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.utils.KeyUtil;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 public abstract class AbstractTemperatureCanvas extends SurfaceView {
@@ -75,7 +75,7 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
         temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, this.id), 50);
         temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, this.id), 100);
 
-        temperature = TemperatureUtil.getCurrentTemperature(this.id);
+        temperature = TemperatureCache.getLatestTemperature(this.id);
         if (temperature == null) {
             temperatureCurrent = Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET;
         } else {

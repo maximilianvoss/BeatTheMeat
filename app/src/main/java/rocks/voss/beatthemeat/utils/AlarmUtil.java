@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.database.Temperature;
+import rocks.voss.beatthemeat.database.TemperatureCache;
 
 /**
  * Created by voss on 28.03.18.
@@ -20,7 +21,7 @@ public class AlarmUtil {
     private static boolean enabled;
 
     public static boolean isAlarm(Context context) {
-        for (int temperatureId : TemperatureUtil.getTemperatures().keySet()) {
+        for (int temperatureId : TemperatureCache.getCache().keySet()) {
             if (isAlarm(context, temperatureId)) {
                 return true;
             }
@@ -33,7 +34,7 @@ public class AlarmUtil {
         boolean isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id), true);
         int temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id), 50);
         int temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id), 100);
-        Temperature temperature = TemperatureUtil.getCurrentTemperature(id);
+        Temperature temperature = TemperatureCache.getLatestTemperature(id);
 
         if (temperature == null) {
             return false;

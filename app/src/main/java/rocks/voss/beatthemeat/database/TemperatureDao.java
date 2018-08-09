@@ -14,10 +14,10 @@ import java.util.List;
 
 @Dao
 public interface TemperatureDao {
-    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId AND datetime(time)>datetime(:time) ORDER BY datetime(time)")
+    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId AND datetime(time)>datetime(:time) ORDER BY datetime(time) DESC")
     List<Temperature> getAll(int thermometerId, OffsetDateTime time);
 
-    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId ORDER BY datetime(time)")
+    @Query("SELECT * FROM temperature WHERE thermometerId=:thermometerId ORDER BY datetime(time) DESC")
     List<Temperature> getAll(int thermometerId);
 
     @Insert

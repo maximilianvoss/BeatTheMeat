@@ -19,12 +19,14 @@ import java.util.Set;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
+import rocks.voss.beatthemeat.database.Temperature;
+import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
+import rocks.voss.beatthemeat.thermometer.ThermometerData;
 import rocks.voss.beatthemeat.thermometer.ThermometerDataWrapper;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
-import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 /**
  * Created by voss on 24.03.18.
@@ -77,7 +79,11 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onDownloadComplete(InputStream stream) throws IOException {
                     ThermometerDataWrapper thermometerDataWrapper = ThermometerDataWrapper.createByStream(stream);
-                    TemperatureUtil.saveTemperature(thermometerDataWrapper);
+                    for (ThermometerData thermometerData : thermometerDataWrapper.getThermometers()) {
+                        Temperature temperature = Temperature.createByThermometerData(thermometerData);
+                        TemperatureCache.insertTemperature(temperature);
+                    }
+
                     MainActivity.refreshThermometers();
 
                     boolean isAlarm = AlarmUtil.isAlarm(getBaseContext());
@@ -91,7 +97,6 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onConnectionFailure(Context context) {
                     NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
-                    TemperatureUtil.saveTemperature(null);
                     MainActivity.refreshThermometers();
                 }
             });

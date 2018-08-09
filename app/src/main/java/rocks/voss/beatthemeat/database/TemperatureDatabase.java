@@ -10,7 +10,7 @@ import rocks.voss.androidutils.utils.DatabaseUtil;
  * Created by voss on 08.04.18.
  */
 
-@Database(entities = {Temperature.class, Thermometer.class}, version = 3)
+@Database(entities = {Temperature.class, Thermometer.class}, version = 5)
 @TypeConverters({TimeConverter.class})
 public abstract class TemperatureDatabase extends RoomDatabase implements DatabaseUtil.Database {
     public abstract TemperatureDao getTemperatureDao();

@@ -12,7 +12,7 @@ public class ThermometerCache {
     public static List<Thermometer> getThermometers() {
         if (thermometers == null) {
             thermometers = new ArrayList<>();
-            databaseUtil.getAll(Temperature.class, 1, elements -> {
+            databaseUtil.getAll(Thermometer.class, null, elements -> {
                 thermometers.addAll((List<Thermometer>) (List<?>) elements);
             });
         }
@@ -20,7 +20,7 @@ public class ThermometerCache {
     }
 
     public static void insertThermometer(Thermometer thermometer) {
-        thermometers.add(0, thermometer);
+        getThermometers().add(thermometer);
         databaseUtil.insert(Thermometer.class, thermometer);
     }
 }

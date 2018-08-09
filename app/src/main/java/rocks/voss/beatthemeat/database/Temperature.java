@@ -20,19 +20,18 @@ import rocks.voss.beatthemeat.utils.TimeUtil;
 )
 public class Temperature {
     @NonNull
-    public org.threeten.bp.OffsetDateTime time;
-    @NonNull
     public int thermometerId;
+    @NonNull
+    public org.threeten.bp.OffsetDateTime time;
+    public boolean isActive;
     public int temperature;
 
     public static Temperature createByThermometerData(ThermometerData thermometerData) {
-        if (!thermometerData.isActive()) {
-            return null;
-        }
         Temperature temperature = new Temperature();
         temperature.temperature = (int) thermometerData.getTemperature();
         temperature.thermometerId = thermometerData.getId();
         temperature.time = TimeUtil.getNow();
+        temperature.isActive = thermometerData.isActive();
         return temperature;
     }
 
