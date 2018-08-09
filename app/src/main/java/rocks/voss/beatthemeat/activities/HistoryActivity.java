@@ -8,9 +8,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
+import rocks.voss.androidutils.AndroidUtilsConstants;
+import rocks.voss.androidutils.activities.ExportGoogleDriveActivity;
+import rocks.voss.androidutils.database.ExportData;
+import rocks.voss.androidutils.database.ExportDataSet;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.UiUtil;
@@ -79,8 +87,18 @@ public class HistoryActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.upload:
-                intent = new Intent(this, UploadActivity.class);
-                intent.putExtra(Constants.THERMOMETER_CANVAS_ID, thermometerId);
+                intent = new Intent(this, ExportGoogleDriveActivity.class);
+
+                ExportData exportData = new ExportData();
+
+                List<String> headers = new ArrayList<>(2);
+                headers.add("Time");
+                headers.add("Temperature");
+                exportData.setHeader(headers);
+                exportData.setDataSets((List<ExportDataSet>) (List<?>) TemperatureCache.getTemperatures(thermometerId));
+
+                intent.putExtra(AndroidUtilsConstants.EXPORT_GOOGLE_DRIVE_ACTIVITY_EXPORT_DATA, exportData);
+                intent.putExtra(AndroidUtilsConstants.EXPORT_GOOGLE_DRIVE_ACTIVITY_EXPORT_FILE_NAME, "temperatures-%1$s.csv");
                 startActivity(intent);
                 return true;
             default:
