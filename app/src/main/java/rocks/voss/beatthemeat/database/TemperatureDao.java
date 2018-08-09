@@ -21,11 +21,11 @@ public interface TemperatureDao {
     List<Temperature> getAll(int thermometerId);
 
     @Insert
-    void insertAll(Temperature ... temperatures);
+    void insert(Temperature temperature);
 
     @Query("DELETE FROM temperature WHERE thermometerId=:thermometerId")
     void delete(int thermometerId);
 
     @Query("DELETE FROM temperature WHERE datetime(time)<datetime(:time)")
-    void delete(OffsetDateTime time);
+    void deleteAll(OffsetDateTime time);
 }

@@ -2,7 +2,6 @@
 .gradle/
 build/
 *.iml
-/app/release
 .DS_Store
 keystore.properties
-release.p12
+local.properties

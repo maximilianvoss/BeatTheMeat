@@ -1,7 +1,6 @@
 package rocks.voss.beatthemeat.activities;
 
 import android.app.Activity;
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,13 +8,13 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import rocks.voss.androidutils.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.TemperatureDatabase;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
-import rocks.voss.beatthemeat.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.utils.TemperatureUtil;
 
 public class SplashActivity extends Activity {
@@ -29,9 +28,8 @@ public class SplashActivity extends Activity {
         scheduleSplashScreen();
 
         TemperatureUtil.getTemperatures().clear();
-        MainActivity.getThermometers().clear();
-
-        DatabaseUtil.setTemperatureDatabase(Room.databaseBuilder(getApplicationContext(), TemperatureDatabase.class, Constants.DATABASE_NAME).build());
+        DatabaseUtil databaseUtil = new DatabaseUtil();
+        databaseUtil.openDatabase(getApplicationContext(), TemperatureDatabase.class, Constants.DATABASE_NAME);
 
         databaseDeleteThread = new DatabaseDeleteThread();
         databaseDeleteThread.start();

@@ -3,8 +3,9 @@ package rocks.voss.beatthemeat.threads;
 import org.threeten.bp.OffsetDateTime;
 
 import lombok.Setter;
+import rocks.voss.androidutils.utils.DatabaseUtil;
+import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
-import rocks.voss.beatthemeat.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.utils.TimeUtil;
 
 public class DatabaseDeleteThread extends Thread {
@@ -14,7 +15,8 @@ public class DatabaseDeleteThread extends Thread {
 
     @Override
     public void run() {
-        TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
+        DatabaseUtil databaseUtil = new DatabaseUtil();
+        TemperatureDao temperatureDao = databaseUtil.getDao(Temperature.class);
         if (temperatureDao == null) {
             return;
         }
@@ -22,7 +24,7 @@ public class DatabaseDeleteThread extends Thread {
         if (thermometerId == -1) {
             OffsetDateTime time = TimeUtil.getNow();
             time = time.minusDays(1);
-            temperatureDao.delete(time);
+            temperatureDao.deleteAll(time);
         } else {
             temperatureDao.delete(thermometerId);
         }

@@ -17,7 +17,6 @@ import android.widget.Switch;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
@@ -34,8 +33,6 @@ import rocks.voss.beatthemeat.utils.UiUtil;
 public class MainActivity extends AppCompatActivity {
 
     private static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
-
-    @Getter
     private static final List<CurrentTemperatureCanvas> thermometers = new ArrayList<>();
 
     private Context context;

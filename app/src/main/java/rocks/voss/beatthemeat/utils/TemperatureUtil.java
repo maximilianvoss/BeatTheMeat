@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Getter;
+import rocks.voss.androidutils.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.database.Temperature;
-import rocks.voss.beatthemeat.database.TemperatureDao;
 import rocks.voss.beatthemeat.thermometer.ThermometerData;
 import rocks.voss.beatthemeat.thermometer.ThermometerDataWrapper;
 import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
@@ -44,11 +44,8 @@ public class TemperatureUtil {
     }
 
     private static void insertTemperatureIntoDatabase(Temperature temperature) {
-        TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
-        if (temperatureDao == null) {
-            return;
-        }
-        temperatureDao.insertAll(temperature);
+        DatabaseUtil databaseUtil = new DatabaseUtil();
+        databaseUtil.insert(Temperature.class, temperature);
     }
 
     public static void removeThermometer(int thermometerId) {

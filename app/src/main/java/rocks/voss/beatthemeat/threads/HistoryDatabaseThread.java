@@ -4,9 +4,9 @@ import org.threeten.bp.OffsetDateTime;
 
 import java.util.List;
 
+import rocks.voss.androidutils.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
-import rocks.voss.beatthemeat.utils.DatabaseUtil;
 
 public class HistoryDatabaseThread extends Thread {
     private final int thermometerId;
@@ -25,7 +25,8 @@ public class HistoryDatabaseThread extends Thread {
 
     @Override
     public void run() {
-        TemperatureDao temperatureDao = DatabaseUtil.getTemperatureDao();
+        DatabaseUtil databaseUtil = new DatabaseUtil();
+        TemperatureDao temperatureDao = databaseUtil.getDao(Temperature.class);
         if (temperatureDao == null) {
             return;
         }

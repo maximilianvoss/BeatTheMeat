@@ -218,11 +218,7 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     }
 
     private void drawIndicator(Canvas canvas) {
-        if (temperature == null) {
-            return;
-        }
-
-        float angle = 180f - getAnglePerTemperature(temperature.temperature);
+        float angle = (temperature != null) ? 180f - getAnglePerTemperature(temperature.temperature) : 180f;
         float length = UiUtil.getStandardPaddingPixel(getContext(), indicatorWidth);
 
         Point end = new Point();

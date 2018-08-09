@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
-import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
 
 /**
@@ -21,8 +20,8 @@ public class AlarmUtil {
     private static boolean enabled;
 
     public static boolean isAlarm(Context context) {
-        for (int i = 0; i < MainActivity.getThermometers().size(); i++) {
-            if (isAlarm(context, i)) {
+        for (int temperatureId : TemperatureUtil.getTemperatures().keySet()) {
+            if (isAlarm(context, temperatureId)) {
                 return true;
             }
         }
