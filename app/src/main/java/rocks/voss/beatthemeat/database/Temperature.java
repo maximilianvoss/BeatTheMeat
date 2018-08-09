@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rocks.voss.androidutils.database.ExportDataSet;
+import rocks.voss.androidutils.utils.TimeUtil;
 import rocks.voss.beatthemeat.thermometer.ThermometerData;
-import rocks.voss.beatthemeat.utils.TimeUtil;
 
 
 /**

@@ -15,11 +15,11 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import rocks.voss.androidutils.utils.TimeUtil;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
-import rocks.voss.beatthemeat.utils.TimeUtil;
 
 public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 

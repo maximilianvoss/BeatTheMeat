@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.TypedValue;
-import android.widget.Toast;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
@@ -97,17 +96,5 @@ public class UiUtil {
         }
 
         ta.recycle();
-    }
-
-    public static void createLongToast(Context context, String msg) {
-        createToast(context, msg, Toast.LENGTH_LONG);
-    }
-
-    public static void createShortToast(Context context, String msg) {
-        createToast(context, msg, Toast.LENGTH_SHORT);
-    }
-
-    public static void createToast(Context context, String msg, int length) {
-        Toast.makeText(context, msg, length).show();
     }
 }

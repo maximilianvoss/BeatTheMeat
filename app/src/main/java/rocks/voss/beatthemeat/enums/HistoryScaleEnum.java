@@ -2,7 +2,7 @@ package rocks.voss.beatthemeat.enums;
 
 import org.threeten.bp.OffsetDateTime;
 
-import rocks.voss.beatthemeat.utils.TimeUtil;
+import rocks.voss.androidutils.utils.TimeUtil;
 
 public enum HistoryScaleEnum {
     min15,

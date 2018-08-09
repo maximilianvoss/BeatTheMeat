@@ -4,9 +4,9 @@ import org.threeten.bp.OffsetDateTime;
 
 import lombok.Setter;
 import rocks.voss.androidutils.utils.DatabaseUtil;
+import rocks.voss.androidutils.utils.TimeUtil;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureDao;
-import rocks.voss.beatthemeat.utils.TimeUtil;
 
 public class DatabaseDeleteThread extends Thread {
 
