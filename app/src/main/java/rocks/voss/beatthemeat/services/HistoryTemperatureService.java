@@ -12,8 +12,6 @@ import android.preference.PreferenceManager;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.HistoryActivity;
-import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
-import rocks.voss.beatthemeat.threads.HistoryDatabaseThread;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 
 /**
@@ -63,15 +61,7 @@ public class HistoryTemperatureService extends JobService {
         if (canvas == null) {
             return;
         }
-
-        HistoryDatabaseThread thread = new HistoryDatabaseThread(canvas.getId(), HistoryScaleEnum.getTime(canvas.getScale()),
-                temperatures -> {
-                    canvas.setTemperatures(temperatures);
-                    canvas.postInvalidate();
-                }
-        );
-
-        thread.start();
+        canvas.postInvalidate();
     }
 
     private void execute(JobParameters params) {

@@ -16,6 +16,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.beatthemeat.database.Temperature;
+import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.utils.TimeUtil;
@@ -24,7 +25,6 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
     private final GestureDetector gestureDetector;
 
-    @Setter
     private List<Temperature> temperatures;
 
     @Setter
@@ -100,6 +100,7 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
     @Override
     protected void doOnDraw(Canvas canvas) {
+        temperatures = TemperatureCache.getTemperatures(this.id);
         if (temperatures == null || temperatures.size() == 0) {
             return;
         }
@@ -148,9 +149,9 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
         Path path = new Path();
         float x = paddingPixel;
-        float y = maxHeight - pixelPerC * (temperatures.get(0).temperature - displayTemperatureMin);
+        float y = maxHeight - pixelPerC * (temperatures.get(temperatures.size() - 1).temperature - displayTemperatureMin);
         path.moveTo(x, y);
-        for (int i = 0; i < temperatures.size(); i++) {
+        for (int i = temperatures.size() - 1; i >= 0; i--) {
             Temperature temperature = temperatures.get(i);
 
             long timeFrameHistory;

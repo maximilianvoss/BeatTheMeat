@@ -37,7 +37,7 @@ import java.util.Set;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.Temperature;
-import rocks.voss.beatthemeat.threads.HistoryDatabaseThread;
+import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.utils.TimeUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
@@ -124,10 +124,7 @@ public class UploadActivity extends Activity {
 
     private void prepareFile() {
         int thermometerId = getIntent().getIntExtra(Constants.THERMOMETER_CANVAS_ID, 0);
-        HistoryDatabaseThread historyDatabaseThread = new HistoryDatabaseThread(thermometerId,
-                this::writeFile
-        );
-        historyDatabaseThread.start();
+        writeFile(TemperatureCache.getTemperatures(thermometerId));
     }
 
     private void writeFile(List<Temperature> temperatures) {
