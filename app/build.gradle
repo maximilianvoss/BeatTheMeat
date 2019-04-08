@@ -39,7 +39,7 @@ android {
 
         defaultConfig {
             applicationId "rocks.voss.beatthemeat"
-            minSdkVersion 26
+            minSdkVersion 24
             targetSdkVersion 27
             versionCode versionProps['VERSION_NUMBER'].toInteger()
             versionName "${mVersionName} Build: ${versionProps['VERSION_BUILD']}"
@@ -104,6 +104,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.github.fge:jackson-coreutils:1.8'
     implementation 'commons-io:commons-io:2.6'
+    implementation 'com.neovisionaries:nv-websocket-client:2.7'
     implementation 'rocks.voss.androidutils:rocks.voss.androidutils:0.0.21-SNAPSHOT@aar'
 }
 

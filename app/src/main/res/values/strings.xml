@@ -17,10 +17,11 @@
     <string name="setting_temperature_min">Temperature Min:</string>
     <string name="setting_temperature_max">Temperature Max:</string>
 
+    <string name="setting_general_thermometer_settings_type">Thermometer Type</string>
+
     <string name="file_upload">Upload File</string>
     <string name="file_export">export-%1$s.csv</string>
     <string name="button_export_data">Export Data</string>
-
 
     <string name="menu_add_thermometer">Add Additional Thermometer</string>
     <string name="menu_remove_thermometer">Remove Last Thermometer</string>
@@ -28,5 +29,5 @@
     <string name="menu_about">About</string>
     <string name="menu_quit">Quit</string>
 
-    <string name="copyrighttext">&#169; Copyright 2018 by Maximilian Voss\n&#174; All rights reserved by Maximilian Voss\nWebsite: <a href="https://maximilian.voss.rocks/diy/beat-the-meat.html">https://maximilian.voss.rocks</a>\nEmail: <a href="mailto: maximilian@voss.rocks">maximilian@voss.rocks</a>\nBeat The Meat Version: %1$s</string>
+    <string name="copyrighttext">&#169; Copyright 2019 by Maximilian Voss\n&#174; All rights reserved by Maximilian Voss\nWebsite: <a href="https://maximilian.voss.rocks/diy/beat-the-meat.html">https://maximilian.voss.rocks</a>\nEmail: <a href="mailto: maximilian@voss.rocks">maximilian@voss.rocks</a>\nBeat The Meat Version: %1$s</string>
 </resources>

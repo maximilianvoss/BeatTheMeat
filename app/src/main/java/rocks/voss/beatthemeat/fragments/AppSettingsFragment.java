@@ -2,6 +2,7 @@ package rocks.voss.beatthemeat.fragments;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
@@ -49,6 +50,12 @@ public class AppSettingsFragment extends PreferenceFragment {
         temperatureWebserviceInterval.setMaxValue(20);
         temperatureWebserviceInterval.setMinValue(3);
 
+        ListPreference thermometerType = new ListPreference(this.getContext());
+        thermometerType.setKey(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE);
+        thermometerType.setTitle(R.string.setting_general_thermometer_settings_type);
+        thermometerType.setEntries(R.array.setting_general_thermometer_settings_types);
+        thermometerType.setEntryValues(R.array.setting_general_thermometer_settings_types);
+
         EditTextPreference thermometerSettingsWebserviceUrl = new EditTextPreference(this.getContext());
         thermometerSettingsWebserviceUrl.setTitle(R.string.setting_general_thermometer_settings_webservice_url);
         thermometerSettingsWebserviceUrl.setKey(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL);
@@ -68,6 +75,7 @@ public class AppSettingsFragment extends PreferenceFragment {
         getPreferenceScreen().addPreference(temperatureWebserviceUrl);
         getPreferenceScreen().addPreference(temperatureWebserviceInterval);
         getPreferenceScreen().addPreference(thermometerSettingsWebserviceUrl);
+        getPreferenceScreen().addPreference(thermometerType);
         getPreferenceScreen().addPreference(alarmSound);
     }
 }

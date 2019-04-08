@@ -25,6 +25,9 @@ public class Constants {
     public static final String SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL = "temperatureWebserviceInterval";
     public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL = "thermometerSettingsWebserviceURL";
     public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_WEBSERVICE_URL_DEFAULT = "https://maximilian.voss.rocks/bin/thermometer.json";
+    public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE = "thermometerType";
+    public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE_JSON = "Standard Json";
+    public static final String SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE_GRILLEYE_PRO = "Grilleye Pro";
     public static final String SETTING_GENERAL_ALARM = "alarm";
 
     public static final String SETTING_TEMPERATURE_CATALOG = "temperatureCatalog";

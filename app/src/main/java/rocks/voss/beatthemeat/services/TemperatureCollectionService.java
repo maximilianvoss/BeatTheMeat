@@ -22,8 +22,10 @@ import rocks.voss.beatthemeat.activities.MainActivity;
 import rocks.voss.beatthemeat.database.Temperature;
 import rocks.voss.beatthemeat.database.TemperatureCache;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
+import rocks.voss.beatthemeat.grilleye.GrillEyePro;
 import rocks.voss.beatthemeat.thermometer.ThermometerData;
 import rocks.voss.beatthemeat.thermometer.ThermometerDataWrapper;
+import rocks.voss.beatthemeat.threads.GrillEyeProThread;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
@@ -33,18 +35,19 @@ import rocks.voss.beatthemeat.utils.NotificationUtil;
  */
 public class TemperatureCollectionService extends JobService {
     private static final int COUNT = 5;
+    private static int webserviceCallInterval;
 
     public static void schedule(Context context) {
         ComponentName component = new ComponentName(context, TemperatureCollectionService.class);
         JobInfo.Builder builder = new JobInfo.Builder(Constants.SERVICE_TEMPERATURE_COLLECTION_SERVICE_ID, component);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        int webserviceUrlCalls = sharedPref.getInt(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL, COUNT);
+        webserviceCallInterval = sharedPref.getInt(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_INTERVAL, COUNT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            builder.setMinimumLatency(webserviceUrlCalls * 1000);
+            builder.setMinimumLatency(webserviceCallInterval * 1000);
         } else {
-            builder.setPeriodic(webserviceUrlCalls * 1000);
+            builder.setPeriodic(webserviceCallInterval * 1000);
         }
 
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -54,6 +57,7 @@ public class TemperatureCollectionService extends JobService {
     public static void cancelJob(Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(Constants.SERVICE_TEMPERATURE_COLLECTION_SERVICE_ID);
+        GrillEyePro.stop();
     }
 
     @Override
@@ -73,7 +77,67 @@ public class TemperatureCollectionService extends JobService {
     private void execute(JobParameters params) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Set<String> webserviceUrls = sharedPref.getStringSet(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL, new LinkedHashSet<>());
+        String webserviceType = sharedPref.getString(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE, Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE_JSON);
 
+        if (webserviceType != null) {
+            if (webserviceType.equals(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE_JSON)) {
+                jsonWebservice(webserviceUrls);
+            } else if (webserviceType.equals(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE_GRILLEYE_PRO)) {
+                grilleyeProWebservice(webserviceUrls);
+            }
+        }
+        jobFinished(params, false);
+    }
+
+    private void grilleyeProWebservice(Set<String> webserviceUrls) {
+        try {
+            GrillEyeProThread service = new GrillEyeProThread(this, webserviceCallInterval * 1000, new GrillEyeProThread.GrilleyeProDownloadThreadCallback() {
+                @Override
+                public void onDownloadComplete(int temperatures[]) {
+                    ThermometerData[] thermometerData = new ThermometerData[temperatures.length];
+                    for (int i = 0; i < temperatures.length; i++) {
+                        thermometerData[i] = new ThermometerData();
+                        thermometerData[i].setId(i);
+                        thermometerData[i].setActive(temperatures[i] != 65486);
+                        thermometerData[i].setTemperature(temperatures[i]);
+
+                        Temperature temperature = Temperature.createByThermometerData(thermometerData[i]);
+                        TemperatureCache.insertTemperature(temperature);
+                    }
+
+                    MainActivity.refreshThermometers();
+                    if (AlarmUtil.isAlarm(getBaseContext())) {
+                        activateNotification();
+                    } else {
+                        deactivateNotification();
+                    }
+                }
+
+                @Override
+                public void onConnectionFailure(Context context) {
+                    NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
+                    ThermometerData[] thermometerData = new ThermometerData[8];
+                    for (int i = 0; i < 8; i++) {
+                        thermometerData[i] = new ThermometerData();
+                        thermometerData[i].setId(i);
+                        thermometerData[i].setActive(false);
+                        Temperature temperature = Temperature.createByThermometerData(thermometerData[i]);
+                        TemperatureCache.insertTemperature(temperature);
+                    }
+                    MainActivity.refreshThermometers();
+                }
+            });
+
+            for (String webserviceUrl : webserviceUrls) {
+                service.addUrl(webserviceUrl);
+            }
+            service.start();
+        } catch (MalformedURLException e) {
+            Log.e(this.getClass().toString(), "MalformedURLException", e);
+        }
+    }
+
+    private void jsonWebservice(Set<String> webserviceUrls) {
         try {
             JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThread.JsonDownloadThreadCallback() {
                 @Override
@@ -85,9 +149,7 @@ public class TemperatureCollectionService extends JobService {
                     }
 
                     MainActivity.refreshThermometers();
-
-                    boolean isAlarm = AlarmUtil.isAlarm(getBaseContext());
-                    if (isAlarm) {
+                    if (AlarmUtil.isAlarm(getBaseContext())) {
                         activateNotification();
                     } else {
                         deactivateNotification();
@@ -108,7 +170,6 @@ public class TemperatureCollectionService extends JobService {
         } catch (MalformedURLException e) {
             Log.e(this.getClass().toString(), "MalformedURLException", e);
         }
-        jobFinished(params, false);
     }
 
     private void activateNotification() {

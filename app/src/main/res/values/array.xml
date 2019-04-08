@@ -1,0 +1,6 @@
+<resources>
+    <string-array name="setting_general_thermometer_settings_types">
+        <item>Standard Json</item>
+        <item>Grilleye Pro</item>
+    </string-array>
+</resources>
