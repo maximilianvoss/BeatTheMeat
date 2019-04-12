@@ -1,5 +1,8 @@
 package rocks.voss.beatthemeat.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ByteUtils {
     private static final char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
@@ -16,5 +19,13 @@ public class ByteUtils {
 
     public static int convertTwoBytesToInt(byte byte1, byte byte2) {
         return byte1 & 255 | (byte2 & 255) << 8;
+    }
+
+    public static List<Byte> toByteList(byte[] bytes) {
+        List<Byte> list = new ArrayList<>(bytes.length);
+        for (byte item : bytes) {
+            list.add(new Byte(item));
+        }
+        return list;
     }
 }

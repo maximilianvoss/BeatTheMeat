@@ -6,8 +6,16 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import rocks.voss.beatthemeat.database.Thermometer;
+import rocks.voss.beatthemeat.utils.ByteUtils;
 
 public class GrillEyePro {
     private static Map<String, GrillEyePro> connections = new HashMap<>();
@@ -56,6 +64,55 @@ public class GrillEyePro {
     public void disconnect() {
         if (webSocket != null) {
             webSocket.disconnect();
+        }
+    }
+
+    public void setMinTemperatures(List<Thermometer> thermometers) {
+        List<Byte> byteList = new ArrayList<>(16);
+        for (Thermometer thermometer : thermometers) {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byte[] data = byteBuffer.putShort((short) thermometer.temperatureMin).array();
+            byteList.add(data[0]);
+            byteList.add(data[1]);
+        }
+        sendData(UUIDS.MINTEMP, byteList);
+    }
+
+    public void setMaxTemperatures(List<Thermometer> thermometers) {
+        List<Byte> byteList = new ArrayList<>(16);
+        for (Thermometer thermometer : thermometers) {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byte[] data = byteBuffer.putShort((short) thermometer.temperatureMax).array();
+            byteList.add(data[0]);
+            byteList.add(data[1]);
+        }
+        sendData(UUIDS.MAXTEMP, byteList);
+    }
+
+    public void setName(Thermometer thermometer) {
+        List<Byte> byteList = new ArrayList<>();
+        byteList.add(Byte.valueOf((byte) 1));
+        byteList.addAll(ByteUtils.toByteList("HAMBURGER".toUpperCase().getBytes(Charset.forName("UTF-8"))));
+
+        sendData(UUIDS.NAMES, byteList);
+    }
+
+    private void sendData(UUIDS command, List<Byte> message) {
+        int uuidLength = command.getUuidArray().length;
+        int messageLength = message.size();
+
+        byte[] data = new byte[uuidLength + messageLength];
+        for (int i = 0; i < uuidLength; i++) {
+            data[i] = command.getUuidArray()[i];
+        }
+        for (int i = 0; i < messageLength; i++) {
+            data[uuidLength + i] = message.get(i).byteValue();
+        }
+
+        if (isConnected()) {
+            webSocket.sendBinary(data);
         }
     }
 }
