@@ -18,7 +18,7 @@ import rocks.voss.androidutils.database.ExportData;
 import rocks.voss.androidutils.database.ExportDataSet;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
-import rocks.voss.beatthemeat.database.TemperatureCache;
+import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.UiUtil;

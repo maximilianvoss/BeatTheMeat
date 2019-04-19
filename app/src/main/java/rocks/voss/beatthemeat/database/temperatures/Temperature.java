@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.database;
+package rocks.voss.beatthemeat.database.temperatures;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import rocks.voss.androidutils.database.ExportDataSet;
 import rocks.voss.androidutils.utils.TimeUtil;
-import rocks.voss.beatthemeat.thermometer.ThermometerData;
+import rocks.voss.beatthemeat.sources.json.ThermometerData;
 
 
 /**

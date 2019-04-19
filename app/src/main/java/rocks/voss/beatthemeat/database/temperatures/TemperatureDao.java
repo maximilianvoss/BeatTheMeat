@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.database;
+package rocks.voss.beatthemeat.database.temperatures;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;

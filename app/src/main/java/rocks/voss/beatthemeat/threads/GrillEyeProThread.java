@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rocks.voss.beatthemeat.grilleye.GrillEyePro;
-import rocks.voss.beatthemeat.grilleye.UUIDS;
+import rocks.voss.beatthemeat.sources.grilleye.GrillEyePro;
+import rocks.voss.beatthemeat.sources.grilleye.UUIDS;
 import rocks.voss.beatthemeat.utils.ByteUtils;
 
 public class GrillEyeProThread extends Thread {

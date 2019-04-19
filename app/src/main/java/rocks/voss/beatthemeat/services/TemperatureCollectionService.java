@@ -19,12 +19,12 @@ import java.util.Set;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.MainActivity;
-import rocks.voss.beatthemeat.database.Temperature;
-import rocks.voss.beatthemeat.database.TemperatureCache;
+import rocks.voss.beatthemeat.database.temperatures.Temperature;
+import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 import rocks.voss.beatthemeat.enums.NotificationEnum;
-import rocks.voss.beatthemeat.grilleye.GrillEyePro;
-import rocks.voss.beatthemeat.thermometer.ThermometerData;
-import rocks.voss.beatthemeat.thermometer.ThermometerDataWrapper;
+import rocks.voss.beatthemeat.sources.grilleye.GrillEyePro;
+import rocks.voss.beatthemeat.sources.json.ThermometerData;
+import rocks.voss.beatthemeat.sources.json.ThermometerDataWrapper;
 import rocks.voss.beatthemeat.threads.GrillEyeProThread;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 import rocks.voss.beatthemeat.utils.AlarmUtil;

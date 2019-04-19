@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.database;
+package rocks.voss.beatthemeat.database.probe;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
@@ -19,6 +19,9 @@ public class Thermometer {
     public int temperatureMin;
     @NonNull
     public int temperatureMax;
-    @NonNull
-    public int order;
+
+    public int fk_catalog;
+    public int fk_meat;
+    public int fk_cut;
+    public int fk_cooking;
 }

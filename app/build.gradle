@@ -105,7 +105,7 @@ dependencies {
     implementation 'com.github.fge:jackson-coreutils:1.8'
     implementation 'commons-io:commons-io:2.6'
     implementation 'com.neovisionaries:nv-websocket-client:2.7'
-    implementation 'rocks.voss.androidutils:rocks.voss.androidutils:0.0.21-SNAPSHOT@aar'
+    implementation 'rocks.voss.androidutils:rocks.voss.androidutils:0.0.26-SNAPSHOT@aar'
 }
 
 play {

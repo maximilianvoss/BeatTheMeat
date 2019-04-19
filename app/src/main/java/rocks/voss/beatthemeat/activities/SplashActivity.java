@@ -11,7 +11,7 @@ import android.util.Log;
 import rocks.voss.androidutils.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
-import rocks.voss.beatthemeat.database.TemperatureDatabase;
+import rocks.voss.beatthemeat.database.MeatDatabase;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.threads.DatabaseDeleteThread;
@@ -27,7 +27,7 @@ public class SplashActivity extends Activity {
         scheduleSplashScreen();
 
         DatabaseUtil databaseUtil = new DatabaseUtil();
-        databaseUtil.openDatabase(getApplicationContext(), TemperatureDatabase.class, Constants.DATABASE_NAME);
+        databaseUtil.openDatabase(getApplicationContext(), MeatDatabase.class, Constants.DATABASE_NAME);
 
         databaseDeleteThread = new DatabaseDeleteThread();
         databaseDeleteThread.start();

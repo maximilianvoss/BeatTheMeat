@@ -31,8 +31,9 @@ public class Constants {
     public static final String SETTING_GENERAL_ALARM = "alarm";
 
     public static final String SETTING_TEMPERATURE_CATALOG = "temperatureCatalog";
-    public static final String SETTING_TEMPERATURE_CATEGORY = "temperatureCategory";
-    public static final String SETTING_TEMPERATURE_STYLE = "temperatureStyle";
+    public static final String SETTING_TEMPERATURE_MEAT = "temperatureMeat";
+    public static final String SETTING_TEMPERATURE_CUT = "temperatureCut";
+    public static final String SETTING_TEMPERATURE_COOKING = "temperatureStyle";
     public static final String SETTING_TEMPERATURE_IS_RANGE = "isRange";
     public static final String SETTING_TEMPERATURE_MIN = "temperatureMin";
     public static final String SETTING_TEMPERATURE_MAX = "temperatureMax";

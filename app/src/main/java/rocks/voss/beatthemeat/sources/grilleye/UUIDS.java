@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.grilleye;
+package rocks.voss.beatthemeat.sources.grilleye;
 
 import java.util.Arrays;
 

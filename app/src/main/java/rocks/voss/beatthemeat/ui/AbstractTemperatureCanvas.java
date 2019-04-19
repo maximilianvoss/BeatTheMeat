@@ -12,8 +12,8 @@ import android.view.SurfaceView;
 import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.beatthemeat.Constants;
-import rocks.voss.beatthemeat.database.Temperature;
-import rocks.voss.beatthemeat.database.TemperatureCache;
+import rocks.voss.beatthemeat.database.temperatures.Temperature;
+import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 

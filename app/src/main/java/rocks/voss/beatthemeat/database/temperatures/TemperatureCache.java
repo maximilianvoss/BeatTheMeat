@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.database;
+package rocks.voss.beatthemeat.database.temperatures;
 
 import java.util.HashMap;
 import java.util.List;

@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 import rocks.voss.beatthemeat.Constants;
-import rocks.voss.beatthemeat.thermometersettings.ThermometerSettingsDataWrapper;
+import rocks.voss.beatthemeat.settings.WrapperSetting;
 import rocks.voss.beatthemeat.threads.JsonDownloadThread;
 
 /**
@@ -56,11 +56,14 @@ public class ThermometerSettingsCollectionService extends JobService {
             JsonDownloadThread service = new JsonDownloadThread(this, new JsonDownloadThread.JsonDownloadThreadCallback() {
                 @Override
                 public void onDownloadComplete(InputStream stream) throws IOException {
-                    ThermometerSettingsDataWrapper.createByStream(stream);
+                    WrapperSetting wrapper = WrapperSetting.createByStream(stream);
+                    wrapper.perist();
                 }
 
                 @Override
                 public void onConnectionFailure(Context context) {
+                    WrapperSetting wrapper = new WrapperSetting();
+                    wrapper.load();
                 }
             });
 

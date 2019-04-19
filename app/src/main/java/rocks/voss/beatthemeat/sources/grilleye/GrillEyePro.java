@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.grilleye;
+package rocks.voss.beatthemeat.sources.grilleye;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rocks.voss.beatthemeat.database.Thermometer;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
 import rocks.voss.beatthemeat.utils.ByteUtils;
 
 public class GrillEyePro {
@@ -91,12 +91,15 @@ public class GrillEyePro {
         sendData(UUIDS.MAXTEMP, byteList);
     }
 
-    public void setName(Thermometer thermometer) {
+    public void setName(List<Thermometer> thermometers) {
         List<Byte> byteList = new ArrayList<>();
-        byteList.add(Byte.valueOf((byte) 1));
-        byteList.addAll(ByteUtils.toByteList("HAMBURGER".toUpperCase().getBytes(Charset.forName("UTF-8"))));
+        for (int i = 0; i < thermometers.size(); i++) {
+            Thermometer thermometer = thermometers.get(i);
+            byteList.add(Byte.valueOf((byte) (i + 1)));
 
-        sendData(UUIDS.NAMES, byteList);
+            byteList.addAll(ByteUtils.toByteList("HAMBURGER".toUpperCase().getBytes(Charset.forName("UTF-8"))));
+            sendData(UUIDS.NAMES, byteList);
+        }
     }
 
     private void sendData(UUIDS command, List<Byte> message) {

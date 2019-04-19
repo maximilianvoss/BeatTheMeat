@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.database;
+package rocks.voss.beatthemeat.database.probe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,5 +22,9 @@ public class ThermometerCache {
     public static void insertThermometer(Thermometer thermometer) {
         getThermometers().add(thermometer);
         databaseUtil.insert(Thermometer.class, thermometer);
+    }
+
+    public static void delete(Thermometer thermometer) {
+        databaseUtil.delete(Thermometer.class, thermometer.id);
     }
 }

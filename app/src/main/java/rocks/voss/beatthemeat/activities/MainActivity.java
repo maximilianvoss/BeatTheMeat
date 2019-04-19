@@ -19,7 +19,9 @@ import java.util.List;
 
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
-import rocks.voss.beatthemeat.database.TemperatureCache;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
+import rocks.voss.beatthemeat.database.probe.ThermometerCache;
+import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
@@ -103,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void removeThermometer() {
+        ThermometerCache.delete(ThermometerCache.getThermometers().get(ThermometerCache.getThermometers().size() - 1));
+
+        // TODO: to delete
         if (thermometers.size() > 0) {
             int id = thermometers.size() - 1;
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -118,6 +123,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addThermometer() {
+        Thermometer thermometer = new Thermometer();
+        thermometer.id = ThermometerCache.getThermometers().size();
+        ThermometerCache.insertThermometer(thermometer);
+
+        // TODO: to delete
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size() + 1);
         editor.apply();

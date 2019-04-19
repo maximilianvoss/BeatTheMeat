@@ -1,4 +1,4 @@
-package rocks.voss.beatthemeat.thermometer;
+package rocks.voss.beatthemeat.sources.json;
 
 import java.io.Serializable;
 
