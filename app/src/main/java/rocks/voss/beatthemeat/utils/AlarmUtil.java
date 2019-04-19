@@ -1,12 +1,11 @@
 package rocks.voss.beatthemeat.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import lombok.Getter;
 import lombok.Setter;
-import rocks.voss.beatthemeat.Constants;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
+import rocks.voss.beatthemeat.database.probe.ThermometerCache;
 import rocks.voss.beatthemeat.database.temperatures.Temperature;
 import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 
@@ -21,30 +20,25 @@ public class AlarmUtil {
     private static boolean enabled;
 
     public static boolean isAlarm(Context context) {
-        for (int temperatureId : TemperatureCache.getCache().keySet()) {
-            if (isAlarm(context, temperatureId)) {
+        for (Thermometer thermometer : ThermometerCache.getThermometers()) {
+            if (isAlarm(context, thermometer)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isAlarm(Context context, int id) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id), true);
-        int temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id), 50);
-        int temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id), 100);
-        Temperature temperature = TemperatureCache.getLatestTemperature(id);
+    public static boolean isAlarm(Context context, Thermometer thermometer) {
+        Temperature temperature = TemperatureCache.getLatestTemperature(thermometer.id);
 
         if (temperature == null) {
             return false;
         }
 
-        int temperatureCurrent = temperature.temperature;
-        if (isRange) {
-            return temperatureCurrent < temperatureMin || temperatureCurrent > temperatureMax;
+        if (thermometer.isRange) {
+            return temperature.temperature < thermometer.temperatureMin || temperature.temperature > thermometer.temperatureMax;
         } else {
-            return temperatureCurrent >= temperatureMin;
+            return temperature.temperature >= thermometer.temperatureMin;
         }
     }
 }

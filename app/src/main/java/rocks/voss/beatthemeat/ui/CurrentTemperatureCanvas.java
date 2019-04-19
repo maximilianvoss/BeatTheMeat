@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.activities.HistoryActivity;
 import rocks.voss.beatthemeat.activities.ThermometerSettingsActivity;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
@@ -29,13 +30,13 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
 
     private int touchAction;
 
-    public CurrentTemperatureCanvas(Context context, int id) {
+    public CurrentTemperatureCanvas(Context context, Thermometer thermometer) {
         this(context);
-        this.id = id;
+        this.thermometer = thermometer;
     }
 
     public CurrentTemperatureCanvas(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public CurrentTemperatureCanvas(Context context, AttributeSet attrs) {
@@ -49,11 +50,11 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
                 v -> {
                     if (touchAction == TOUCH_ACTION_SETTINGS) {
                         Intent intent = new Intent(v.getContext(), ThermometerSettingsActivity.class);
-                        intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
+                        intent.putExtra(Constants.THERMOMETER_CANVAS_ID, thermometer.id);
                         v.getContext().startActivity(intent);
                     } else {
                         Intent intent = new Intent(v.getContext(), HistoryActivity.class);
-                        intent.putExtra(Constants.THERMOMETER_CANVAS_ID, id);
+                        intent.putExtra(Constants.THERMOMETER_CANVAS_ID, thermometer.id);
                         v.getContext().startActivity(intent);
                     }
                 }
@@ -82,7 +83,7 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
             squareSize = maxHeight;
         }
 
-        if (isRange) {
+        if (thermometer.isRange) {
             drawRange(canvas);
         } else {
             drawTarget(canvas);
@@ -115,16 +116,16 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     }
 
     private void drawMarkers(Canvas canvas) {
-        if (isRange) {
+        if (thermometer.isRange) {
             for (int i = calcDisplayTemperatureMin() + 5; i < calcDisplayTemperatureMax(); i += 5) {
                 Paint color;
-                if (i <= temperatureMin - DEGREES_YELLOW) {
+                if (i <= thermometer.temperatureMin - DEGREES_YELLOW) {
                     color = colorRed;
-                } else if (i <= temperatureMin) {
+                } else if (i <= thermometer.temperatureMin) {
                     color = colorYellow;
-                } else if (i <= temperatureMax) {
+                } else if (i <= thermometer.temperatureMax) {
                     color = colorGreen;
-                } else if (i <= temperatureMax + DEGREES_YELLOW) {
+                } else if (i <= thermometer.temperatureMax + DEGREES_YELLOW) {
                     color = colorYellow;
                 } else {
                     color = colorRed;
@@ -135,9 +136,9 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
         } else {
             for (int i = calcDisplayTemperatureMin() + 5; i < calcDisplayTemperatureMax(); i += 5) {
                 Paint color;
-                if (i <= temperatureMin) {
+                if (i <= thermometer.temperatureMin) {
                     color = colorGreen;
-                } else if (i <= temperatureMin + DEGREES_YELLOW) {
+                } else if (i <= thermometer.temperatureMin + DEGREES_YELLOW) {
                     color = colorYellow;
                 } else {
                     color = colorRed;
@@ -149,8 +150,8 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     }
 
     private void drawTarget(Canvas canvas) {
-        float angleGreen = getAnglePerTemperature(temperatureMin);
-        float angleYellow = getAnglePerTemperature(temperatureMin + DEGREES_YELLOW);
+        float angleGreen = getAnglePerTemperature(thermometer.temperatureMin);
+        float angleYellow = getAnglePerTemperature(thermometer.temperatureMin + DEGREES_YELLOW);
         float angleRed = 180f;
 
         drawTemperatureArc(canvas, 180f, angleGreen, colorLightGreen);
@@ -162,10 +163,10 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
     }
 
     private void drawRange(Canvas canvas) {
-        float angleRed1 = getAnglePerTemperature(temperatureMin - DEGREES_YELLOW);
-        float angleYellow1 = getAnglePerTemperature(temperatureMin);
-        float angleGreen = getAnglePerTemperature(temperatureMax);
-        float angleYellow2 = getAnglePerTemperature(temperatureMax + DEGREES_YELLOW);
+        float angleRed1 = getAnglePerTemperature(thermometer.temperatureMin - DEGREES_YELLOW);
+        float angleYellow1 = getAnglePerTemperature(thermometer.temperatureMin);
+        float angleGreen = getAnglePerTemperature(thermometer.temperatureMax);
+        float angleYellow2 = getAnglePerTemperature(thermometer.temperatureMax + DEGREES_YELLOW);
         float angleRed2 = 180f;
 
         drawTemperatureArc(canvas, 180f, angleRed1, colorLightRed);
@@ -206,7 +207,7 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
 
     private void drawTemperature(Canvas canvas, String temperature) {
         Paint color;
-        if (AlarmUtil.isAlarm(getContext(), id)) {
+        if (AlarmUtil.isAlarm(getContext(), thermometer)) {
             color = colorTextAlarm;
         } else {
             color = colorText;

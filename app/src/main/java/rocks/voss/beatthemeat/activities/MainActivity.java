@@ -17,25 +17,20 @@ import android.widget.Switch;
 import java.util.ArrayList;
 import java.util.List;
 
-import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.probe.Thermometer;
 import rocks.voss.beatthemeat.database.probe.ThermometerCache;
-import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.services.NotificationSoundService;
 import rocks.voss.beatthemeat.services.TemperatureCollectionService;
 import rocks.voss.beatthemeat.services.ThermometerSettingsCollectionService;
 import rocks.voss.beatthemeat.ui.CurrentTemperatureCanvas;
 import rocks.voss.beatthemeat.utils.AlarmUtil;
-import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.NotificationUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String NUMBER_OF_THERMOMETERS = "numberOfThermometers";
-    private static final List<CurrentTemperatureCanvas> thermometers = new ArrayList<>();
+    private static final List<CurrentTemperatureCanvas> thermometerCanvas = new ArrayList<>();
 
     private Context context;
     private static SharedPreferences sharedPref;
@@ -104,44 +99,28 @@ public class MainActivity extends AppCompatActivity {
         createUI();
     }
 
-    private void removeThermometer() {
-        ThermometerCache.delete(ThermometerCache.getThermometers().get(ThermometerCache.getThermometers().size() - 1));
-
-        // TODO: to delete
-        if (thermometers.size() > 0) {
-            int id = thermometers.size() - 1;
-            SharedPreferences.Editor editor = sharedPref.edit();
-            thermometers.remove(id);
-            editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size());
-            editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id));
-            editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id));
-            editor.remove(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
-            editor.apply();
-            TemperatureCache.deleteTemperatures(id);
+    public static void refreshThermometers() {
+        for (CurrentTemperatureCanvas currentTemperatureCanvas : thermometerCanvas) {
+            currentTemperatureCanvas.postInvalidate();
         }
-        createUI();
     }
 
     private void addThermometer() {
         Thermometer thermometer = new Thermometer();
         thermometer.id = ThermometerCache.getThermometers().size();
         ThermometerCache.insertThermometer(thermometer);
-
-        // TODO: to delete
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(NUMBER_OF_THERMOMETERS, thermometers.size() + 1);
-        editor.apply();
         createUI();
     }
 
-    public static void refreshThermometers() {
-        for (CurrentTemperatureCanvas currentTemperatureCanvas : thermometers) {
-            currentTemperatureCanvas.postInvalidate();
+    private void removeThermometer() {
+        List<Thermometer> thermometers = ThermometerCache.getThermometers();
+        if (thermometers.size() > 0) {
+            ThermometerCache.delete(thermometers.get(thermometers.size() - 1));
+            createUI();
         }
     }
 
     private void createUI() {
-        thermometers.clear();
         float paddingPixel = UiUtil.getStandardPaddingPixel(this);
 
         ScrollView scrollView = findViewById(R.id.scrollview);
@@ -167,13 +146,12 @@ public class MainActivity extends AppCompatActivity {
         );
         linearLayout.addView(switchAlarm);
 
-        int numberOfThermometers = sharedPref.getInt(NUMBER_OF_THERMOMETERS, 0);
-        for (int i = 0; i < numberOfThermometers; i++) {
-            CurrentTemperatureCanvas currentTemperatureCanvas = new CurrentTemperatureCanvas(context, i);
+        for (Thermometer thermometer : ThermometerCache.getThermometers()) {
+            CurrentTemperatureCanvas currentTemperatureCanvas = new CurrentTemperatureCanvas(context, thermometer);
             currentTemperatureCanvas.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
             UiUtil.setupTemperatureCanvas(this, currentTemperatureCanvas);
             linearLayout.addView(currentTemperatureCanvas);
-            thermometers.add(currentTemperatureCanvas);
+            thermometerCanvas.add(currentTemperatureCanvas);
             linearLayout.postInvalidate();
         }
     }

@@ -21,10 +21,20 @@ public class ThermometerCache {
 
     public static void insertThermometer(Thermometer thermometer) {
         getThermometers().add(thermometer);
-        databaseUtil.insert(Thermometer.class, thermometer);
+        databaseUtil.insert(Thermometer.class, thermometer, true);
     }
 
     public static void delete(Thermometer thermometer) {
         databaseUtil.delete(Thermometer.class, thermometer.id);
+        thermometers.remove(thermometer);
+    }
+
+    public static Thermometer getThermometerById(int id) {
+        for (Thermometer thermometer : getThermometers()) {
+            if (thermometer.id == id) {
+                return thermometer;
+            }
+        }
+        return null;
     }
 }

@@ -7,6 +7,8 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+
 @Dao
 public interface ThermometerDao {
     @Query("SELECT * FROM Thermometer")
@@ -21,6 +23,6 @@ public interface ThermometerDao {
     @Query("DELETE FROM Thermometer WHERE id=:id")
     void delete(int id);
 
-    @Update
+    @Update(onConflict = REPLACE)
     void update(Thermometer thermometer);
 }

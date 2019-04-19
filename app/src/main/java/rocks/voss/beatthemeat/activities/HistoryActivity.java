@@ -18,6 +18,8 @@ import rocks.voss.androidutils.database.ExportData;
 import rocks.voss.androidutils.database.ExportDataSet;
 import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
+import rocks.voss.beatthemeat.database.probe.ThermometerCache;
 import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 import rocks.voss.beatthemeat.services.HistoryTemperatureService;
 import rocks.voss.beatthemeat.ui.HistoryTemperatureCanvas;
@@ -25,7 +27,7 @@ import rocks.voss.beatthemeat.utils.UiUtil;
 
 public class HistoryActivity extends AppCompatActivity {
 
-    private int thermometerId;
+    private Thermometer thermometer;
 
     @Getter
     private static HistoryTemperatureCanvas canvas;
@@ -41,10 +43,11 @@ public class HistoryActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("  " + getSupportActionBar().getTitle());
 
-        thermometerId = getIntent().getIntExtra(Constants.THERMOMETER_CANVAS_ID, 0);
+        int thermometerId = getIntent().getIntExtra(Constants.THERMOMETER_CANVAS_ID, -1);
+        thermometer = ThermometerCache.getThermometerById(thermometerId);
 
         ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
-        canvas = new HistoryTemperatureCanvas(this, thermometerId);
+        canvas = new HistoryTemperatureCanvas(this, thermometer);
         UiUtil.setupTemperatureCanvas(this, canvas);
         constraintLayout.addView(canvas);
 
@@ -95,7 +98,7 @@ public class HistoryActivity extends AppCompatActivity {
                 headers.add("Time");
                 headers.add("Temperature");
                 exportData.setHeader(headers);
-                exportData.setDataSets((List<ExportDataSet>) (List<?>) TemperatureCache.getTemperatures(thermometerId));
+                exportData.setDataSets((List<ExportDataSet>) (List<?>) TemperatureCache.getTemperatures(thermometer.id));
 
                 intent.putExtra(AndroidUtilsConstants.EXPORT_GOOGLE_DRIVE_ACTIVITY_EXPORT_DATA, exportData);
                 intent.putExtra(AndroidUtilsConstants.EXPORT_GOOGLE_DRIVE_ACTIVITY_EXPORT_FILE_NAME, "temperatures-%1$s.csv");

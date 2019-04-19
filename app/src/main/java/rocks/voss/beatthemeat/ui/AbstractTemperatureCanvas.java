@@ -9,21 +9,19 @@ import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
-import lombok.Getter;
 import lombok.Setter;
-import rocks.voss.beatthemeat.Constants;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
 import rocks.voss.beatthemeat.database.temperatures.Temperature;
 import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
-import rocks.voss.beatthemeat.utils.KeyUtil;
 import rocks.voss.beatthemeat.utils.UiUtil;
 
 public abstract class AbstractTemperatureCanvas extends SurfaceView {
     protected static final int TEMPERATURE_THRESHOLD = 20;
     protected static final int DEGREES_YELLOW = 5;
 
-    @Setter
-    @Getter
-    protected int id;
+    //    @Setter
+//    @Getter
+//    protected int id;
     @Setter
     protected Paint colorBackground;
     @Setter
@@ -47,11 +45,8 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
     @Setter
     protected Paint colorSeparator;
 
-    protected boolean isRange;
+    protected Thermometer thermometer;
     protected Temperature temperature;
-    private int temperatureCurrent;
-    protected int temperatureMin;
-    protected int temperatureMax;
 
     protected float paddingPixel;
     protected float maxWidth;
@@ -71,15 +66,13 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
         super.onDraw(canvas);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        isRange = sharedPref.getBoolean(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, this.id), true);
-        temperatureMin = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, this.id), 50);
-        temperatureMax = sharedPref.getInt(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, this.id), 100);
 
-        temperature = TemperatureCache.getLatestTemperature(this.id);
+        temperature = TemperatureCache.getLatestTemperature(thermometer.id);
         if (temperature == null) {
-            temperatureCurrent = Constants.FALLBACK_VALUE_TEMPERATURE_NOT_SET;
-        } else {
-            temperatureCurrent = temperature.temperature;
+            temperature = new Temperature();
+            temperature.isActive = false;
+            temperature.temperature = 0;
+            temperature.thermometerId = thermometer.id;
         }
 
         paddingPixel = UiUtil.getStandardPaddingPixel(getContext());
@@ -94,10 +87,10 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
 
     protected int calcDisplayTemperatureMin() {
         int displayTemperatureMin;
-        if (temperatureCurrent > temperatureMin) {
-            displayTemperatureMin = temperatureMin - TEMPERATURE_THRESHOLD;
+        if (temperature.temperature > thermometer.temperatureMin) {
+            displayTemperatureMin = thermometer.temperatureMin - TEMPERATURE_THRESHOLD;
         } else {
-            displayTemperatureMin = temperatureCurrent - TEMPERATURE_THRESHOLD;
+            displayTemperatureMin = temperature.temperature - TEMPERATURE_THRESHOLD;
         }
         if (displayTemperatureMin < 0) {
             return 0;
@@ -114,17 +107,17 @@ public abstract class AbstractTemperatureCanvas extends SurfaceView {
 
     protected int calcDisplayTemperatureMax() {
         int displayTemperatureMax;
-        if (isRange) {
-            if (temperatureCurrent > temperatureMax) {
-                displayTemperatureMax = temperatureCurrent + TEMPERATURE_THRESHOLD;
+        if (thermometer.isRange) {
+            if (temperature.temperature > thermometer.temperatureMax) {
+                displayTemperatureMax = temperature.temperature + TEMPERATURE_THRESHOLD;
             } else {
-                displayTemperatureMax = temperatureMax + TEMPERATURE_THRESHOLD;
+                displayTemperatureMax = thermometer.temperatureMax + TEMPERATURE_THRESHOLD;
             }
         } else {
-            if (temperatureCurrent < temperatureMin) {
-                displayTemperatureMax = temperatureMin + TEMPERATURE_THRESHOLD;
+            if (temperature.temperature < thermometer.temperatureMin) {
+                displayTemperatureMax = thermometer.temperatureMin + TEMPERATURE_THRESHOLD;
             } else {
-                displayTemperatureMax = temperatureCurrent + TEMPERATURE_THRESHOLD;
+                displayTemperatureMax = temperature.temperature + TEMPERATURE_THRESHOLD;
             }
         }
         if (displayTemperatureMax % 10 > 5) {

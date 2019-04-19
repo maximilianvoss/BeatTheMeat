@@ -16,6 +16,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import rocks.voss.androidutils.utils.TimeUtil;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
 import rocks.voss.beatthemeat.database.temperatures.Temperature;
 import rocks.voss.beatthemeat.database.temperatures.TemperatureCache;
 import rocks.voss.beatthemeat.enums.HistoryScaleEnum;
@@ -39,13 +40,13 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
     private final static float radius = 15f;
     private final static int cellPerCs = 5;
 
-    public HistoryTemperatureCanvas(Context context, int id) {
+    public HistoryTemperatureCanvas(Context context, Thermometer thermometer) {
         this(context);
-        this.id = id;
+        this.thermometer = thermometer;
     }
 
     public HistoryTemperatureCanvas(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public HistoryTemperatureCanvas(Context context, AttributeSet attrs) {
@@ -100,7 +101,7 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
     @Override
     protected void doOnDraw(Canvas canvas) {
-        temperatures = TemperatureCache.getTemperatures(this.id);
+        temperatures = TemperatureCache.getTemperatures(thermometer.id);
         if (temperatures == null || temperatures.size() == 0) {
             return;
         }
@@ -197,21 +198,21 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
 
     private void drawRange(Canvas canvas) {
         float start = maxHeight;
-        float end = maxHeight - (temperatureMin - displayTemperatureMin - DEGREES_YELLOW) * pixelPerC;
+        float end = maxHeight - (thermometer.temperatureMin - displayTemperatureMin - DEGREES_YELLOW) * pixelPerC;
 
-        if (isRange) {
+        if (thermometer.isRange) {
             drawRangeBar(canvas, start, end, colorLightRed);
 
             start = end;
-            end = maxHeight - (temperatureMin - displayTemperatureMin) * pixelPerC;
+            end = maxHeight - (thermometer.temperatureMin - displayTemperatureMin) * pixelPerC;
             drawRangeBar(canvas, start, end, colorLightYellow);
 
             start = end;
-            end = maxHeight - (temperatureMax - displayTemperatureMin) * pixelPerC;
+            end = maxHeight - (thermometer.temperatureMax - displayTemperatureMin) * pixelPerC;
             drawRangeBar(canvas, start, end, colorLightGreen);
 
             start = end;
-            end = maxHeight - (temperatureMax - displayTemperatureMin + DEGREES_YELLOW) * pixelPerC;
+            end = maxHeight - (thermometer.temperatureMax - displayTemperatureMin + DEGREES_YELLOW) * pixelPerC;
             drawRangeBar(canvas, start, end, colorLightYellow);
 
             start = end;
@@ -221,7 +222,7 @@ public class HistoryTemperatureCanvas extends AbstractTemperatureCanvas {
             drawRangeBar(canvas, start, end, colorLightGreen);
 
             start = end;
-            end = maxHeight - (temperatureMin - displayTemperatureMin) * pixelPerC;
+            end = maxHeight - (thermometer.temperatureMin - displayTemperatureMin) * pixelPerC;
             drawRangeBar(canvas, start, end, colorLightYellow);
 
             start = end;

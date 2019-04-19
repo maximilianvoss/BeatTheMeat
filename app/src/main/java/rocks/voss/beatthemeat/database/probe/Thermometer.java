@@ -19,9 +19,11 @@ public class Thermometer {
     public int temperatureMin;
     @NonNull
     public int temperatureMax;
+    @NonNull
+    public boolean alarm;
 
-    public int fk_catalog;
-    public int fk_meat;
-    public int fk_cut;
-    public int fk_cooking;
+    public String catalog;
+    public String meat;
+    public String cut;
+    public String cooking;
 }

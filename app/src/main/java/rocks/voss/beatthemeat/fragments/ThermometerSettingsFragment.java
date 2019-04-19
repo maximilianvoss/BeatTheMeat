@@ -10,23 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Setter;
-import rocks.voss.beatthemeat.Constants;
+import rocks.voss.androidutils.utils.DatabaseUtil;
 import rocks.voss.beatthemeat.R;
+import rocks.voss.beatthemeat.database.probe.Thermometer;
 import rocks.voss.beatthemeat.settings.CatalogSetting;
 import rocks.voss.beatthemeat.settings.CookingSetting;
 import rocks.voss.beatthemeat.settings.CutSetting;
 import rocks.voss.beatthemeat.settings.MeatSetting;
 import rocks.voss.beatthemeat.settings.WrapperSetting;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
-import rocks.voss.beatthemeat.utils.KeyUtil;
 
 /**
  * Created by voss on 26.03.18.
  */
 
 public class ThermometerSettingsFragment extends PreferenceFragment {
+
+    private static DatabaseUtil databaseUtil = new DatabaseUtil();
+
     @Setter
-    private int id;
+    private Thermometer thermometer;
 
     private ListPreference temperatureCatalog;
     private ListPreference temperatureMeat;
@@ -48,7 +51,7 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_thermometersettings);
 
         temperatureCatalog = new ListPreference(this.getContext());
-        temperatureCatalog.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CATALOG, id));
+        temperatureCatalog.setValue(thermometer.catalog);
         temperatureCatalog.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_catalog, (String) o);
                     settingsCatalog = settingsWrapper.findCatalogByName((String) o);
@@ -56,6 +59,9 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
                     settingsCut = null;
                     settingsCooking = null;
                     updateUI();
+
+            thermometer.catalog = (String) o;
+            databaseUtil.update(Thermometer.class, thermometer);
                     return true;
                 }
         );
@@ -63,13 +69,16 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         setPreferenceTitle(temperatureCatalog, R.string.setting_temperature_catalog, temperatureCatalog.getValue());
 
         temperatureMeat = new ListPreference(this.getContext());
-        temperatureMeat.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MEAT, id));
+        temperatureMeat.setValue(thermometer.meat);
         temperatureMeat.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_meat, (String) o);
                     settingsMeat = settingsCatalog.findMeatByName((String) o);
                     settingsCut = null;
                     settingsCooking = null;
                     updateUI();
+
+            thermometer.meat = (String) o;
+            databaseUtil.update(Thermometer.class, thermometer);
                     return true;
                 }
         );
@@ -77,12 +86,15 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         setPreferenceTitle(temperatureMeat, R.string.setting_temperature_meat, temperatureMeat.getValue());
 
         temperatureCut = new ListPreference(this.getContext());
-        temperatureCut.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_CUT, id));
+        temperatureCut.setValue(thermometer.cut);
         temperatureCut.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_cut, (String) o);
                     settingsCut = settingsMeat.findCutByName((String) o);
                     settingsCooking = null;
                     updateUI();
+
+            thermometer.cut = (String) o;
+            databaseUtil.update(Thermometer.class, thermometer);
                     return true;
                 }
         );
@@ -90,10 +102,16 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         setPreferenceTitle(temperatureCut, R.string.setting_temperature_cut, temperatureCut.getValue());
 
         temperatureCooking = new ListPreference(this.getContext());
-        temperatureCooking.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_COOKING, id));
+        temperatureCooking.setValue(thermometer.cooking);
         temperatureCooking.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_cooking, (String) o);
                     settingsCooking = settingsCut.findCookingByName((String) o);
+
+            thermometer.cooking = (String) o;
+            thermometer.temperatureMin = settingsCooking.getTemperatureMin();
+            thermometer.temperatureMax = settingsCooking.getTemperatureMax();
+            thermometer.isRange = settingsCooking.isTemperatureIsRange();
+            databaseUtil.update(Thermometer.class, thermometer);
                     updateUI();
                     return true;
                 }
@@ -102,12 +120,15 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         setPreferenceTitle(temperatureCooking, R.string.setting_temperature_cooking, temperatureCooking.getValue());
 
         isRange = new SwitchPreference(this.getContext());
-        isRange.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_IS_RANGE, id));
         isRange.setTitle(R.string.setting_temperature_isrange);
-        isRange.setDefaultValue(true);
+        isRange.setDefaultValue(thermometer.isRange);
         isRange.setOnPreferenceChangeListener((preference, newValue) -> {
                     temperatureMin.setEnabled((boolean) newValue);
                     settingsCooking = null;
+
+            thermometer.cooking = null;
+            thermometer.isRange = (boolean) newValue;
+            databaseUtil.update(Thermometer.class, thermometer);
                     updateUI();
                     return true;
                 }
@@ -115,12 +136,15 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         getPreferenceScreen().addPreference(isRange);
 
         temperatureMin = new NumberPickerPreference(this.getContext());
-        temperatureMin.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MIN, id));
-        temperatureMin.setDefaultValue(50);
+        temperatureMin.setDefaultValue(thermometer.temperatureMin);
+        temperatureMin.setEnabled(thermometer.isRange);
         temperatureMin.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_min, String.valueOf(o));
                     settingsCooking = null;
                     updateUI();
+            thermometer.cooking = null;
+            thermometer.temperatureMin = (int) o;
+            databaseUtil.update(Thermometer.class, thermometer);
                     return true;
                 }
         );
@@ -128,12 +152,14 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         setPreferenceTitle(temperatureMin, R.string.setting_temperature_min, String.valueOf(temperatureMin.getValue()));
 
         temperatureMax = new NumberPickerPreference(this.getContext());
-        temperatureMax.setKey(KeyUtil.createKey(Constants.SETTING_TEMPERATURE_MAX, id));
-        temperatureMax.setDefaultValue(100);
+        temperatureMax.setDefaultValue(thermometer.temperatureMax);
         temperatureMax.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_max, String.valueOf(o));
                     settingsCooking = null;
                     updateUI();
+            thermometer.cooking = null;
+            thermometer.temperatureMax = (int) o;
+            databaseUtil.update(Thermometer.class, thermometer);
                     return true;
                 }
         );
@@ -237,8 +263,6 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
             setPreferenceTitle(temperatureCooking, R.string.setting_temperature_cooking, temperatureCooking.getValue());
         }
     }
-
-    private enum SelectionType {Catalog, Meat, Cut, Cooked}
 
     private void setPreferenceTitle(Preference preference, int titleResId, String addition) {
         preference.setTitle(titleResId);
