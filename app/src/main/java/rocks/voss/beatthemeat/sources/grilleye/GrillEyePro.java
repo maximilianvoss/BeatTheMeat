@@ -72,7 +72,12 @@ public class GrillEyePro {
         for (Thermometer thermometer : thermometers) {
             ByteBuffer byteBuffer = ByteBuffer.allocate(2);
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-            byte[] data = byteBuffer.putShort((short) thermometer.temperatureMin).array();
+            byte[] data;
+            if (thermometer.isRange) {
+                data = byteBuffer.putShort((short) thermometer.temperatureMin).array();
+            } else {
+                data = byteBuffer.putShort((short) -50).array();
+            }
             byteList.add(data[0]);
             byteList.add(data[1]);
         }
@@ -92,14 +97,23 @@ public class GrillEyePro {
     }
 
     public void setName(List<Thermometer> thermometers) {
-        List<Byte> byteList = new ArrayList<>();
         for (int i = 0; i < thermometers.size(); i++) {
+            List<Byte> byteList = new ArrayList<>();
             Thermometer thermometer = thermometers.get(i);
             byteList.add(Byte.valueOf((byte) (i + 1)));
 
-            byteList.addAll(ByteUtils.toByteList("HAMBURGER".toUpperCase().getBytes(Charset.forName("UTF-8"))));
+            String part1 = getSixCharString(thermometer.cut);
+            String part2 = getSixCharString(thermometer.cooking);
+            String text = part1 + part2;
+
+            byteList.addAll(ByteUtils.toByteList(text.getBytes(Charset.forName("UTF-8"))));
             sendData(UUIDS.NAMES, byteList);
         }
+    }
+
+    private String getSixCharString(String input) {
+        input = input + "      ";
+        return input.toUpperCase().substring(0, 6);
     }
 
     private void sendData(UUIDS command, List<Byte> message) {

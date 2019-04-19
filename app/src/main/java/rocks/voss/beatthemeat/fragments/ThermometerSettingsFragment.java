@@ -1,23 +1,30 @@
 package rocks.voss.beatthemeat.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.Setter;
 import rocks.voss.androidutils.utils.DatabaseUtil;
+import rocks.voss.beatthemeat.Constants;
 import rocks.voss.beatthemeat.R;
 import rocks.voss.beatthemeat.database.probe.Thermometer;
+import rocks.voss.beatthemeat.database.probe.ThermometerCache;
 import rocks.voss.beatthemeat.settings.CatalogSetting;
 import rocks.voss.beatthemeat.settings.CookingSetting;
 import rocks.voss.beatthemeat.settings.CutSetting;
 import rocks.voss.beatthemeat.settings.MeatSetting;
 import rocks.voss.beatthemeat.settings.WrapperSetting;
+import rocks.voss.beatthemeat.sources.grilleye.GrillEyePro;
 import rocks.voss.beatthemeat.ui.NumberPickerPreference;
 
 /**
@@ -25,7 +32,6 @@ import rocks.voss.beatthemeat.ui.NumberPickerPreference;
  */
 
 public class ThermometerSettingsFragment extends PreferenceFragment {
-
     private static DatabaseUtil databaseUtil = new DatabaseUtil();
 
     @Setter
@@ -45,6 +51,9 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     private CutSetting settingsCut = null;
     private CookingSetting settingsCooking = null;
 
+    private Set<String> webserviceUrls;
+    private String webserviceType;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +67,9 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
                     settingsMeat = null;
                     settingsCut = null;
                     settingsCooking = null;
-                    updateUI();
-
             thermometer.catalog = (String) o;
             databaseUtil.update(Thermometer.class, thermometer);
+            updateUI();
                     return true;
                 }
         );
@@ -75,10 +83,9 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
                     settingsMeat = settingsCatalog.findMeatByName((String) o);
                     settingsCut = null;
                     settingsCooking = null;
-                    updateUI();
-
             thermometer.meat = (String) o;
             databaseUtil.update(Thermometer.class, thermometer);
+            updateUI();
                     return true;
                 }
         );
@@ -91,10 +98,9 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
                     setPreferenceTitle(preference, R.string.setting_temperature_cut, (String) o);
                     settingsCut = settingsMeat.findCutByName((String) o);
                     settingsCooking = null;
-                    updateUI();
-
             thermometer.cut = (String) o;
             databaseUtil.update(Thermometer.class, thermometer);
+            updateUI();
                     return true;
                 }
         );
@@ -141,10 +147,10 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         temperatureMin.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_min, String.valueOf(o));
                     settingsCooking = null;
-                    updateUI();
             thermometer.cooking = null;
             thermometer.temperatureMin = (int) o;
             databaseUtil.update(Thermometer.class, thermometer);
+            updateUI();
                     return true;
                 }
         );
@@ -156,10 +162,10 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         temperatureMax.setOnPreferenceChangeListener((preference, o) -> {
                     setPreferenceTitle(preference, R.string.setting_temperature_max, String.valueOf(o));
                     settingsCooking = null;
-                    updateUI();
             thermometer.cooking = null;
             thermometer.temperatureMax = (int) o;
             databaseUtil.update(Thermometer.class, thermometer);
+            updateUI();
                     return true;
                 }
         );
@@ -170,6 +176,10 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
     }
 
     private void loadInitial() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        webserviceUrls = sharedPref.getStringSet(Constants.SETTING_GENERAL_TEMPERATURE_WEBSERVICE_URL, new LinkedHashSet<>());
+        webserviceType = sharedPref.getString(Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE, Constants.SETTING_GENERAL_THERMOMETER_SETTINGS_TYPE_JSON);
+
         settingsCatalog = settingsWrapper.findCatalogByName(temperatureCatalog.getValue());
         if (settingsCatalog != null) {
             settingsMeat = settingsCatalog.findMeatByName(temperatureMeat.getValue());
@@ -261,6 +271,17 @@ public class ThermometerSettingsFragment extends PreferenceFragment {
         } else {
             temperatureCooking.setValue("");
             setPreferenceTitle(temperatureCooking, R.string.setting_temperature_cooking, temperatureCooking.getValue());
+        }
+
+        if (webserviceType.equals("Grilleye Pro")) {
+            for (String webserviceUrl : webserviceUrls) {
+                GrillEyePro grillEyePro = GrillEyePro.getConnection(webserviceUrl);
+                if (grillEyePro != null) {
+                    grillEyePro.setName(ThermometerCache.getThermometers());
+                    grillEyePro.setMinTemperatures(ThermometerCache.getThermometers());
+                    grillEyePro.setMaxTemperatures(ThermometerCache.getThermometers());
+                }
+            }
         }
     }
 
