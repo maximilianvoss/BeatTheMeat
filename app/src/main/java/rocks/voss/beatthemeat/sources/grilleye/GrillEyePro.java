@@ -44,10 +44,12 @@ public class GrillEyePro {
 
     public synchronized void connect(int timeout, WebSocketListener listener) throws WebSocketException, IOException {
         if (!isConnected()) {
-            webSocket = new WebSocketFactory().createSocket(url, timeout);
+            webSocket = new WebSocketFactory().createSocket(url, timeout * 1000);
+            webSocket.getSocket().setSoTimeout(timeout * 1000);
             webSocket.addExtension("permessage-deflate");
             webSocket.addListener(listener);
             webSocket.connect();
+            connectionChecker(timeout);
         }
     }
 
@@ -58,7 +60,7 @@ public class GrillEyePro {
         if (webSocket.getSocket() == null) {
             return false;
         }
-        return webSocket.getSocket().isConnected();
+        return webSocket.getSocket().isConnected() && !webSocket.getSocket().isClosed();
     }
 
     public void disconnect() {
@@ -131,5 +133,10 @@ public class GrillEyePro {
         if (isConnected()) {
             webSocket.sendBinary(data);
         }
+    }
+
+    private void connectionChecker(int timeout) {
+        ConnectionChecker connectionChecker = new ConnectionChecker(webSocket, timeout);
+        connectionChecker.start();
     }
 }

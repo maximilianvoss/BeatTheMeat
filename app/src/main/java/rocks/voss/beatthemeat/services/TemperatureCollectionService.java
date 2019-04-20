@@ -91,7 +91,7 @@ public class TemperatureCollectionService extends JobService {
 
     private void grilleyeProWebservice(Set<String> webserviceUrls) {
         try {
-            GrillEyeProThread service = new GrillEyeProThread(this, webserviceCallInterval * 1000, new GrillEyeProThread.GrilleyeProDownloadThreadCallback() {
+            GrillEyeProThread service = new GrillEyeProThread(this, webserviceCallInterval, new GrillEyeProThread.GrilleyeProDownloadThreadCallback() {
                 @Override
                 public void onDownloadComplete(int temperatures[]) {
                     ThermometerData[] thermometerData = new ThermometerData[temperatures.length];
