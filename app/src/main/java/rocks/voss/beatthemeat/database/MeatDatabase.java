@@ -23,7 +23,7 @@ import rocks.voss.beatthemeat.database.temperatures.TimeConverter;
  * Created by voss on 08.04.18.
  */
 
-@Database(entities = {Temperature.class, Thermometer.class, Catalog.class, Meat.class, Cut.class, Cooking.class}, version = 8)
+@Database(entities = {Temperature.class, Thermometer.class, Catalog.class, Meat.class, Cut.class, Cooking.class}, version = 9)
 @TypeConverters({TimeConverter.class})
 public abstract class MeatDatabase extends RoomDatabase implements DatabaseUtil.Database {
     public abstract TemperatureDao getTemperatureDao();
