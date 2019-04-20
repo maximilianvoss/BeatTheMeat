@@ -90,10 +90,10 @@ public class CurrentTemperatureCanvas extends AbstractTemperatureCanvas {
         }
         drawMarkers(canvas);
 
-        if (temperature == null) {
-            drawTemperature(canvas, "N/A");
-        } else {
+        if (temperature.isActive) {
             drawTemperature(canvas, String.valueOf(temperature.temperature));
+        } else {
+            drawTemperature(canvas, "N/A");
         }
 
         colorBlack.setStyle(Paint.Style.STROKE);
