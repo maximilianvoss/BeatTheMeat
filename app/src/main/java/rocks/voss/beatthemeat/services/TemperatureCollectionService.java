@@ -116,14 +116,6 @@ public class TemperatureCollectionService extends JobService {
                 @Override
                 public void onConnectionFailure(Context context) {
                     NotificationUtil.createNotification(context, NotificationEnum.WebserviceAlarm);
-                    ThermometerData[] thermometerData = new ThermometerData[8];
-                    for (int i = 0; i < 8; i++) {
-                        thermometerData[i] = new ThermometerData();
-                        thermometerData[i].setId(i);
-                        thermometerData[i].setActive(false);
-                        Temperature temperature = Temperature.createByThermometerData(thermometerData[i]);
-                        TemperatureCache.insertTemperature(temperature);
-                    }
                     MainActivity.refreshThermometers();
                 }
             });
