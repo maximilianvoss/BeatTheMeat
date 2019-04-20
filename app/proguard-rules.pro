@@ -32,3 +32,4 @@
 -keepclassmembers public final enum com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility {
     public static final com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility *;
 }
+-dontwarn com.fasterxml.jackson.databind.**
