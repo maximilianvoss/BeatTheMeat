@@ -92,7 +92,7 @@ public class UiUtil {
         canvas.setColorSeparator(paintSeparator);
 
         if (canvas instanceof HistoryTemperatureCanvas) {
-            ((HistoryTemperatureCanvas) canvas).setScale(HistoryScaleEnum.hrs3);
+            ((HistoryTemperatureCanvas) canvas).setScale(HistoryScaleEnum.min15);
         }
 
         ta.recycle();
