@@ -23,6 +23,8 @@
 -dontwarn android.support.v7.**
 -keep class android.support.v7.app.AppCompatViewInflater{ <init>(...); }
 -dontwarn com.google.android.gms.**
+-keep class rocks.voss.beatthemeat.settings.**
+-keepnames class rocks.voss.beatthemeat.settings.**
 -keep class com.fasterxml.jackson.databind.ObjectMapper {
     public <methods>;
     protected <methods>;
