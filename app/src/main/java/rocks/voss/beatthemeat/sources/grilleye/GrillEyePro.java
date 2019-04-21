@@ -53,6 +53,12 @@ public class GrillEyePro {
         }
     }
 
+    public void sendTempRequest() {
+        if ( webSocket != null && webSocket.isOpen()) {
+            webSocket.sendBinary(UUIDS.TEMP.getUuidArray());
+        }
+    }
+
     public boolean isConnected() {
         if (webSocket == null) {
             return false;

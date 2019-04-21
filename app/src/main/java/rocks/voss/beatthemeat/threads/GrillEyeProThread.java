@@ -74,6 +74,7 @@ public class GrillEyeProThread extends Thread {
                         grillEyeProDownloadCallback.onDownloadComplete(temperatures);
                     }
                 });
+                grillEyePro.sendTempRequest();
             } catch (WebSocketException e) {
                 Log.e(this.getClass().toString(), "WebSocketException", e);
                 grillEyeProDownloadCallback.onConnectionFailure(context);

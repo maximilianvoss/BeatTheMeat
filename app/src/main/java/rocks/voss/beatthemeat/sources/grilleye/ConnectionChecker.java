@@ -40,8 +40,8 @@ public class ConnectionChecker extends Thread {
                 }
                 Log.d(this.getClass().toString(), "Times between: " + secondsBetween);
                 if (secondsBetween > timeout) {
-                    webSocket.getSocket().close();
                     webSocket.disconnect();
+                    webSocket.getSocket().close();
                     return;
                 }
 
