@@ -7,6 +7,10 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 def mVersionName = ""
 
 android {
+    lintOptions {
+        abortOnError false
+    }
+
     compileSdkVersion 27
 
     def versionPropsFile = rootProject.file('version.properties')
