@@ -2,6 +2,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenLocal()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
@@ -17,6 +18,8 @@ allprojects {
             url 'https://oss.sonatype.org/content/repositories/snapshots'
 //            url 'https://oss.sonatype.org/content/groups/public'
         }
+        mavenLocal()
+//        mavenCentral artifactUrls:["/Users/voss/.m2/repository/"]
     }
 }
 

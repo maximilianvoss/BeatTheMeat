@@ -104,7 +104,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.github.fge:jackson-coreutils:1.8'
     implementation 'commons-io:commons-io:2.6'
-    implementation 'com.neovisionaries:nv-websocket-client:2.7'
+    implementation 'com.neovisionaries:nv-websocket-client:2.9-SNAPSHOT'
     implementation 'rocks.voss.androidutils:rocks.voss.androidutils:0.0.27-SNAPSHOT@aar'
 }
 
