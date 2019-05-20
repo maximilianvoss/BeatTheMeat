@@ -4,10 +4,9 @@ import android.util.Log;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketCloseCode;
 
 import org.threeten.bp.OffsetDateTime;
-
-import java.io.IOException;
 
 import rocks.voss.androidutils.utils.TimeUtil;
 
@@ -40,16 +39,13 @@ public class ConnectionChecker extends Thread {
                 }
                 Log.d(this.getClass().toString(), "Times between: " + secondsBetween);
                 if (secondsBetween > timeout) {
-                    webSocket.disconnect();
-                    webSocket.getSocket().close();
+                    webSocket.disconnect(WebSocketCloseCode.NORMAL, null, 0);
                     return;
                 }
 
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Log.e(this.getClass().toString(), "InterruptedException", e);
-            } catch (IOException e) {
-                Log.e(this.getClass().toString(), "IOException", e);
             }
         }
     }

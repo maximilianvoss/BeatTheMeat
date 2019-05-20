@@ -1,9 +1,11 @@
 package rocks.voss.beatthemeat.sources.grilleye;
 
 import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketCloseCode;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketListener;
+import com.neovisionaries.ws.client.WebSocketState;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -54,7 +56,7 @@ public class GrillEyePro {
     }
 
     public void sendTempRequest() {
-        if ( webSocket != null && webSocket.isOpen()) {
+        if (webSocket != null && webSocket.isOpen()) {
             webSocket.sendBinary(UUIDS.TEMP.getUuidArray());
         }
     }
@@ -66,12 +68,12 @@ public class GrillEyePro {
         if (webSocket.getSocket() == null) {
             return false;
         }
-        return webSocket.getSocket().isConnected() && !webSocket.getSocket().isClosed();
+        return webSocket.getState() != WebSocketState.OPEN && webSocket.getSocket().isConnected() && !webSocket.getSocket().isClosed();
     }
 
     public void disconnect() {
         if (webSocket != null) {
-            webSocket.disconnect();
+            webSocket.disconnect(WebSocketCloseCode.NORMAL, null, 0);
         }
     }
 
